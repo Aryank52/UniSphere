@@ -1,0 +1,148 @@
+# Product Requirement Document (PRD): UniSphere
+
+## Project: UniSphere - Unified Campus Club & Event Hub
+**Version**: 2.0 (Full-Stack Express, Redux, RAG Vector, Caching & Containerization Edition)  
+**Status**: Approved & Released  
+**Target Release**: Q3 2026  
+**Document Owner**: Antigravity AI  
+
+---
+
+## 1. Executive Summary
+UniSphere is a full-stack campus engagement platform designed to centralize extracurricular life, simplify event planning, automate attendance verification, and deliver personalized academic guidance. It eliminates the fragmentation of student life by integrating directories, scheduling, ticketing, and diagnostics into a unified dashboard.
+
+This version marks a complete architectural migration from Java Spring Boot to Node.js (TypeScript/Express) on the backend, Zustand to Redux Toolkit on the frontend, and local H2 to dual-mode PostgreSQL/SQLite databases. It introduces advanced integrations, including simulated SMTP email dispatches, Redis caching, Swagger API docs, Cosine-Similarity RAG vector heuristics, and 8 fully functional interactive sliding drawers.
+
+---
+
+## 2. User Personas & Objectives
+
+### A. Alex Rivera - The Active Student
+* **Profile**: Senior Computer Science student, honors candidate.
+* **Objective**: Discover workshops and academic seminars matching CS interests without scanning bulletin boards or disjoint chat threads.
+* **Goal**: Register for events, check boarding passes, request transcripts, review courses, and submit support tickets in a mobile-friendly dashboard.
+
+### B. Dr. Sarah Jenkins - The Faculty Coordinator
+* **Profile**: Assistant Professor of Data Science and ACM Chapter advisor.
+* **Objective**: Host student hackathons, check in attendees via digital ticket scanners, and schedule events without double-booking rooms.
+* **Goal**: Propose new clubs, schedule events, view registered attendees, scan student boarding passes, and utilize AI prediction metrics.
+
+### C. Admin Chief - The Site Administrator
+* **Profile**: Director of Student Life & Operations.
+* **Objective**: Moderating student groups, approving new events, auditing server status, and clearing cached memories.
+* **Goal**: Approve pending clubs and events, monitor active connections, and synchronize SQLite/PostgreSQL seeding pipelines.
+
+---
+
+## 3. Core Functional Features & Requirements
+
+### 3.1 Authentication & Role-Based Access Control (RBAC)
+* **JWT Security**: All REST endpoints are secured via JSON Web Tokens. Token validity is checked on the frontend using custom Redux state selectors.
+* **Role Check Middleware**: Restricts administrative commands (approvals, user listings) to `ADMIN` and coordinator options (event creation, scanning) to `FACULTY`.
+
+### 3.2 Clubs & Societies Hub
+* **Discovery Grid**: Card listings displaying active clubs with banner graphics, category labels, and descriptions.
+* **Live Counter**: Increments or decrements member counts in real-time when students join or leave a club.
+* **Coordinator Popovers**: Hovering over a card details advisor information (avatar, name, email, department).
+* **Approval Pipeline**: Faculty proposals route to the Admin dashboard, remaining `PENDING` until approved.
+
+### 3.3 Event Management & Digital Ticketing
+* **Explore Portal**: Sort events by date, name, or AI match score.
+* **One-Click Reservation**: Reserves a seat, checks capacity limits, and decrements available seats.
+* **Digital Pass Wallet**: Generates boarding tickets containing alphanumeric passcodes (`PASS-{eventId}-{randomCode}`). Clicking a ticket renders a detailed boarding pass with simulated QR code rendering.
+* **Interactive Reviews**: Allows students to leave 1-to-5 star ratings and textual comments on past events.
+
+### 3.4 Interactive Sliding Drawers
+Replaces static mock links with right-sided sliding panels:
+1. **Announcements**: Displays campus news with priority pin indicators.
+2. **Academic Calendar**: Interactive June 2026 calendar grid. Highlighting key dates displays upcoming agendas. Allows adding custom tasks to the agenda in real-time.
+3. **Campus Directory**: Active campus member list with status indicators (Online, In Meeting, Offline) and dynamic search query filtering.
+4. **Academic Record**: Shows CGPA (3.92) and completed credits. Features an interactive sealed transcript request button with simulated PDF package email dispatch.
+5. **Course Catalog**: Searchable database of university courses. Features an enrollment request toggle.
+6. **Faculty Hub**: advisory hours list and a scheduled office hours booking form.
+7. **Student Affairs**: Displays housing, career, and health summaries, and features a functional support ticket submission form.
+8. **System Admin**: Renders server diagnostics parameters. Features interactive buttons to run seeder scripts, clear memory caches, and export diagnostic JSON dumps.
+
+---
+
+## 4. AI & Intelligent Systems (RAG & Regression)
+
+### 4.1 RAG Vector Similarity Search Heuristics
+* **Tokenization Vectorizer**: Implemented a TF-IDF tokenizer that splits student department/major interests and event descriptions into term frequency vectors, filtering out stop-words.
+* **Cosine Similarity Matcher**: Computes the dot product of student profile vectors and event details divided by their magnitudes to rank and recommend relevant events in [aiService.ts](file:///e:/PROJECTS/UniSphere/backend/src/services/aiService.ts).
+* **Justification Engine**: Translates similarity coefficients into clear descriptions, such as: *"RAG Vector Match: This event matches 85% of your profile tags in Computer Science."*
+
+### 4.2 Attendance Regression Predictor
+* **Algorithmic Predictor**: Uses event categories (Tech: 85%, Academic: 55%, Sports: 75%), scheduled days (Weekends: +15%), and capacities (>100 capacity: -15%) to output predicted attendance rates.
+
+### 4.3 Smart Schedule Suggestion
+* **Optimization Grid**: Analyzes current schedules to suggest optimal times with the lowest conflict scores (e.g., Tuesday 2:00 PM, Conflict Score: 0.15).
+
+---
+
+## 5. Technical Architecture & Database Schemas
+
+### 5.1 Tech Stack
+* **Frontend**: React 18, Redux Toolkit, TailwindCSS, Lucide, Recharts.
+* **Backend**: Express (Node.js/TypeScript).
+* **Databases**: SQLite (Development), PostgreSQL (Production/Docker).
+* **Caching**: Redis Cache Client with in-memory bypass fallback.
+* **Testing**: Self-contained Node TypeScript unit test suite (`npm test`).
+* **CI/CD**: GitHub Actions.
+* **Containerization**: Docker & Docker Compose.
+
+### 5.2 Database Entity Relationship Model
+```mermaid
+erDiagram
+    User ||--o{ Registration : "registers"
+    User ||--o{ Attendance : "records"
+    User ||--o{ Feedback : "submits"
+    User ||--o{ Notification : "receives"
+    Club ||--o{ Event : "hosts"
+    Event ||--o{ Registration : "contains"
+    Event ||--o{ Attendance : "verifies"
+    Event ||--o{ Feedback : "aggregates"
+```
+
+### 5.3 Data Schemas
+* **Users**: `id` (PK), `name`, `email`, `password`, `role` (STUDENT/FACULTY/ADMIN), `department`, `profileImage`.
+* **Clubs**: `id` (PK), `name`, `description`, `bannerImage`, `creatorId` (FK), `membersCount`, `status` (PENDING/ACTIVE).
+* **Events**: `id` (PK), `title`, `description`, `date`, `time`, `location`, `campus`, `maxCapacity`, `status` (PENDING/APPROVED/REJECTED), `bannerImage`, `category` (TECH/ACADEMIC/SPORTS/CULTURAL), `clubId` (FK), `coordinatorId` (FK), `engagementScore`.
+* **Registrations**: `id` (PK), `eventId` (FK), `studentId` (FK), `status` (REGISTERED/CANCELLED), `passCode`.
+* **Attendances**: `id` (PK), `eventId` (FK), `studentId` (FK), `checkedInAt`, `checkedById` (FK).
+* **Notifications**: `id` (PK), `userId` (FK), `title`, `message`, `type`, `isRead` (boolean).
+* **Feedbacks**: `id` (PK), `eventId` (FK), `studentId` (FK), `rating` (1-5), `comment`.
+
+---
+
+## 6. Non-Functional Requirements & Performance
+
+### 6.1 Caching Strategy (Redis)
+* **Query Caching**: Caches active event query results in Redis (e.g. key: `events_list_ALL`).
+* **Instant Invalidation**: Event creation, deletion, or admin approval invalidates the cache.
+* **Memory Bypass**: If Redis is offline, the server falls back to standard Sequelize queries with in-memory logging.
+
+### 6.2 Simulated SMTP Email Notifications
+* **Console Trace logs**: Outgoing emails print full envelopes to the terminal console during registrations and ticket scans to trace email functionality.
+
+### 6.3 Deployment & Orchestration Blueprints
+* **Docker Multi-Container**:
+  - `docker-compose.yml` mounts Postgres (port 5432), Redis (port 6379), Express (port 8080), and Nginx Frontend (port 80).
+* **Render Blueprints**:
+  - `render.yaml` automates cloud orchestration, provisioning PostgreSQL databases and Redis cache servers.
+* **Vercel Routing Proxy**:
+  - `vercel.json` proxies frontend API calls to Render endpoints.
+
+---
+
+## 7. Success Metrics & Roadmap
+
+### 7.1 Success KPIs
+1. **Engagement Lift**: Increase active club membership by 20% within the first semester of deployment.
+2. **AI Click-Through Rate**: Achieve >75% registration rate on events marked with >80% AI match scores.
+3. **Check-in Efficiency**: Reduce campus event check-in times by 50% using digital QR codes.
+
+### 7.2 Future Roadmap
+* **Phase 2.1**: Real-time WebSockets chat rooms for active club members.
+* **Phase 2.2**: Integrate third-party calendars (Google / Outlook exports).
+* **Phase 2.3**: Deploy native iOS/Android client apps using React Native.
