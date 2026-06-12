@@ -58,7 +58,7 @@ export const AdminDashboard: React.FC = () => {
   })
 
   // Colors for Recharts categories
-  const COLORS = ['#3b82f6', '#10b981', '#6366f1']
+  const COLORS = ['#06b6d4', '#10b981', '#7c3aed']
 
   // Format Recharts data safely
   const rawChartData = stats?.registrationsTrend || [
@@ -97,7 +97,7 @@ export const AdminDashboard: React.FC = () => {
               <span>+8.4% from last week</span>
             </p>
           </div>
-          <div className="h-12 w-12 bg-blue-50 border border-blue-100 text-blue-600 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-cyan-50 border border-cyan-100 text-cyan-700 rounded-2xl flex items-center justify-center">
             <Users className="h-5 w-5" />
           </div>
         </div>
@@ -122,9 +122,9 @@ export const AdminDashboard: React.FC = () => {
           <div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Monthly Registrations</span>
             <h2 className="text-3xl font-black text-slate-900 mt-1.5">1,105</h2>
-            <p className="text-[10px] text-blue-600 font-bold mt-1">Peak activity: Mondays</p>
+            <p className="text-[10px] text-cyan-700 font-bold mt-1">Peak activity: Mondays</p>
           </div>
-          <div className="h-12 w-12 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-cyan-50 border border-cyan-100 text-cyan-700 rounded-2xl flex items-center justify-center">
             <Activity className="h-5 w-5 animate-pulse" />
           </div>
         </div>
@@ -208,7 +208,7 @@ export const AdminDashboard: React.FC = () => {
 
           <button 
             onClick={() => alert("Manual Override bypass activated. Access log entry logged in diagnostic ledger.")}
-            className="w-full bg-[#006644] hover:bg-[#005533] text-white font-extrabold py-3.5 rounded-xl transition-all cursor-pointer text-xs tracking-wider mt-4"
+            className="w-full bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-extrabold py-3.5 rounded-xl transition-all cursor-pointer text-xs tracking-wider mt-4 shadow-sm"
           >
             MANUAL OVERRIDE
           </button>
@@ -243,13 +243,13 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex bg-slate-100 border border-slate-200 rounded-lg p-0.5">
                   <button 
                     onClick={() => setApprovalsTab('events')}
-                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${approvalsTab === 'events' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${approvalsTab === 'events' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
                   >
                     Events
                   </button>
                   <button 
                     onClick={() => setApprovalsTab('clubs')}
-                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${approvalsTab === 'clubs' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${approvalsTab === 'clubs' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
                   >
                     Clubs
                   </button>
@@ -279,7 +279,7 @@ export const AdminDashboard: React.FC = () => {
                         const priorityBadge = isUrgent 
                           ? 'bg-red-50 text-red-600 border border-red-100' 
                           : isMedium 
-                            ? 'bg-blue-50 text-blue-600 border border-blue-100' 
+                            ? 'bg-cyan-50 text-cyan-705 border border-cyan-100' 
                             : 'bg-slate-100 text-slate-600 border border-slate-200';
 
                         return (
@@ -336,7 +336,7 @@ export const AdminDashboard: React.FC = () => {
                           </td>
                           <td className="py-3.5 text-slate-600 font-medium">ACM Chapter</td>
                           <td className="py-3.5">
-                            <Badge className="text-[8px] font-bold bg-blue-50 text-blue-600 border border-blue-100">MEDIUM</Badge>
+                            <Badge className="text-[8px] font-bold bg-cyan-50 text-cyan-705 border border-cyan-100">MEDIUM</Badge>
                           </td>
                           <td className="py-3.5 font-semibold text-slate-500">Oct 28, 08:00 PM</td>
                           <td className="py-3.5">
@@ -420,7 +420,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-4 border border-slate-100 rounded-2xl">
-              I've analyzed the Spring 2026 course requests. There is a conflict in <span className="text-blue-600 font-bold underline cursor-pointer">Room 402</span> between 10:00 AM - 12:00 PM.
+              I've analyzed the Spring 2026 course requests. There is a conflict in <span className="text-cyan-700 font-bold underline cursor-pointer">Room 402</span> between 10:00 AM - 12:00 PM.
             </p>
 
             <div className="space-y-2">
@@ -453,7 +453,7 @@ export const AdminDashboard: React.FC = () => {
                   <span className="text-slate-900">24%</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full" style={{ width: '24%' }} />
+                  <div className="h-full bg-cyan-500 rounded-full" style={{ width: '24%' }} />
                 </div>
               </div>
 
@@ -464,7 +464,7 @@ export const AdminDashboard: React.FC = () => {
                   <span className="text-slate-900">12ms</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-500 rounded-full" style={{ width: '12%' }} />
+                  <div className="h-full bg-cyan-500 rounded-full" style={{ width: '12%' }} />
                 </div>
               </div>
 
@@ -498,13 +498,13 @@ export const AdminDashboard: React.FC = () => {
             <div className="flex bg-slate-100 border border-slate-200 rounded-lg p-0.5">
               <button 
                 onClick={() => setTimeframe('week')}
-                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${timeframe === 'week' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${timeframe === 'week' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
               >
                 Week
               </button>
               <button 
                 onClick={() => setTimeframe('month')}
-                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${timeframe === 'month' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${timeframe === 'month' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
               >
                 Month
               </button>
@@ -527,7 +527,7 @@ export const AdminDashboard: React.FC = () => {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                   }} 
                 />
-                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                <Bar dataKey="count" fill="#06b6d4" radius={[4, 4, 0, 0]} maxBarSize={32} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -581,7 +581,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="space-y-2 text-[10px] font-bold text-slate-500 mt-4 text-left">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <div className="w-2 h-2 rounded-full bg-cyan-500" />
                 <span>Academic</span>
               </div>
               <span className="text-slate-800">45%</span>
@@ -595,7 +595,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                <div className="w-2 h-2 rounded-full bg-violet-500" />
                 <span>Social</span>
               </div>
               <span className="text-slate-800">23%</span>
@@ -620,7 +620,7 @@ export const AdminDashboard: React.FC = () => {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value as 'ALL' | 'STUDENT' | 'FACULTY' | 'ADMIN')}
-              className="bg-white border border-slate-200 text-slate-700 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-blue-600 cursor-pointer shadow-sm"
+              className="bg-white border border-slate-200 text-slate-700 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
             >
               <option value="ALL">Role: All</option>
               <option value="STUDENT">Student</option>
@@ -632,7 +632,7 @@ export const AdminDashboard: React.FC = () => {
             <select
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-700 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-blue-600 cursor-pointer shadow-sm"
+              className="bg-white border border-slate-200 text-slate-700 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
             >
               <option value="ALL">Department: All</option>
               <option value="Computer Science">Computer Science</option>
@@ -741,7 +741,7 @@ export const AdminDashboard: React.FC = () => {
           <span>Showing 1-10 of {filteredUsers.length} users</span>
           <div className="flex gap-1.5">
             <button className="px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-all cursor-pointer">Previous</button>
-            <button className="px-3.5 py-1.5 border border-slate-200 bg-slate-100 text-blue-600 rounded-lg font-bold">1</button>
+            <button className="px-3.5 py-1.5 border border-slate-200 bg-cyan-50 text-cyan-700 rounded-lg font-bold">1</button>
             <button className="px-3.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 hover:text-slate-800 transition-all cursor-pointer">2</button>
             <button className="px-3.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 hover:text-slate-800 transition-all cursor-pointer">3</button>
             <button className="px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-all cursor-pointer">Next</button>
@@ -753,7 +753,7 @@ export const AdminDashboard: React.FC = () => {
       {/* Floating circular + button in the bottom right corner (Mockup 2) */}
       <button 
         onClick={() => alert("Initiate fast command: Create quick notice or event schedule.")}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-xl z-20 cursor-pointer border border-blue-500 transition-all active:scale-[0.95] flex items-center justify-center"
+        className="fixed bottom-6 right-6 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-full p-4 shadow-xl z-20 cursor-pointer border border-cyan-300 transition-all active:scale-[0.95] flex items-center justify-center"
       >
         <Plus className="h-6 w-6" />
       </button>

@@ -65,14 +65,13 @@ export const EventsPage: React.FC = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       
       {/* Title Header Banner */}
-      <div className={`flex flex-col sm:flex-row justify-between sm:items-center gap-4 ${
-        isStudent ? 'bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm' : ''
-      }`}>
+      {/* Title Header Banner */}
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
         <div>
-          <h2 className={`text-3xl font-black tracking-tight ${isStudent ? 'text-slate-900' : 'text-foreground'}`}>
+          <h2 className="text-3xl font-black tracking-tight text-slate-900">
             {isStudent ? 'Discover Campus Life' : 'Explore Events'}
           </h2>
-          <p className="text-xs text-muted-foreground mt-1.5 font-medium">
+          <p className="text-xs text-slate-500 mt-1.5 font-medium">
             {isStudent 
               ? 'Find events that match your interests, from late-night hackathons to morning yoga on the quad.' 
               : 'Find upcoming technology bootcamps, athletic tournaments, and academic forums'
@@ -101,55 +100,35 @@ export const EventsPage: React.FC = () => {
               placeholder="Search events, keywords, or clubs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`pl-10 ${
-                isStudent ? 'bg-white border-slate-200 text-slate-800 focus:border-[#006680] focus:ring-1 focus:ring-[#006680]' : ''
-              }`}
+              className="pl-10 bg-white border-slate-200 text-slate-800 focus:border-[#006680] focus:ring-1 focus:ring-[#006680]"
             />
             <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
           </div>
 
           {/* Category Pill Filters */}
           <div className="flex gap-2 w-full lg:w-auto overflow-x-auto pb-1 lg:pb-0 scrollbar-none items-center">
-            {isStudent ? (
-              <>
-                {displayCategories.map(cat => (
-                  <button
-                    key={cat.key}
-                    onClick={() => setSelectedCategory(cat.key)}
-                    className={`px-4 py-2 text-xs font-bold rounded-xl transition-all shrink-0 cursor-pointer shadow-sm ${
-                      selectedCategory === cat.key
-                        ? 'bg-[#006680] text-white'
-                        : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-                
-                {/* Filters button */}
-                <button 
-                  onClick={() => alert("Advance filter modal opened.")}
-                  className="px-4 py-2 text-xs font-bold rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
-                >
-                  <SlidersHorizontal className="h-3.5 w-3.5" />
-                  <span>Filters</span>
-                </button>
-              </>
-            ) : (
-              ['ALL', 'TECH', 'SPORTS', 'ACADEMIC', 'CULTURAL'].map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 text-xs font-bold rounded-full transition-all shrink-0 ${
-                    selectedCategory === cat
-                      ? 'bg-primary text-white shadow-md shadow-primary/20'
-                      : 'bg-secondary/40 text-muted-foreground hover:bg-secondary/80'
-                  }`}
-                >
-                  {cat === 'ALL' ? 'All Categories' : cat}
-                </button>
-              ))
-            )}
+            {displayCategories.map(cat => (
+              <button
+                key={cat.key}
+                onClick={() => setSelectedCategory(cat.key)}
+                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all shrink-0 cursor-pointer shadow-sm ${
+                  selectedCategory === cat.key
+                    ? 'bg-[#006680] text-white'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+            
+            {/* Filters button */}
+            <button 
+              onClick={() => alert("Advance filter modal opened.")}
+              className="px-4 py-2 text-xs font-bold rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+              <span>Filters</span>
+            </button>
           </div>
 
         </div>
@@ -160,11 +139,7 @@ export const EventsPage: React.FC = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'DATE' | 'TITLE' | 'SCORE')}
-            className={`px-3 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none transition-all cursor-pointer ${
-              isStudent 
-                ? 'bg-white border-slate-200 text-slate-800 focus:border-[#006680]' 
-                : 'bg-background/50 border-border/80 text-foreground focus:ring-2 focus:ring-primary/50'
-            }`}
+            className="px-3 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none transition-all cursor-pointer bg-white border-slate-200 text-slate-800 focus:border-[#006680]"
           >
             <option value="DATE">🗓️ Date (Upcoming first)</option>
             <option value="TITLE">🔤 Title (A-Z)</option>
@@ -238,21 +213,19 @@ export const EventsPage: React.FC = () => {
         )}
       </Dialog>
 
-      {/* Custom light-theme Footer specifically for Student events portal */}
-      {isStudent && (
-        <footer className="border-t border-slate-200 mt-16 pt-8 pb-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
-          <div>
-            <span className="font-extrabold text-sm text-[#006680] mr-2">UniSphere</span>
-            <span>&copy; 2026 UniSphere Systems Inc. All rights reserved.</span>
-          </div>
-          <div className="flex gap-6 font-semibold">
-            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Privacy Policy</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Terms of Service</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Campus Partners</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Contact Support</a>
-          </div>
-        </footer>
-      )}
+      {/* Custom light-theme Footer for events portal */}
+      <footer className="border-t border-slate-200 mt-16 pt-8 pb-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
+        <div>
+          <span className="font-extrabold text-sm text-[#006680] mr-2">UniSphere</span>
+          <span>&copy; 2026 UniSphere Systems Inc. All rights reserved.</span>
+        </div>
+        <div className="flex gap-6 font-semibold">
+          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Privacy Policy</a>
+          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Terms of Service</a>
+          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Campus Partners</a>
+          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Contact Support</a>
+        </div>
+      </footer>
 
     </div>
   )

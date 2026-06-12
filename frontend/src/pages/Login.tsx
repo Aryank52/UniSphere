@@ -82,22 +82,17 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#f8fafc] flex flex-col justify-between relative overflow-hidden font-sans select-none text-slate-700">
+    <div className="min-h-screen w-full bg-slate-50 flex flex-col justify-between relative overflow-hidden font-sans select-none text-slate-700">
       
-      {/* Dots Grid Pattern Background */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.4]"
-        style={{
-          backgroundImage: 'radial-gradient(#cbd5e1 1.5px, transparent 1.5px)',
-          backgroundSize: '24px 24px'
-        }}
-      />
+      {/* Background Soft Glows */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-cyan-100/40 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-blue-100/40 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Top Header Secure Bar */}
-      <header className="w-full bg-white border-b border-slate-200 z-10">
+      <header className="w-full bg-white/80 border-b border-slate-200 backdrop-blur-md z-10">
         <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <span className="font-black text-2xl tracking-tight text-[#006680] font-sans">UniSphere</span>
+            <span className="font-extrabold text-2xl tracking-tight text-[#006680] font-sans">UniSphere</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
             <span>Secure Access Portal</span>
@@ -116,7 +111,7 @@ export const Login: React.FC = () => {
               onClick={() => { setIsRegister(false); setFormError(''); }}
               className={`py-4 text-xs font-extrabold transition-all border-b-2 cursor-pointer ${
                 !isRegister 
-                  ? 'border-[#006680] text-[#006680] bg-white' 
+                  ? 'border-cyan-500 text-cyan-700 bg-white' 
                   : 'border-transparent text-slate-400 hover:text-slate-600 bg-slate-50/50'
               }`}
             >
@@ -126,7 +121,7 @@ export const Login: React.FC = () => {
               onClick={() => { setIsRegister(true); setFormError(''); }}
               className={`py-4 text-xs font-extrabold transition-all border-b-2 cursor-pointer ${
                 isRegister 
-                  ? 'border-[#006680] text-[#006680] bg-white' 
+                  ? 'border-cyan-500 text-cyan-700 bg-white' 
                   : 'border-transparent text-slate-400 hover:text-slate-600 bg-slate-50/50'
               }`}
             >
@@ -167,7 +162,7 @@ export const Login: React.FC = () => {
                     placeholder="e.g. Alex Rivera"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-white border border-slate-200 focus:border-[#006680] focus:ring-1 focus:ring-[#006680] text-slate-800 rounded-xl py-3 px-4 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
+                    className="w-full bg-white border border-slate-200 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-800 rounded-xl py-3 px-4 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
                     required
                   />
                 </div>
@@ -186,7 +181,7 @@ export const Login: React.FC = () => {
                     placeholder="e.g. student@unisphere.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-white border border-slate-200 focus:border-[#006680] focus:ring-1 focus:ring-[#006680] text-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
+                    className="w-full bg-white border border-slate-200 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
                     required
                   />
                 </div>
@@ -200,7 +195,7 @@ export const Login: React.FC = () => {
                     <button 
                       type="button" 
                       onClick={() => alert("Credentials reset request forwarded to registrar support.")}
-                      className="text-xs text-[#006680] hover:underline font-extrabold transition-colors"
+                      className="text-xs text-cyan-700 hover:underline font-extrabold transition-colors"
                     >
                       Forgot password?
                     </button>
@@ -214,7 +209,7 @@ export const Login: React.FC = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-white border border-slate-200 focus:border-[#006680] focus:ring-1 focus:ring-[#006680] text-slate-800 rounded-xl py-3 pl-11 pr-11 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
+                    className="w-full bg-white border border-slate-200 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-800 rounded-xl py-3 pl-11 pr-11 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
                     required
                   />
                   <button
@@ -236,7 +231,7 @@ export const Login: React.FC = () => {
                       id="reg-role"
                       value={role}
                       onChange={(e) => setRole(e.target.value as 'STUDENT' | 'FACULTY' | 'ADMIN')}
-                      className="w-full bg-white border border-slate-200 focus:border-[#006680] text-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none shadow-sm cursor-pointer"
+                      className="w-full bg-white border border-slate-200 focus:border-cyan-500 text-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none shadow-sm cursor-pointer"
                     >
                       <option value="STUDENT">Student</option>
                       <option value="FACULTY">Faculty Coordinator</option>
@@ -248,7 +243,7 @@ export const Login: React.FC = () => {
                       id="reg-dept"
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
-                      className="w-full bg-white border border-slate-200 focus:border-[#006680] text-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none shadow-sm cursor-pointer"
+                      className="w-full bg-white border border-slate-200 focus:border-cyan-500 text-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none shadow-sm cursor-pointer"
                     >
                       <option value="Computer Science">Computer Science</option>
                       <option value="Data Science">Data Science</option>
@@ -267,7 +262,7 @@ export const Login: React.FC = () => {
                     id="remember-device"
                     checked={rememberDevice}
                     onChange={(e) => setRememberDevice(e.target.checked)}
-                    className="h-4 w-4 rounded border-slate-300 text-[#006680] focus:ring-[#006680] cursor-pointer"
+                    className="h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 cursor-pointer"
                   />
                   <label htmlFor="remember-device" className="text-xs font-semibold text-slate-500 cursor-pointer">
                     Remember device for 30 days
@@ -279,7 +274,7 @@ export const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loginMutation.isPending || registerMutation.isPending}
-                className="w-full bg-[#00d5ff] hover:bg-[#00c0e0] text-[#052530] font-black rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-sm active:scale-[0.98] disabled:opacity-50 mt-4 cursor-pointer text-sm"
+                className="w-full bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-extrabold rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-md active:scale-[0.98] disabled:opacity-50 mt-4 cursor-pointer text-sm"
               >
                 {loginMutation.isPending || registerMutation.isPending ? (
                   <span>Verifying security credentials...</span>
@@ -308,7 +303,7 @@ export const Login: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleShortcutLogin('STUDENT')}
-                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-emerald-500/30 text-slate-500 hover:text-emerald-600 transition-all duration-200 cursor-pointer"
+                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-cyan-50/20 hover:border-cyan-300 text-slate-500 hover:text-cyan-700 transition-all duration-200 cursor-pointer"
               >
                 <GraduationCap className="h-4.5 w-4.5" />
                 <span className="text-[10px] font-extrabold">Student</span>
@@ -318,7 +313,7 @@ export const Login: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleShortcutLogin('FACULTY')}
-                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-500/30 text-slate-500 hover:text-indigo-600 transition-all duration-200 cursor-pointer"
+                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-cyan-50/20 hover:border-cyan-300 text-slate-500 hover:text-cyan-700 transition-all duration-200 cursor-pointer"
               >
                 <Briefcase className="h-4.5 w-4.5" />
                 <span className="text-[10px] font-extrabold">Faculty</span>
@@ -328,7 +323,7 @@ export const Login: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleShortcutLogin('ADMIN')}
-                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-violet-500/30 text-slate-500 hover:text-violet-600 transition-all duration-200 cursor-pointer"
+                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-cyan-50/20 hover:border-cyan-300 text-slate-500 hover:text-cyan-700 transition-all duration-200 cursor-pointer"
               >
                 <Shield className="h-4.5 w-4.5" />
                 <span className="text-[10px] font-extrabold">Admin</span>

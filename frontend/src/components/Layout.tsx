@@ -171,15 +171,15 @@ export const Layout: React.FC = () => {
   // Drawer Titles & Icons
   const getDrawerIcon = () => {
     switch (activeDrawer) {
-      case 'announcements': return <Bell className="h-5 w-5 text-indigo-400" />
-      case 'calendar': return <Calendar className="h-5 w-5 text-indigo-400" />
-      case 'directory': return <Users className="h-5 w-5 text-indigo-400" />
-      case 'academic-record': return <GraduationCap className="h-5 w-5 text-indigo-400" />
-      case 'course-catalog': return <BookOpen className="h-5 w-5 text-indigo-400" />
-      case 'faculty-hub': return <Users className="h-5 w-5 text-indigo-400" />
-      case 'student-affairs': return <Award className="h-5 w-5 text-indigo-400" />
-      case 'system-admin': return <Settings className="h-5 w-5 text-indigo-400" />
-      default: return <HelpCircle className="h-5 w-5 text-indigo-400" />
+      case 'announcements': return <Bell className="h-5 w-5 text-[#006680]" />
+      case 'calendar': return <Calendar className="h-5 w-5 text-[#006680]" />
+      case 'directory': return <Users className="h-5 w-5 text-[#006680]" />
+      case 'academic-record': return <GraduationCap className="h-5 w-5 text-[#006680]" />
+      case 'course-catalog': return <BookOpen className="h-5 w-5 text-[#006680]" />
+      case 'faculty-hub': return <Users className="h-5 w-5 text-[#006680]" />
+      case 'student-affairs': return <Award className="h-5 w-5 text-[#006680]" />
+      case 'system-admin': return <Settings className="h-5 w-5 text-[#006680]" />
+      default: return <HelpCircle className="h-5 w-5 text-[#006680]" />
     }
   }
 
@@ -203,8 +203,8 @@ export const Layout: React.FC = () => {
       case 'announcements':
         return (
           <div className="space-y-4">
-            <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-semibold flex gap-2">
-              <Sparkles className="h-4 w-4 shrink-0 text-violet-400 animate-pulse" />
+            <div className="p-4 rounded-2xl bg-[#e6f2f5] border border-[#006680]/20 text-xs text-[#006680] font-semibold flex gap-2">
+              <Sparkles className="h-4 w-4 shrink-0 text-cyan-500 animate-pulse" />
               <span>Real-time news alerts curated by academic advisors and the student registry office.</span>
             </div>
             <div className="space-y-3">
@@ -214,7 +214,7 @@ export const Layout: React.FC = () => {
                 }`}>
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-[10px] font-bold text-slate-500">{item.sender} • {item.time}</span>
-                    {item.pinned && <span className="text-[9px] px-1.5 py-0.5 rounded bg-indigo-900/60 text-indigo-300 font-bold uppercase">Pinned</span>}
+                    {item.pinned && <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#006680] text-white font-bold uppercase">Pinned</span>}
                   </div>
                   <h4 className={`font-extrabold text-xs mb-1 ${'text-slate-900'}`}>{item.title}</h4>
                   <p className={`text-[11px] leading-relaxed ${'text-slate-600'}`}>{item.content}</p>
@@ -228,8 +228,8 @@ export const Layout: React.FC = () => {
         const filteredReminders = calendarReminders.filter(r => selectedCalendarDay ? r.day === selectedCalendarDay : true)
         return (
           <div className="space-y-6">
-            <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-semibold flex gap-2">
-              <CalendarDays className="h-4 w-4 shrink-0 text-violet-400" />
+            <div className="p-4 rounded-2xl bg-[#e6f2f5] border border-[#006680]/20 text-xs text-[#006680] font-semibold flex gap-2">
+              <CalendarDays className="h-4 w-4 shrink-0 text-cyan-500" />
               <span>Click on any date to filter events, or append custom tasks to your schedule below.</span>
             </div>
 
@@ -253,14 +253,14 @@ export const Layout: React.FC = () => {
                       onClick={() => setSelectedCalendarDay(isSelected ? null : day)}
                       className={`h-8 w-8 rounded-lg text-xs font-bold transition-all flex items-center justify-center relative ${
                         isSelected 
-                          ? 'bg-indigo-600 text-white font-black scale-105 shadow-md shadow-indigo-600/35' 
+                          ? 'bg-cyan-400 text-slate-900 font-black scale-105 shadow-md shadow-cyan-400/35' 
                           : hasEvent
-                            ? 'bg-blue-50 text-blue-600 border border-blue-200 font-extrabold hover:bg-blue-100/60'
+                            ? 'bg-cyan-50 text-cyan-700 border border-cyan-200 font-extrabold hover:bg-cyan-100/60'
                             : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                       }`}
                     >
                       {day}
-                      {hasEvent && !isSelected && <span className="absolute bottom-1 h-1 w-1 bg-indigo-400 rounded-full" />}
+                      {hasEvent && !isSelected && <span className="absolute bottom-1 h-1 w-1 bg-cyan-500 rounded-full" />}
                     </button>
                   )
                 })}
@@ -274,7 +274,7 @@ export const Layout: React.FC = () => {
                   {selectedCalendarDay ? `Agenda for June ${selectedCalendarDay}` : 'Upcoming Calendar Events'}
                 </span>
                 {selectedCalendarDay && (
-                  <button onClick={() => setSelectedCalendarDay(null)} className="text-[10px] text-indigo-400 hover:text-indigo-300 font-bold">Show All</button>
+                  <button onClick={() => setSelectedCalendarDay(null)} className="text-[10px] text-[#006680] hover:text-[#00556c] font-bold">Show All</button>
                 )}
               </div>
 
@@ -286,7 +286,7 @@ export const Layout: React.FC = () => {
                     'bg-slate-50 border-slate-200 text-slate-800'
                   }`}>
                     <div>
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-900 text-indigo-400 tracking-wider mr-2">Day {r.day}</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#e6f2f5] text-[#006680] tracking-wider mr-2">Day {r.day}</span>
                       <span className={`text-xs font-semibold ${'text-slate-900'}`}>{r.title}</span>
                     </div>
                     <Badge variant={r.type === 'TECH' ? 'purple' : r.type === 'ACADEMIC' ? 'default' : 'info'} className="text-[8px] font-black uppercase shrink-0">
@@ -309,7 +309,7 @@ export const Layout: React.FC = () => {
                   max="30"
                   value={newReminderDay}
                   onChange={(e) => setNewReminderDay(Number(e.target.value))}
-                  className={`border text-xs rounded-lg p-2 focus:outline-none focus:border-indigo-600 text-center font-bold ${
+                  className={`border text-xs rounded-lg p-2 focus:outline-none focus:border-[#006680] text-center font-bold ${
                     'bg-white border-slate-200 text-slate-800'
                   }`}
                 />
@@ -318,12 +318,12 @@ export const Layout: React.FC = () => {
                   placeholder="Task title..."
                   value={newReminderTitle}
                   onChange={(e) => setNewReminderTitle(e.target.value)}
-                  className={`col-span-2 border text-xs rounded-lg p-2 focus:outline-none focus:border-indigo-600 ${
+                  className={`col-span-2 border text-xs rounded-lg p-2 focus:outline-none focus:border-[#006680] ${
                     'bg-white border-slate-200 text-slate-800'
                   }`}
                 />
               </div>
-              <button type="submit" className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all">
+              <button type="submit" className="w-full py-2.5 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-xl text-xs font-bold transition-all">
                 Append Agenda Item
               </button>
             </form>
@@ -346,7 +346,7 @@ export const Layout: React.FC = () => {
                 placeholder="Search name, role, department..."
                 value={drawerSearchQuery}
                 onChange={(e) => setDrawerSearchQuery(e.target.value)}
-                className={`w-full border text-xs rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-indigo-600 transition-all ${
+                className={`w-full border text-xs rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-[#006680] transition-all ${
                   'bg-slate-50 border-slate-200 text-slate-800'
                 }`}
               />
@@ -376,7 +376,7 @@ export const Layout: React.FC = () => {
                     </span>
                     <button 
                       onClick={() => alert(`Email composition draft opened for: ${person.email}`)}
-                      className="text-[10px] text-indigo-400 hover:text-indigo-300 font-bold block mt-1 transition-colors"
+                      className="text-[10px] text-[#006680] hover:text-[#00556c] font-bold block mt-1 transition-colors"
                     >
                       Email →
                     </button>
@@ -408,7 +408,7 @@ export const Layout: React.FC = () => {
               }`}>
                 <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Completed Credits</span>
                 <h3 className={`text-2xl font-black mt-1 ${'text-slate-900'}`}>108 / 120</h3>
-                <span className={`text-[9px] font-semibold mt-0.5 block ${isStudent ? 'text-indigo-400' : 'text-[#006680]'}`}>Senior Status</span>
+                <span className={`text-[9px] font-semibold mt-0.5 block text-[#006680]`}>Senior Status</span>
               </div>
             </div>
 
@@ -520,7 +520,7 @@ export const Layout: React.FC = () => {
                 placeholder="Search course title, syllabus, code..."
                 value={drawerSearchQuery}
                 onChange={(e) => setDrawerSearchQuery(e.target.value)}
-                className={`w-full border text-xs rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-indigo-600 transition-all ${
+                className={`w-full border text-xs rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-[#006680] transition-all ${
                   'bg-slate-50 border-slate-200 text-slate-800'
                 }`}
               />
@@ -534,7 +534,7 @@ export const Layout: React.FC = () => {
                   <div>
                     <div className="flex justify-between items-start">
                       <span className={`text-[9px] font-black tracking-wider uppercase px-2 py-0.5 rounded border ${
-                        'bg-blue-50 text-blue-600 border border-blue-200'
+                        'bg-cyan-50 text-cyan-700 border border-cyan-200'
                       }`}>{c.id}</span>
                       <span className="text-[10px] text-slate-500 font-bold">{c.credits} Semester Credits</span>
                     </div>
@@ -551,7 +551,7 @@ export const Layout: React.FC = () => {
                       <button
                         onClick={() => setEnrolledCourseRequests(prev => ({ ...prev, [c.id]: true }))}
                         className={`px-3.5 py-1.5 border rounded-lg text-[10px] font-bold transition-all ${
-                          'bg-[#006680]/10 hover:bg-[#006680]/20 border border-[#006680]/20 text-[#006680]'
+                          'bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 text-cyan-800'
                         }`}
                       >
                         Enroll Syllabus
@@ -621,7 +621,7 @@ export const Layout: React.FC = () => {
                     <select
                       value={officeHoursProfessor}
                       onChange={(e) => setOfficeHoursProfessor(e.target.value)}
-                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 cursor-pointer ${
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-[#006680] cursor-pointer ${
                         'bg-white border-slate-200 text-slate-800'
                       }`}
                     >
@@ -635,7 +635,7 @@ export const Layout: React.FC = () => {
                     <select
                       value={officeHoursTime}
                       onChange={(e) => setOfficeHoursTime(e.target.value)}
-                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 cursor-pointer ${
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-[#006680] cursor-pointer ${
                         'bg-white border-slate-200 text-slate-800'
                       }`}
                     >
@@ -651,7 +651,7 @@ export const Layout: React.FC = () => {
                       placeholder="e.g. Thesis advice, exam review..."
                       value={officeHoursTopic}
                       onChange={(e) => setOfficeHoursTopic(e.target.value)}
-                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 ${
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-[#006680] ${
                         'bg-white border-slate-200 text-slate-800'
                       }`}
                     />
@@ -662,7 +662,7 @@ export const Layout: React.FC = () => {
                       setOfficeHoursBooking({ professor: officeHoursProfessor, time: officeHoursTime, topic: officeHoursTopic })
                       setOfficeHoursTopic('')
                     }}
-                    className="w-full py-3 bg-[#5c68f2] hover:bg-[#4b55e0] text-white rounded-xl text-xs font-bold transition-all"
+                    className="w-full py-3 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-xl text-xs font-bold transition-all"
                   >
                     Confirm Booking Slot
                   </button>
@@ -678,7 +678,7 @@ export const Layout: React.FC = () => {
             <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-2 ${
               'bg-blue-50 border-blue-100 text-slate-700'
             }`}>
-              <span className={`font-extrabold uppercase tracking-widest block text-[9px] ${isStudent ? 'text-indigo-400' : 'text-blue-600'}`}>Campus Amenities</span>
+              <span className={`font-extrabold uppercase tracking-widest block text-[9px] text-[#006680]`}>Campus Amenities</span>
               <p>📍 <strong>Student Housing:</strong> Dorm room requests, dining plan adjustments, maintenance orders.</p>
               <p>📍 <strong>Career Desk:</strong> Placements schedules, resume reviews, guest recruiter seminars.</p>
               <p>📍 <strong>Health Clinic:</strong> General wellness visits, sports clearances, counseling appointments.</p>
@@ -707,7 +707,7 @@ export const Layout: React.FC = () => {
                       placeholder="e.g. Housing swap request, career guidance..."
                       value={affairsSubject}
                       onChange={(e) => setAffairsSubject(e.target.value)}
-                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 ${
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-[#006680] ${
                         'bg-white border-slate-200 text-slate-800'
                       }`}
                     />
@@ -719,7 +719,7 @@ export const Layout: React.FC = () => {
                       rows={4}
                       value={affairsMessage}
                       onChange={(e) => setAffairsMessage(e.target.value)}
-                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 resize-none ${
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-[#006680] resize-none ${
                         'bg-white border-slate-200 text-slate-800'
                       }`}
                     />
@@ -731,7 +731,7 @@ export const Layout: React.FC = () => {
                       setAffairsSubject('')
                       setAffairsMessage('')
                     }}
-                    className="w-full py-3 bg-[#5c68f2] hover:bg-[#4b55e0] text-white rounded-xl text-xs font-bold transition-all"
+                    className="w-full py-3 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-xl text-xs font-bold transition-all"
                   >
                     Send Support Request
                   </button>
@@ -755,9 +755,9 @@ export const Layout: React.FC = () => {
               <div className={`border rounded-xl p-3 flex flex-col items-center ${
                 'bg-slate-50 border-slate-200 text-slate-800'
               }`}>
-                <Database className="h-5 w-5 text-indigo-400 mb-1" />
+                <Database className="h-5 w-5 text-[#006680] mb-1" />
                 <span className="text-[9px] font-bold text-slate-500 uppercase">SQLite Database</span>
-                <span className="text-xs font-black text-indigo-400 mt-0.5">ACTIVE</span>
+                <span className="text-xs font-black text-[#006680] mt-0.5">ACTIVE</span>
               </div>
             </div>
 
@@ -779,7 +779,7 @@ export const Layout: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">Active Sessions:</span>
-                <span className="text-indigo-400 font-extrabold">1,420 Active Peers</span>
+                <span className="text-[#006680] font-extrabold">1,420 Active Peers</span>
               </div>
             </div>
 
@@ -803,7 +803,7 @@ export const Layout: React.FC = () => {
                     'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700'
                   }`}
                 >
-                  <RefreshCw className={`h-4 w-4 text-indigo-400 ${adminActionLoading ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`h-4 w-4 text-[#006680] ${adminActionLoading ? 'animate-spin' : ''}`} />
                   <span>Sync DB Seed</span>
                 </button>
                 <button
@@ -813,7 +813,7 @@ export const Layout: React.FC = () => {
                     'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700'
                   }`}
                 >
-                  <Settings className={`h-4 w-4 text-indigo-400 ${adminActionLoading ? 'animate-spin' : ''}`} />
+                  <Settings className={`h-4 w-4 text-[#006680] ${adminActionLoading ? 'animate-spin' : ''}`} />
                   <span>Clear Cache</span>
                 </button>
               </div>
@@ -829,9 +829,9 @@ export const Layout: React.FC = () => {
                   }
                   alert(`Diagnostic Server Export JSON:\n\n${JSON.stringify(dump, null, 2)}`)
                 }}
-                className="w-full py-3 bg-[#5c68f2] hover:bg-[#4b55e0] text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
               >
-                <Activity className="h-4 w-4 text-white" />
+                <Activity className="h-4 w-4 text-slate-900" />
                 <span>Export JSON Diagnostics</span>
               </button>
             </div>
@@ -853,8 +853,8 @@ export const Layout: React.FC = () => {
           {/* Logo Brand */}
           <div className="p-6 flex flex-col items-start gap-0.5 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight font-sans text-blue-900">
-                {isStudent ? 'UniSphere' : 'EduCore Enterprise'}
+              <span className="font-extrabold text-xl tracking-tight font-sans text-[#006680]">
+                {isStudent ? 'UniSphere' : 'EduCore Coordinator'}
               </span>
             </div>
             <span className="text-[9px] font-black uppercase tracking-wider text-slate-450 text-slate-400">
@@ -870,9 +870,9 @@ export const Layout: React.FC = () => {
               const isActive = isHash ? false : location.pathname === item.path
               
               const linkClass = isActive
-                ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600 rounded-r-xl font-bold'
+                ? 'bg-cyan-50/70 text-cyan-800 border-l-4 border-cyan-500 rounded-r-xl font-bold'
                 : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/50 rounded-xl transition-all font-semibold'
-              const iconColor = isActive ? 'text-blue-600' : 'text-slate-400'
+              const iconColor = isActive ? 'text-cyan-600' : 'text-slate-400'
 
               return (
                 <Link
@@ -978,7 +978,7 @@ export const Layout: React.FC = () => {
               <input 
                 type="text" 
                 placeholder={isStudent ? "Search courses, events, or resources..." : "Search systems, students, or logs..."} 
-                className="w-full border rounded-xl py-2 pl-10 pr-4 text-xs focus:outline-none transition-all duration-200 bg-slate-50 border-slate-200 text-slate-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 placeholder-slate-400"
+                className="w-full border rounded-xl py-2 pl-10 pr-4 text-xs focus:outline-none transition-all duration-200 bg-slate-50 border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 placeholder-slate-400"
               />
             </div>
 
@@ -1026,7 +1026,7 @@ export const Layout: React.FC = () => {
                           className={`p-2.5 rounded-xl text-[11px] transition-colors border border-transparent ${
                             n.isRead 
                               ? 'opacity-60 bg-transparent' 
-                              : 'bg-blue-50/50 border-l-2 border-l-blue-600 text-slate-950 font-semibold'
+                              : 'bg-cyan-50/30 border-l-2 border-l-cyan-400 text-slate-950 font-semibold'
                           }`}
                           onClick={() => !n.isRead && readNotifMutation.mutate(n.id)}
                         >
@@ -1160,8 +1160,8 @@ export const Layout: React.FC = () => {
                 const isHash = item.path.startsWith('#')
                 const isActive = isHash ? false : location.pathname === item.path
                 
-                const linkClass = isActive
-                  ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600 rounded-r-xl font-bold'
+                 const linkClass = isActive
+                  ? 'bg-cyan-50/70 text-cyan-800 border-l-4 border-cyan-500 rounded-r-xl font-bold'
                   : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/50 rounded-xl transition-all font-semibold'
 
                 return (

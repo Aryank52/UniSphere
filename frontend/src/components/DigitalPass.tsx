@@ -70,21 +70,21 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
   return (
     <div className="w-full flex flex-col items-center gap-6">
       {/* Boarding Pass Container */}
-      <Card variant="glow" className="relative w-full max-w-sm overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 text-white border border-indigo-500/20 shadow-2xl p-6 flex flex-col gap-6">
+      <Card variant="glow" className="relative w-full max-w-sm overflow-hidden bg-gradient-to-br from-[#006680] via-[#00556c] to-cyan-950 text-white border border-cyan-500/20 shadow-2xl p-6 flex flex-col gap-6">
         
         {/* Glow Effects */}
-        <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Ticket Header */}
         <div className="flex justify-between items-center border-b border-white/10 pb-4">
           <div>
-            <span className="text-[10px] uppercase tracking-widest font-extrabold text-indigo-400">BOARDING PASS</span>
+            <span className="text-[10px] uppercase tracking-widest font-extrabold text-cyan-300">BOARDING PASS</span>
             <h5 className="font-extrabold text-md tracking-tight text-white truncate max-w-[200px]">
               {event?.title}
             </h5>
           </div>
-          <Badge variant="purple" className="font-extrabold text-[9px]">
+          <Badge variant="info" className="font-extrabold text-[9px] bg-cyan-400/20 text-cyan-200 border-cyan-400/30">
             {event?.category}
           </Badge>
         </div>
@@ -92,23 +92,23 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
         {/* Ticket Body details */}
         <div className="grid grid-cols-2 gap-4 text-xs">
           <div className="space-y-1">
-            <span className="text-[10px] text-indigo-300 font-semibold uppercase">Attendee</span>
+            <span className="text-[10px] text-cyan-200 font-semibold uppercase">Attendee</span>
             <div className="flex items-center gap-1.5 font-bold text-white">
-              <User className="h-3.5 w-3.5 text-indigo-400" />
+              <User className="h-3.5 w-3.5 text-cyan-300" />
               <span className="truncate">{studentName}</span>
             </div>
           </div>
           <div className="space-y-1">
-            <span className="text-[10px] text-indigo-300 font-semibold uppercase">Location</span>
+            <span className="text-[10px] text-cyan-200 font-semibold uppercase">Location</span>
             <div className="flex items-center gap-1.5 font-bold text-white">
-              <MapPin className="h-3.5 w-3.5 text-indigo-400" />
+              <MapPin className="h-3.5 w-3.5 text-cyan-300" />
               <span className="truncate">{event?.location}</span>
             </div>
           </div>
           <div className="space-y-1 col-span-2">
-            <span className="text-[10px] text-indigo-300 font-semibold uppercase">Date & Time</span>
+            <span className="text-[10px] text-cyan-200 font-semibold uppercase">Date & Time</span>
             <div className="flex items-center gap-1.5 font-bold text-white">
-              <Calendar className="h-3.5 w-3.5 text-indigo-400" />
+              <Calendar className="h-3.5 w-3.5 text-cyan-300" />
               <span>{event?.date} — {event?.time}</span>
             </div>
           </div>
@@ -116,8 +116,8 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
 
         {/* Dashed separator */}
         <div className="relative border-t-2 border-dashed border-white/10 my-1">
-          <div className="absolute -left-[30px] -top-3 w-6 h-6 rounded-full bg-background dark:bg-background border-r border-indigo-500/20" />
-          <div className="absolute -right-[30px] -top-3 w-6 h-6 rounded-full bg-background dark:bg-background border-l border-indigo-500/20" />
+          <div className="absolute -left-[30px] -top-3 w-6 h-6 rounded-full bg-background dark:bg-background border-r border-cyan-500/20" />
+          <div className="absolute -right-[30px] -top-3 w-6 h-6 rounded-full bg-background dark:bg-background border-l border-cyan-500/20" />
         </div>
 
         {/* QR Section */}
@@ -135,7 +135,7 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
                       y={padding + r * cellSize}
                       width={cellSize}
                       height={cellSize}
-                      fill="#1e1b4b" // Deep Indigo
+                      fill="#00556c" // Deep Teal/Cyan
                       rx={2}
                     />
                   ) : null
@@ -144,8 +144,8 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
             </svg>
           </div>
           <div className="text-center">
-            <p className="text-[10px] text-indigo-300 font-semibold tracking-wide uppercase">Digital Pass Code</p>
-            <p className="text-sm font-extrabold font-mono tracking-wider text-indigo-400">{passCode}</p>
+            <p className="text-[10px] text-cyan-200 font-semibold tracking-wide uppercase">Digital Pass Code</p>
+            <p className="text-sm font-extrabold font-mono tracking-wider text-cyan-300">{passCode}</p>
           </div>
         </div>
       </Card>

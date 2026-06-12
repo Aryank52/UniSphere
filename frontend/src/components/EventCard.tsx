@@ -132,7 +132,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             </span>
           ) : (
             event.engagementScore !== undefined && event.engagementScore > 0 && (
-              <div className="glass px-2.5 py-1 rounded-full text-xs font-bold text-violet-400 flex items-center gap-1 border border-white/20">
+              <div className="glass px-2.5 py-1 rounded-full text-xs font-bold text-[#006680] flex items-center gap-1 border border-white/20">
                 <Award className="h-3 w-3" />
                 AI Score: {event.engagementScore.toFixed(1)}
               </div>
@@ -193,7 +193,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         {!isStudent && (
           <div className="w-full bg-secondary/50 rounded-full h-2 mb-5">
             <div 
-              className="bg-gradient-to-r from-indigo-500 to-violet-500 h-2 rounded-full transition-all duration-500" 
+              className="bg-gradient-to-r from-[#006680] to-cyan-500 h-2 rounded-full transition-all duration-500" 
               style={{ width: `${occupancyPercentage}%` }}
             />
           </div>

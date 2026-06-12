@@ -120,7 +120,7 @@ async function startServer() {
         await database_1.sequelize.authenticate();
         console.log('Database connection authenticated successfully.');
         // Sync models (alter table structure if needed)
-        await database_1.sequelize.sync({ alter: true });
+        await database_1.sequelize.sync();
         console.log('Database tables synchronized.');
         // Seed Data
         await (0, seed_1.seedDatabase)();

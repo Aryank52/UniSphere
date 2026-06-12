@@ -141,7 +141,7 @@ export const FacultyDashboard: React.FC = () => {
             <h2 className="text-3xl font-black text-slate-900 mt-1.5">3,248</h2>
             <p className="text-[10px] text-slate-500 font-bold mt-1">Across all active tracks</p>
           </div>
-          <div className="h-12 w-12 bg-blue-50 border border-blue-100 text-blue-600 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-cyan-50 border border-cyan-100 text-cyan-700 rounded-2xl flex items-center justify-center">
             <Users className="h-5 w-5" />
           </div>
         </div>
@@ -153,10 +153,10 @@ export const FacultyDashboard: React.FC = () => {
             <h2 className="text-3xl font-black text-slate-900 mt-1.5">92.4</h2>
             {/* Visual Mini Progress Bar */}
             <div className="h-1.5 w-32 bg-slate-100 rounded-full mt-2.5 overflow-hidden">
-              <div className="h-full bg-blue-600 rounded-full" style={{ width: '92%' }} />
+              <div className="h-full bg-cyan-500 rounded-full" style={{ width: '92%' }} />
             </div>
           </div>
-          <div className="h-12 w-12 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-cyan-50 border border-cyan-100 text-cyan-700 rounded-2xl flex items-center justify-center">
             <Star className="h-5 w-5" />
           </div>
         </div>
@@ -172,7 +172,7 @@ export const FacultyDashboard: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-extrabold text-sm tracking-tight text-slate-900 flex items-center gap-2">
-                <Calendar className="h-4.5 w-4.5 text-blue-600" />
+                <Calendar className="h-4.5 w-4.5 text-cyan-600" />
                 <span>Create New Event</span>
               </h3>
               <Badge className="px-2.5 py-0.5 font-bold text-[9px] uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100 flex gap-1 items-center">
@@ -190,7 +190,7 @@ export const FacultyDashboard: React.FC = () => {
                   placeholder="e.g. Graduate Colloquium"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-slate-800 rounded-xl py-3 px-4 text-xs focus:outline-none transition-all placeholder-slate-400"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-800 rounded-xl py-3 px-4 text-xs focus:outline-none transition-all placeholder-slate-400"
                 />
               </div>
               <div className="space-y-1.5">
@@ -198,7 +198,7 @@ export const FacultyDashboard: React.FC = () => {
                 <select
                   value={formClubId}
                   onChange={(e) => setFormClubId(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-slate-700 rounded-xl py-3 px-3 text-xs focus:outline-none transition-all cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-slate-700 rounded-xl py-3 px-3 text-xs focus:outline-none transition-all cursor-pointer"
                 >
                   {clubs.map((c: Club) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
@@ -217,11 +217,11 @@ export const FacultyDashboard: React.FC = () => {
                 {/* AI Suggestion Slot 1 */}
                 <div 
                   onClick={() => handleSelectSlot(smartSlots[0]?.date || '2026-10-24', smartSlots[0]?.time || '10:00')}
-                  className="bg-blue-50/50 border border-dashed border-blue-300 hover:border-blue-500 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between min-h-[90px]"
+                  className="bg-cyan-50/50 border border-dashed border-cyan-300 hover:border-cyan-500 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between min-h-[90px]"
                 >
                   <div>
-                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1">
-                      <Sparkles className="h-3 w-3 text-blue-500" />
+                    <span className="text-[9px] font-bold text-cyan-700 uppercase tracking-wider flex items-center gap-1">
+                      <Sparkles className="h-3 w-3 text-cyan-500" />
                       <span>AI Suggested</span>
                     </span>
                     <h4 className="font-bold text-xs text-slate-800 mt-1.5">
@@ -273,7 +273,7 @@ export const FacultyDashboard: React.FC = () => {
                 }
                 handleCreateEventSubmit(e);
               }}
-              className="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-all shadow-md cursor-pointer"
+              className="flex-1 py-3.5 bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-extrabold text-xs rounded-xl transition-all shadow-md cursor-pointer"
             >
               Initialize Event
             </button>
@@ -286,7 +286,7 @@ export const FacultyDashboard: React.FC = () => {
           
           <div>
             <h3 className="font-extrabold text-sm tracking-tight text-slate-900 flex items-center justify-center gap-2 mb-6">
-              <BarChart3 className="h-4.5 w-4.5 text-blue-600" />
+              <BarChart3 className="h-4.5 w-4.5 text-cyan-600" />
               <span>Attendance Predictor</span>
             </h3>
 
@@ -306,7 +306,7 @@ export const FacultyDashboard: React.FC = () => {
                   cx="72" 
                   cy="72" 
                   r="62" 
-                  className="text-emerald-500" 
+                  className="text-cyan-500" 
                   strokeWidth="8" 
                   strokeDasharray={389.5} 
                   strokeDashoffset={389.5 * (1 - (aiPrediction?.predictedAttendanceRate || 80) / 100)} 
@@ -331,7 +331,7 @@ export const FacultyDashboard: React.FC = () => {
               </div>
               <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
                 <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Risk Factor</span>
-                <h4 className="text-lg font-black text-emerald-600 mt-1">Low</h4>
+                <h4 className="text-lg font-black text-cyan-700 mt-1">Low</h4>
               </div>
             </div>
 
@@ -385,7 +385,7 @@ export const FacultyDashboard: React.FC = () => {
                 const statusColor = event.status === 'APPROVED' 
                   ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
                   : event.status === 'PENDING' 
-                    ? 'bg-blue-50 text-blue-600 border border-blue-100' 
+                    ? 'bg-cyan-50 text-cyan-700 border border-cyan-100' 
                     : 'bg-slate-50 text-slate-400 border border-slate-200'
 
                 return (
@@ -394,7 +394,7 @@ export const FacultyDashboard: React.FC = () => {
                     {/* Event details */}
                     <td className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                        <div className="h-8 w-8 rounded-lg bg-cyan-50 border border-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
                           <FlaskConical className="h-4 w-4" />
                         </div>
                         <div>
@@ -424,7 +424,7 @@ export const FacultyDashboard: React.FC = () => {
                         </div>
                         <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                           <div 
-                            className={`h-full rounded-full ${event.status === 'APPROVED' ? 'bg-emerald-500' : 'bg-blue-500'}`} 
+                            className={`h-full rounded-full ${event.status === 'APPROVED' ? 'bg-emerald-500' : 'bg-cyan-500'}`} 
                             style={{ width: `${Math.min(100, capacityRatio * 100)}%` }} 
                           />
                         </div>
@@ -498,7 +498,7 @@ export const FacultyDashboard: React.FC = () => {
           <div className="flex flex-col gap-1">
             <label className="text-xs font-semibold text-slate-500 uppercase pl-1">Description</label>
             <textarea
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-all min-h-[80px] text-slate-800"
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all min-h-[80px] text-slate-800"
               value={formDesc}
               onChange={(e) => setFormDesc(e.target.value)}
               required
@@ -560,7 +560,7 @@ export const FacultyDashboard: React.FC = () => {
               onChange={(e) => setFormClubId(e.target.value)}
             />
           </div>
-          <Button type="submit" className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white">
+          <Button type="submit" className="w-full mt-4 bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-extrabold">
             Publish Event Schedule
           </Button>
         </form>
@@ -590,7 +590,7 @@ export const FacultyDashboard: React.FC = () => {
               required
             />
             <div className="flex gap-2">
-              <Button type="submit" className="flex-1 flex gap-1.5 items-center justify-center bg-blue-600 text-white hover:bg-blue-700">
+              <Button type="submit" className="flex-1 flex gap-1.5 items-center justify-center bg-cyan-400 text-slate-900 hover:bg-cyan-500 font-extrabold">
                 <ScanLine className="h-4 w-4" />
                 Scan Pass
               </Button>

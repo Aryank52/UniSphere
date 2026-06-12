@@ -507,12 +507,12 @@ export const ClubsPage: React.FC = () => {
           </footer>
         </>
       ) : (
-        // COORDINATOR / ADMIN DARK GLASSMORPHIC VIEW
+        // COORDINATOR / ADMIN LIGHT THEME VIEW
         <>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-foreground font-sans">Campus Clubs & Societies</h2>
-              <p className="text-xs text-muted-foreground">Join academic chapters, technical coding teams, or environmental organizations</p>
+              <h2 className="text-2xl font-black tracking-tight text-slate-900 font-sans">Campus Clubs & Societies</h2>
+              <p className="text-xs text-slate-500 mt-1.5 font-medium">Join academic chapters, technical coding teams, or environmental organizations</p>
             </div>
             <Button onClick={() => setCreateOpen(true)} className="flex items-center gap-2">
               <PlusCircle className="h-4 w-4" />
@@ -523,27 +523,27 @@ export const ClubsPage: React.FC = () => {
           {/* Filter and Search Bar */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             {/* Search */}
-            <div className="relative w-full md:w-80">
+            <div className="relative w-full md:w-80 shrink-0">
               <Input
                 id="search-club"
                 placeholder="Search clubs by name or details..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white border-slate-200 text-slate-800 focus:border-[#006680] focus:ring-1 focus:ring-[#006680]"
               />
-              <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
             </div>
 
             {/* Category Pill Filters */}
-            <div className="flex gap-2 w-full overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+            <div className="flex gap-2 w-full overflow-x-auto pb-1 md:pb-0 scrollbar-none items-center">
               {originalCategories.map(cat => (
                 <button
                   key={cat.key}
                   onClick={() => setSelectedCategory(cat.key)}
-                  className={`px-4 py-2 text-xs font-bold rounded-full transition-all shrink-0 ${
+                  className={`px-4 py-2 text-xs font-bold rounded-xl transition-all shrink-0 cursor-pointer shadow-sm ${
                     selectedCategory === cat.key
-                      ? 'bg-primary text-white shadow-md shadow-primary/20'
-                      : 'bg-secondary/40 text-muted-foreground hover:bg-secondary/80 hover:text-foreground border border-border/20'
+                      ? 'bg-[#006680] text-white'
+                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800'
                   }`}
                 >
                   {cat.label}
@@ -553,7 +553,7 @@ export const ClubsPage: React.FC = () => {
           </div>
 
           {isLoading ? (
-            <div className="text-center py-12 text-muted-foreground">Loading active directories...</div>
+            <div className="text-center py-12 text-slate-400">Loading active directories...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredClubs.map((club: Club) => {
@@ -575,8 +575,8 @@ export const ClubsPage: React.FC = () => {
                 })
 
                 return (
-                  <Card key={club.id} variant="glass" className="flex flex-col h-full relative">
-                    <div className="relative h-36 overflow-hidden rounded-t-2xl">
+                  <div key={club.id} className="bg-white border border-slate-200 shadow-sm rounded-3xl overflow-hidden flex flex-col h-full hover:border-slate-300 transition-colors relative">
+                    <div className="relative h-36 overflow-hidden">
                       <img 
                         src={club.bannerImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800'} 
                         alt={club.name} 
@@ -584,47 +584,47 @@ export const ClubsPage: React.FC = () => {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                       <div className="absolute bottom-3 left-4 text-white">
-                        <span className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider">CAMPUS CHAPTER</span>
+                        <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">CAMPUS CHAPTER</span>
                         <h4 className="font-extrabold text-base tracking-tight">{club.name}</h4>
                       </div>
                     </div>
 
                     <div className="p-5 flex-1 flex flex-col justify-between">
-                      <p className="text-xs text-slate-300/90 line-clamp-3 mb-4">
+                      <p className="text-xs text-slate-500 line-clamp-3 mb-4 leading-relaxed">
                         {club.description}
                       </p>
 
-                      <div className="flex justify-between items-center border-t border-border/40 pt-4 mt-auto gap-2">
-                        <span className="text-xs text-slate-300 font-semibold flex items-center gap-1 shrink-0">
-                          <Users className="h-4 w-4 text-indigo-400" />
+                      <div className="flex justify-between items-center border-t border-slate-100 pt-4 mt-auto gap-2">
+                        <span className="text-xs text-slate-500 font-bold flex items-center gap-1 shrink-0">
+                          <Users className="h-4 w-4 text-[#006680]" />
                           <AnimatedCounter value={club.membersCount + (hasJoined && !joinedClubs.includes(club.id) ? -1 : hasJoined && joinedClubs.includes(club.id) ? 0 : 0)} /> Members
                         </span>
 
                         <div className="relative group shrink-0">
-                          <div className="flex items-center gap-1 cursor-pointer bg-secondary/60 hover:bg-secondary py-1 px-2 rounded-lg transition-colors border border-border/30">
+                          <div className="flex items-center gap-1 cursor-pointer bg-slate-100 hover:bg-slate-250 py-1 px-2 rounded-lg transition-colors border border-slate-200">
                             <img 
                               src={creator.profileImage || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'} 
                               alt={creator.name} 
                               className="w-3.5 h-3.5 rounded-full object-cover"
                             />
-                            <span className="text-[10px] font-bold text-muted-foreground">Coord</span>
+                            <span className="text-[10px] font-bold text-slate-500">Coord</span>
                           </div>
                           
-                          <div className="absolute bottom-full right-0 mb-2 w-56 p-3 rounded-xl bg-card border border-border shadow-xl opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                          <div className="absolute bottom-full right-0 mb-2 w-56 p-3 rounded-xl bg-white border border-slate-200 shadow-xl opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 z-50">
                             <div className="flex items-center gap-2">
                               <img 
                                 src={creator.profileImage || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'} 
                                 alt={creator.name} 
-                                className="w-8 h-8 rounded-full object-cover border border-primary"
+                                className="w-8 h-8 rounded-full object-cover border border-[#006680]"
                               />
                               <div className="min-w-0">
-                                <h5 className="font-extrabold text-[11px] text-foreground truncate">{creator.name}</h5>
-                                <span className="text-[9px] text-primary font-bold tracking-wider uppercase">{creator.role}</span>
+                                <h5 className="font-extrabold text-[11px] text-slate-800 truncate">{creator.name}</h5>
+                                <span className="text-[9px] text-[#006680] font-bold tracking-wider uppercase">{creator.role}</span>
                               </div>
                             </div>
-                            <div className="mt-2 space-y-0.5 text-[10px] text-muted-foreground border-t border-border/40 pt-1.5">
-                              <p className="truncate"><strong className="text-foreground">Dept:</strong> {creator.department || 'N/A'}</p>
-                              <p className="truncate"><strong className="text-foreground">Email:</strong> {creator.email}</p>
+                            <div className="mt-2 space-y-0.5 text-[10px] text-slate-500 border-t border-slate-100 pt-1.5">
+                              <p className="truncate"><strong className="text-slate-700">Dept:</strong> {creator.department || 'N/A'}</p>
+                              <p className="truncate"><strong className="text-slate-700">Email:</strong> {creator.email}</p>
                             </div>
                           </div>
                         </div>
@@ -649,11 +649,11 @@ export const ClubsPage: React.FC = () => {
                         </Button>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 )
               })}
               {filteredClubs.length === 0 && (
-                <Card className="col-span-3 p-12 text-center text-muted-foreground border-dashed bg-card/40">
+                <Card className="col-span-3 p-12 text-center text-slate-400 border-dashed bg-card/40">
                   No matching clubs found in the directory. Try adjusting your search.
                 </Card>
               )}
