@@ -25,8 +25,8 @@ try {
   console.error('Failed to parse saved user', e)
 }
 
-// Force dark theme for premium glowing dark theme experience
-document.documentElement.classList.add('dark')
+// Force light theme for white background experience
+document.documentElement.classList.remove('dark')
 
 const initialState: AuthState = {
   user: savedUser,

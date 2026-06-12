@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
-  Sparkles, 
-  Shield, 
-  GraduationCap, 
-  Network, 
   Lock, 
   ArrowRight, 
-  Fingerprint, 
-  Users, 
-  Zap, 
-  Globe,
-  User
+  GraduationCap, 
+  Briefcase, 
+  Shield, 
+  Eye, 
+  EyeOff, 
+  Building,
+  ShieldAlert,
+  ShieldCheck
 } from 'lucide-react'
 import { useLogin, useRegister } from '../hooks/useApi'
 import { useAuthStore } from '../store/authStore'
@@ -27,6 +26,8 @@ export const Login: React.FC = () => {
   const [role, setRole] = useState<'STUDENT' | 'FACULTY' | 'ADMIN'>('STUDENT')
   const [department, setDepartment] = useState('Computer Science')
   const [formError, setFormError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberDevice, setRememberDevice] = useState(false)
 
   const loginMutation = useLogin()
   const registerMutation = useRegister()
@@ -81,250 +82,173 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#060814] flex flex-col justify-between p-6 relative overflow-hidden font-sans select-none">
-      {/* Background radial glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
+    <div className="min-h-screen w-full bg-[#f8fafc] flex flex-col justify-between relative overflow-hidden font-sans select-none text-slate-700">
+      
+      {/* Dots Grid Pattern Background */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.4]"
+        style={{
+          backgroundImage: 'radial-gradient(#cbd5e1 1.5px, transparent 1.5px)',
+          backgroundSize: '24px 24px'
+        }}
+      />
 
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-
-      {/* Main Grid Wrapper */}
-      <div className="max-w-7xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center z-10 px-4 md:px-8 py-12">
-        
-        {/* Left Side: Branding & Statistics */}
-        <div className="lg:col-span-6 flex flex-col justify-between h-full py-4 text-left">
-          
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-10 lg:mb-16">
-            <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
-              <Network className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-extrabold text-2xl tracking-tight text-white font-sans">UniSphere</span>
+      {/* Top Header Secure Bar */}
+      <header className="w-full bg-white border-b border-slate-200 z-10">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="font-black text-2xl tracking-tight text-[#006680] font-sans">UniSphere</span>
           </div>
-
-          {/* Headline Description */}
-          <div className="space-y-5 mb-10 lg:mb-12">
-            <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-              The Future of <br />
-              <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(52,211,153,0.15)]">
-                Campus Life
-              </span>
-            </h1>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-md">
-              A unified ecosystem for students, faculty, and administrators. Experience precision-engineered academic management with real-time data orchestration.
-            </p>
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+            <span>Secure Access Portal</span>
+            <Lock className="h-4 w-4 text-[#006680]" />
           </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-4 max-w-lg mb-12">
-            
-            {/* Stat 1 */}
-            <div className="bg-[#0b0e17]/60 backdrop-blur border border-slate-900 rounded-2xl p-5 hover:border-slate-800 transition-colors duration-300">
-              <div className="flex items-center gap-2 text-emerald-400 mb-2">
-                <Users className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Community</span>
-              </div>
-              <h3 className="text-2xl font-black text-white">45k+</h3>
-              <p className="text-xs text-slate-500 font-medium">Active Students</p>
-            </div>
-
-            {/* Stat 2 */}
-            <div className="bg-[#0b0e17]/60 backdrop-blur border border-slate-900 rounded-2xl p-5 hover:border-slate-800 transition-colors duration-300">
-              <div className="flex items-center gap-2 text-blue-400 mb-2">
-                <Zap className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Performance</span>
-              </div>
-              <h3 className="text-2xl font-black text-white">99.9%</h3>
-              <p className="text-xs text-slate-500 font-medium">System Uptime</p>
-            </div>
-
-            {/* Stat 3 */}
-            <div className="bg-[#0b0e17]/60 backdrop-blur border border-slate-900 rounded-2xl p-5 hover:border-slate-800 transition-colors duration-300">
-              <div className="flex items-center gap-2 text-violet-400 mb-2">
-                <Sparkles className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Intelligence</span>
-              </div>
-              <h3 className="text-2xl font-black text-white">2.4m</h3>
-              <p className="text-xs text-slate-500 font-medium">Daily Data Points</p>
-            </div>
-
-            {/* Stat 4 */}
-            <div className="relative overflow-hidden bg-[#0b0e17]/60 backdrop-blur border border-slate-900 rounded-2xl p-5 hover:border-slate-800 transition-colors duration-300 flex flex-col justify-between">
-              {/* Subtle background glow representing world network */}
-              <div className="absolute -right-8 -bottom-8 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none" />
-              
-              <div className="flex items-center gap-2 text-slate-300 mb-2">
-                <Globe className="h-4 w-4 text-indigo-400" />
-                <span className="text-xs font-bold uppercase tracking-wider">Global</span>
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-white leading-snug">Campus Network</h3>
-                <p className="text-[10px] text-slate-500 mt-0.5">Connected Infrastructure</p>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Trusted Brand Footer */}
-          <div className="flex items-center gap-4 text-slate-600 text-[10px] font-bold uppercase tracking-widest mt-auto">
-            <span>Trusted by world-class institutions</span>
-            <div className="h-[1px] bg-slate-900 flex-1" />
-          </div>
-
         </div>
+      </header>
 
-        {/* Right Side: Login Card Container */}
-        <div className="lg:col-span-6 flex justify-center lg:justify-end items-center">
+      {/* Central Login Card Section */}
+      <main className="flex-1 flex items-center justify-center py-12 px-6 z-10">
+        <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col">
           
-          <div className="bg-[#0c101d]/80 backdrop-blur border border-slate-800/80 rounded-3xl p-8 lg:p-10 w-full max-w-md shadow-2xl relative">
+          {/* Top Switcher Tabs */}
+          <div className="grid grid-cols-2 border-b border-slate-100">
+            <button
+              onClick={() => { setIsRegister(false); setFormError(''); }}
+              className={`py-4 text-xs font-extrabold transition-all border-b-2 cursor-pointer ${
+                !isRegister 
+                  ? 'border-[#006680] text-[#006680] bg-white' 
+                  : 'border-transparent text-slate-400 hover:text-slate-600 bg-slate-50/50'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => { setIsRegister(true); setFormError(''); }}
+              className={`py-4 text-xs font-extrabold transition-all border-b-2 cursor-pointer ${
+                isRegister 
+                  ? 'border-[#006680] text-[#006680] bg-white' 
+                  : 'border-transparent text-slate-400 hover:text-slate-600 bg-slate-50/50'
+              }`}
+            >
+              Register
+            </button>
+          </div>
+
+          <div className="p-8 flex flex-col">
             
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold tracking-tight text-white mb-1.5">
-                {isRegister ? 'Welcome to UniSphere' : 'Welcome Back'}
+            {/* Greetings block */}
+            <div className="text-left mb-6">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+                {isRegister ? 'Create Account' : 'Welcome Back'}
               </h2>
-              <p className="text-xs text-slate-400">
-                {isRegister ? 'Access your digital campus experience' : 'Access your digital campus experience'}
+              <p className="text-xs text-slate-400 font-semibold mt-1">
+                {isRegister ? 'Enter your details to register a profile.' : 'Enter your university credentials to continue.'}
               </p>
             </div>
 
+            {/* Form Error Banner */}
             {formError && (
-              <div className="p-3 mb-5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 font-semibold text-center">
-                {formError}
+              <div className="p-3 mb-5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-600 font-bold text-center flex items-center justify-center gap-1.5">
+                <ShieldAlert className="h-4.5 w-4.5 text-rose-500 shrink-0" />
+                <span>{formError}</span>
               </div>
             )}
 
-            {!isRegister ? (
-              /* LOGIN FORM */
-              <form onSubmit={handleSubmit} className="space-y-5">
-                
-                {/* Institutional Email */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Institutional Email</label>
-                  <div className="relative flex items-center">
-                    <span className="absolute left-4 text-slate-500 text-base font-bold">@</span>
-                    <input 
-                      type="email"
-                      id="login-email"
-                      placeholder="name@university.edu"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3.5 pl-10 pr-4 text-sm focus:outline-none transition-all duration-200 placeholder-slate-600 shadow-inner"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Password */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Password</label>
-                    <button type="button" className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">Forgot?</button>
-                  </div>
-                  <div className="relative flex items-center">
-                    <Lock className="absolute left-4 h-4 w-4 text-slate-500" />
-                    <input 
-                      type="password"
-                      id="login-pass"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3.5 pl-10 pr-4 text-sm focus:outline-none transition-all duration-200 placeholder-slate-600 shadow-inner"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loginMutation.isPending}
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-indigo-600/20 active:scale-[0.98] disabled:opacity-50 mt-2"
-                >
-                  {loginMutation.isPending ? (
-                    <span>Verifying Security Check...</span>
-                  ) : (
-                    <>
-                      <span>Sign In to UniSphere</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </button>
-
-              </form>
-            ) : (
-              /* REGISTRATION FORM */
-              <form onSubmit={handleSubmit} className="space-y-4">
-                
-                {/* Full Name */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Full Name</label>
+            {/* FORM CONTAINER */}
+            <form onSubmit={handleSubmit} className="space-y-4 text-left">
+              
+              {isRegister && (
+                /* Full Name (Registration only) */
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black text-slate-400 tracking-wider uppercase pl-1">Full Name</label>
                   <input 
                     type="text"
                     id="reg-name"
-                    placeholder="e.g. John Doe"
+                    placeholder="e.g. Alex Rivera"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3 px-4 text-sm focus:outline-none transition-all duration-200 placeholder-slate-600"
+                    className="w-full bg-white border border-slate-200 focus:border-[#006680] focus:ring-1 focus:ring-[#006680] text-slate-800 rounded-xl py-3 px-4 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
                     required
                   />
                 </div>
+              )}
 
-                {/* Email */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Institutional Email</label>
-                  <div className="relative flex items-center">
-                    <span className="absolute left-4 text-slate-500 text-base font-bold">@</span>
-                    <input 
-                      type="email"
-                      id="login-email"
-                      placeholder="student@unisphere.edu"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none transition-all duration-200 placeholder-slate-600"
-                      required
-                    />
-                  </div>
+              {/* University ID / Email */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-400 tracking-wider uppercase pl-1">
+                  University ID
+                </label>
+                <div className="relative flex items-center">
+                  <Building className="absolute left-4 h-4 w-4 text-slate-400" />
+                  <input 
+                    type="text"
+                    id="login-email"
+                    placeholder="e.g. student@unisphere.edu"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-white border border-slate-200 focus:border-[#006680] focus:ring-1 focus:ring-[#006680] text-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
+                    required
+                  />
                 </div>
+              </div>
 
-                {/* Password */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Secret Password</label>
-                  <div className="relative flex items-center">
-                    <Lock className="absolute left-4 h-4 w-4 text-slate-500" />
-                    <input 
-                      type="password"
-                      id="login-pass"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none transition-all duration-200 placeholder-slate-600"
-                      required
-                    />
-                  </div>
+              {/* Password */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center px-1">
+                  <label className="text-[10px] font-black text-slate-400 tracking-wider uppercase">Password</label>
+                  {!isRegister && (
+                    <button 
+                      type="button" 
+                      onClick={() => alert("Credentials reset request forwarded to registrar support.")}
+                      className="text-xs text-[#006680] hover:underline font-extrabold transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
                 </div>
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-4 h-4 w-4 text-slate-400" />
+                  <input 
+                    type={showPassword ? 'text' : 'password'}
+                    id="login-pass"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-white border border-slate-200 focus:border-[#006680] focus:ring-1 focus:ring-[#006680] text-slate-800 rounded-xl py-3 pl-11 pr-11 text-sm focus:outline-none transition-all placeholder-slate-300 shadow-sm font-semibold"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
 
-                {/* Select Options */}
+              {isRegister && (
+                /* Role & Department Switchers (Registration only) */
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Account Role</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 tracking-wider uppercase pl-1">Role</label>
                     <select
                       id="reg-role"
                       value={role}
                       onChange={(e) => setRole(e.target.value as 'STUDENT' | 'FACULTY' | 'ADMIN')}
-                      className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3 px-3 text-xs focus:outline-none transition-all duration-200"
+                      className="w-full bg-white border border-slate-200 focus:border-[#006680] text-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none shadow-sm cursor-pointer"
                     >
                       <option value="STUDENT">Student</option>
                       <option value="FACULTY">Faculty Coordinator</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">Department</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 tracking-wider uppercase pl-1">Department</label>
                     <select
                       id="reg-dept"
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
-                      className="w-full bg-[#131929] border border-slate-800/80 focus:border-indigo-500 text-white rounded-xl py-3 px-3 text-xs focus:outline-none transition-all duration-200"
+                      className="w-full bg-white border border-slate-200 focus:border-[#006680] text-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none shadow-sm cursor-pointer"
                     >
                       <option value="Computer Science">Computer Science</option>
                       <option value="Data Science">Data Science</option>
@@ -333,136 +257,112 @@ export const Login: React.FC = () => {
                     </select>
                   </div>
                 </div>
+              )}
 
-                {/* Register Submit */}
-                <button
-                  type="submit"
-                  disabled={registerMutation.isPending}
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-indigo-600/20 active:scale-[0.98] disabled:opacity-50 mt-2"
-                >
-                  {registerMutation.isPending ? 'Completing Sign Up...' : 'Complete Sign Up'}
-                </button>
+              {/* Remember device checkbox */}
+              {!isRegister && (
+                <div className="flex items-center gap-2 pt-1 px-1">
+                  <input
+                    type="checkbox"
+                    id="remember-device"
+                    checked={rememberDevice}
+                    onChange={(e) => setRememberDevice(e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-300 text-[#006680] focus:ring-[#006680] cursor-pointer"
+                  />
+                  <label htmlFor="remember-device" className="text-xs font-semibold text-slate-500 cursor-pointer">
+                    Remember device for 30 days
+                  </label>
+                </div>
+              )}
 
-              </form>
-            )}
+              {/* Submit Action Button */}
+              <button
+                type="submit"
+                disabled={loginMutation.isPending || registerMutation.isPending}
+                className="w-full bg-[#00d5ff] hover:bg-[#00c0e0] text-[#052530] font-black rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-200 shadow-sm active:scale-[0.98] disabled:opacity-50 mt-4 cursor-pointer text-sm"
+              >
+                {loginMutation.isPending || registerMutation.isPending ? (
+                  <span>Verifying security credentials...</span>
+                ) : (
+                  <>
+                    <span>{isRegister ? 'Register and Log In' : 'Sign Into Dashboard'}</span>
+                    <ArrowRight className="h-4.5 w-4.5" />
+                  </>
+                )}
+              </button>
+            </form>
 
-            {/* Secure Connect Divider */}
+            {/* Quick Access Roles Separator */}
             <div className="relative my-6 flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-800/60"></div>
+                <div className="w-full border-t border-slate-100"></div>
               </div>
-              <span className="relative px-3 bg-[#0c101d] text-[9px] font-black tracking-widest text-slate-500 uppercase">Secure Connect</span>
+              <span className="relative px-3 bg-white text-[9px] font-black tracking-widest text-slate-400 uppercase">
+                QUICK ACCESS ROLES
+              </span>
             </div>
 
-            {/* Google & Biometrics Mock connect */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Shortcut Buttons Grid */}
+            <div className="grid grid-cols-3 gap-2.5">
+              {/* Student */}
               <button
                 type="button"
-                onClick={() => alert("Google Single Sign-On integration is currently in sandbox mode.")}
-                className="bg-[#131929] hover:bg-[#182035] border border-slate-800/80 text-slate-300 rounded-xl py-2.5 px-4 text-xs font-semibold flex items-center justify-center gap-2 transition-colors duration-200"
+                onClick={() => handleShortcutLogin('STUDENT')}
+                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-emerald-500/30 text-slate-500 hover:text-emerald-600 transition-all duration-200 cursor-pointer"
               >
-                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                  />
-                </svg>
-                <span>Google</span>
+                <GraduationCap className="h-4.5 w-4.5" />
+                <span className="text-[10px] font-extrabold">Student</span>
               </button>
+
+              {/* Faculty */}
               <button
                 type="button"
-                onClick={() => alert("Biometrics fingerprint scanning is currently in sandbox mode.")}
-                className="bg-[#131929] hover:bg-[#182035] border border-slate-800/80 text-slate-300 rounded-xl py-2.5 px-4 text-xs font-semibold flex items-center justify-center gap-2 transition-colors duration-200"
+                onClick={() => handleShortcutLogin('FACULTY')}
+                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-500/30 text-slate-500 hover:text-indigo-600 transition-all duration-200 cursor-pointer"
               >
-                <Fingerprint className="h-4 w-4 text-slate-500" />
-                <span>Biometrics</span>
+                <Briefcase className="h-4.5 w-4.5" />
+                <span className="text-[10px] font-extrabold">Faculty</span>
               </button>
-            </div>
 
-            {/* Quick Access Horizontal Section */}
-            <div className="mt-8 pt-4 border-t border-slate-800/60 space-y-3">
-              <div className="text-center">
-                <span className="text-[9px] font-black tracking-widest text-slate-500 uppercase">Quick Access (Sandboxed)</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2.5">
-                
-                {/* Student Shortcut */}
-                <button
-                  type="button"
-                  onClick={() => handleShortcutLogin('STUDENT')}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-800 bg-[#131929]/30 hover:bg-[#131929] hover:border-emerald-500/40 text-slate-400 hover:text-emerald-400 transition-all duration-200"
-                >
-                  <User className="h-4 w-4" />
-                  <span className="text-[10px] font-bold">Student</span>
-                </button>
-
-                {/* Faculty Shortcut */}
-                <button
-                  type="button"
-                  onClick={() => handleShortcutLogin('FACULTY')}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-800 bg-[#131929]/30 hover:bg-[#131929] hover:border-indigo-500/40 text-slate-400 hover:text-indigo-400 transition-all duration-200"
-                >
-                  <GraduationCap className="h-4 w-4" />
-                  <span className="text-[10px] font-bold">Faculty</span>
-                </button>
-
-                {/* Admin Shortcut */}
-                <button
-                  type="button"
-                  onClick={() => handleShortcutLogin('ADMIN')}
-                  className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-800 bg-[#131929]/30 hover:bg-[#131929] hover:border-violet-500/40 text-slate-400 hover:text-violet-400 transition-all duration-200"
-                >
-                  <Shield className="h-4 w-4" />
-                  <span className="text-[10px] font-bold">Admin</span>
-                </button>
-
-              </div>
-            </div>
-
-            {/* Need Access / Onboarding footer */}
-            <div className="mt-8 text-center">
+              {/* Admin */}
               <button
                 type="button"
-                onClick={() => {
-                  setFormError('')
-                  setIsRegister(!isRegister)
-                }}
-                className="text-xs text-slate-400 hover:text-white transition-colors duration-200"
+                onClick={() => handleShortcutLogin('ADMIN')}
+                className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-violet-500/30 text-slate-500 hover:text-violet-600 transition-all duration-200 cursor-pointer"
               >
-                {isRegister ? (
-                  <span>Already have an account? <span className="font-bold text-indigo-400 hover:underline">Log In</span></span>
-                ) : (
-                  <span>Need access? <span className="font-bold text-indigo-400 hover:underline">Request Institution Onboarding</span></span>
-                )}
+                <Shield className="h-4.5 w-4.5" />
+                <span className="text-[10px] font-extrabold">Admin</span>
               </button>
             </div>
 
           </div>
-
         </div>
+      </main>
 
+      {/* Security credentials indicators */}
+      <div className="flex justify-center items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-6">
+        <div className="flex items-center gap-1">
+          <ShieldCheck className="h-4 w-4 text-slate-400" />
+          <span>AES-256 Encrypted</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <ShieldCheck className="h-4 w-4 text-slate-400" />
+          <span>2FA Ready</span>
+        </div>
       </div>
 
-      {/* Global Page Footer */}
-      <footer className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-600 text-xs px-4 md:px-8 border-t border-slate-900 pt-6">
-        <div>
-          <span>&copy; {new Date().getFullYear()} UniSphere Systems</span>
-        </div>
-        <div className="flex gap-6 font-semibold">
-          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-400 transition-colors">Security</a>
-          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-400 transition-colors">Privacy</a>
+      {/* Footer */}
+      <footer className="bg-white border-t border-slate-200 py-6 text-xs text-slate-500 z-10">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div>
+            <span className="font-extrabold text-sm text-[#006680] mr-2">UniSphere</span>
+            <span>&copy; {new Date().getFullYear()} UniSphere Systems Inc. All rights reserved.</span>
+          </div>
+          <div className="flex gap-6 font-semibold">
+            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Privacy Policy</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Terms of Service</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-[#006680] transition-colors">Support</a>
+          </div>
         </div>
       </footer>
 

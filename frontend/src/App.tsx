@@ -8,6 +8,7 @@ import { Dashboard } from './pages/Dashboard'
 import { EventsPage } from './pages/EventsPage'
 import { ClubsPage } from './pages/ClubsPage'
 import { Unauthorized } from './pages/Unauthorized'
+import { LandingPage } from './pages/LandingPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,16 +26,35 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 }
 
 export default function App() {
+  const { token } = useAuthStore()
+
+  React.useEffect(() => {
+    document.documentElement.classList.remove('dark')
+  }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
+          {/* Public Landing Path */}
+          <Route 
+            path="/" 
+            element={
+              token ? <Navigate to="/dashboard" replace /> : <LandingPage />
+            } 
+          />
+
           {/* Public Authentication Path */}
-          <Route path="/login" element={<Login />} />
+          <Route 
+            path="/login" 
+            element={
+              token ? <Navigate to="/dashboard" replace /> : <Login />
+            } 
+          />
 
           {/* Protected Administrative Paths */}
           <Route 
-            path="/" 
+            path="/dashboard" 
             element={
               <ProtectedRoute>
                 <Layout />

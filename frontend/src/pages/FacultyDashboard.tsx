@@ -43,8 +43,8 @@ export const FacultyDashboard: React.FC = () => {
 
   // AI attendance predictor parameters
   const predCategory = 'TECH'
-  const predCapacity = 100;
-  const predDay = 'Saturday';
+  const predCapacity = 100
+  const predDay = 'Saturday'
 
   // Form states (prefilled with defaults, mapped to suggested slots)
   const [formTitle, setFormTitle] = useState('')
@@ -117,46 +117,46 @@ export const FacultyDashboard: React.FC = () => {
   const activeEventsCount = events.filter((e: Event) => e.status === 'APPROVED').length
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 font-sans select-none pb-16">
+    <div className="space-y-8 animate-in fade-in duration-500 font-sans select-none pb-24 bg-slate-50/50">
       
       {/* Row 1: Telemetry Stats Panel */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Metric 1 */}
-        <div className="bg-[#0b0e17] border border-slate-900 rounded-3xl p-6 flex items-center justify-between">
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between shadow-sm">
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Live Events</span>
-            <h2 className="text-3xl font-black text-white mt-1.5">{activeEventsCount || 14} Active</h2>
-            <p className="text-[10px] text-emerald-400 font-bold mt-1">+12% from last week</p>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Events</span>
+            <h2 className="text-3xl font-black text-slate-900 mt-1.5">{activeEventsCount || 14} Active</h2>
+            <p className="text-[10px] text-emerald-600 font-bold mt-1">+12% from last week</p>
           </div>
-          <div className="h-12 w-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center">
             <Signal className="h-5 w-5 animate-pulse" />
           </div>
         </div>
 
         {/* Metric 2 */}
-        <div className="bg-[#0b0e17] border border-slate-900 rounded-3xl p-6 flex items-center justify-between">
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between shadow-sm">
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Attendees</span>
-            <h2 className="text-3xl font-black text-white mt-1.5">3,248</h2>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Attendees</span>
+            <h2 className="text-3xl font-black text-slate-900 mt-1.5">3,248</h2>
             <p className="text-[10px] text-slate-500 font-bold mt-1">Across all active tracks</p>
           </div>
-          <div className="h-12 w-12 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-blue-50 border border-blue-100 text-blue-600 rounded-2xl flex items-center justify-center">
             <Users className="h-5 w-5" />
           </div>
         </div>
 
         {/* Metric 3 */}
-        <div className="bg-[#0b0e17] border border-slate-900 rounded-3xl p-6 flex items-center justify-between">
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between shadow-sm">
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Average Hub Score</span>
-            <h2 className="text-3xl font-black text-white mt-1.5">92.4</h2>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Average Hub Score</span>
+            <h2 className="text-3xl font-black text-slate-900 mt-1.5">92.4</h2>
             {/* Visual Mini Progress Bar */}
-            <div className="h-1.5 w-32 bg-slate-900 rounded-full mt-2 overflow-hidden">
-              <div className="h-full bg-violet-500 rounded-full" style={{ width: '92%' }} />
+            <div className="h-1.5 w-32 bg-slate-100 rounded-full mt-2.5 overflow-hidden">
+              <div className="h-full bg-blue-600 rounded-full" style={{ width: '92%' }} />
             </div>
           </div>
-          <div className="h-12 w-12 bg-violet-500/10 border border-violet-500/20 text-violet-400 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center">
             <Star className="h-5 w-5" />
           </div>
         </div>
@@ -164,41 +164,41 @@ export const FacultyDashboard: React.FC = () => {
       </div>
 
       {/* Row 2: Grid Form & Estimators */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Create Event Panel (Left, col-span-7) */}
-        <div className="lg:col-span-7 bg-[#0b0e17] border border-slate-900 rounded-3xl p-8 flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-sm text-left">
           
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-extrabold text-lg tracking-tight text-white flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-indigo-400" />
+              <h3 className="font-extrabold text-sm tracking-tight text-slate-900 flex items-center gap-2">
+                <Calendar className="h-4.5 w-4.5 text-blue-600" />
                 <span>Create New Event</span>
               </h3>
-              <Badge variant="success" className="px-2 py-0.5 font-black text-[9px] uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex gap-1 items-center">
-                <Sparkles className="h-3 w-3" />
+              <Badge className="px-2.5 py-0.5 font-bold text-[9px] uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100 flex gap-1 items-center">
+                <Sparkles className="h-3 w-3 text-emerald-500 animate-pulse" />
                 <span>AI Enhanced</span>
               </Badge>
             </div>
 
             {/* Inline Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Event Name</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Graduate Colloquium"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  className="w-full bg-[#131929] border border-slate-800 focus:border-indigo-600 text-white rounded-xl py-3 px-4 text-xs focus:outline-none transition-all placeholder-slate-600"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-slate-800 rounded-xl py-3 px-4 text-xs focus:outline-none transition-all placeholder-slate-400"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Department</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hosting Club</label>
                 <select
                   value={formClubId}
                   onChange={(e) => setFormClubId(e.target.value)}
-                  className="w-full bg-[#131929] border border-slate-800 focus:border-indigo-600 text-white rounded-xl py-3 px-3 text-xs focus:outline-none transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-slate-700 rounded-xl py-3 px-3 text-xs focus:outline-none transition-all cursor-pointer"
                 >
                   {clubs.map((c: Club) => (
                     <option key={c.id} value={c.id}>{c.name}</option>
@@ -217,28 +217,28 @@ export const FacultyDashboard: React.FC = () => {
                 {/* AI Suggestion Slot 1 */}
                 <div 
                   onClick={() => handleSelectSlot(smartSlots[0]?.date || '2026-10-24', smartSlots[0]?.time || '10:00')}
-                  className="bg-[#121624]/60 border border-dashed border-indigo-500/30 hover:border-indigo-500 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between min-h-[90px]"
+                  className="bg-blue-50/50 border border-dashed border-blue-300 hover:border-blue-500 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between min-h-[90px]"
                 >
                   <div>
-                    <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1">
-                      <Sparkles className="h-3 w-3 text-indigo-400" />
+                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1">
+                      <Sparkles className="h-3 w-3 text-blue-500" />
                       <span>AI Suggested</span>
                     </span>
-                    <h4 className="font-bold text-xs text-white mt-1.5">
+                    <h4 className="font-bold text-xs text-slate-800 mt-1.5">
                       {smartSlots[0]?.date || 'Oct 24'}, {smartSlots[0]?.time || '10:00 AM'}
                     </h4>
                   </div>
-                  <span className="text-[8px] text-slate-500 font-bold mt-2 block">High Engagement Prob.</span>
+                  <span className="text-[8px] text-slate-400 font-semibold mt-2 block">High Engagement Prob.</span>
                 </div>
 
                 {/* Slot 2 */}
                 <div 
                   onClick={() => handleSelectSlot(smartSlots[1]?.date || '2026-10-25', smartSlots[1]?.time || '14:00')}
-                  className="bg-[#121624]/30 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between min-h-[90px]"
+                  className="bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between min-h-[90px]"
                 >
                   <div>
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Alternative</span>
-                    <h4 className="font-bold text-xs text-white mt-1.5">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Alternative</span>
+                    <h4 className="font-bold text-xs text-slate-800 mt-1.5">
                       {smartSlots[1]?.date || 'Oct 25'}, {smartSlots[1]?.time || '2:00 PM'}
                     </h4>
                   </div>
@@ -247,9 +247,9 @@ export const FacultyDashboard: React.FC = () => {
                 {/* Slot 3: Custom Date Picker Trigger */}
                 <div 
                   onClick={() => setCreateOpen(true)}
-                  className="bg-[#121624]/30 border border-slate-800 hover:border-slate-700 rounded-2xl p-4 cursor-pointer transition-all flex items-center justify-center min-h-[90px]"
+                  className="bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-2xl p-4 cursor-pointer transition-all flex items-center justify-center min-h-[90px]"
                 >
-                  <Calendar className="h-5 w-5 text-slate-500" />
+                  <Calendar className="h-5 w-5 text-slate-400" />
                 </div>
 
               </div>
@@ -260,8 +260,8 @@ export const FacultyDashboard: React.FC = () => {
           {/* Create Event Submit Buttons */}
           <div className="flex gap-3 mt-8">
             <button
-              onClick={() => alert("Draft Event saved to templates.")}
-              className="flex-1 py-3.5 border border-slate-800 hover:border-slate-700 bg-slate-900/40 text-slate-300 font-bold text-xs rounded-xl transition-all"
+              onClick={() => alert("Draft Event saved to coordinator templates.")}
+              className="flex-1 py-3.5 border border-slate-200 hover:bg-slate-100 text-slate-600 font-bold text-xs rounded-xl transition-all cursor-pointer"
             >
               Draft
             </button>
@@ -273,7 +273,7 @@ export const FacultyDashboard: React.FC = () => {
                 }
                 handleCreateEventSubmit(e);
               }}
-              className="flex-1 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-indigo-600/20"
+              className="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-all shadow-md cursor-pointer"
             >
               Initialize Event
             </button>
@@ -282,11 +282,11 @@ export const FacultyDashboard: React.FC = () => {
         </div>
 
         {/* Attendance Predictor (Right, col-span-5) */}
-        <div className="lg:col-span-5 bg-[#0b0e17] border border-slate-900 rounded-3xl p-8 flex flex-col justify-between text-center">
+        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between text-center shadow-sm">
           
           <div>
-            <h3 className="font-extrabold text-base tracking-tight text-white flex items-center justify-center gap-2 mb-6">
-              <BarChart3 className="h-5 w-5 text-indigo-400" />
+            <h3 className="font-extrabold text-sm tracking-tight text-slate-900 flex items-center justify-center gap-2 mb-6">
+              <BarChart3 className="h-4.5 w-4.5 text-blue-600" />
               <span>Attendance Predictor</span>
             </h3>
 
@@ -297,7 +297,7 @@ export const FacultyDashboard: React.FC = () => {
                   cx="72" 
                   cy="72" 
                   r="62" 
-                  className="text-slate-900" 
+                  className="text-slate-100" 
                   strokeWidth="8" 
                   stroke="currentColor" 
                   fill="transparent" 
@@ -316,29 +316,29 @@ export const FacultyDashboard: React.FC = () => {
                 />
               </svg>
               <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-3xl font-black text-white">
+                <span className="text-3xl font-black text-slate-800">
                   {predLoading ? '...' : `${aiPrediction?.predictedAttendanceRate || 80}%`}
                 </span>
-                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Confidence</span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Confidence</span>
               </div>
             </div>
 
             {/* expected & risk details */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#121624]/60 border border-slate-800/80 rounded-2xl p-4">
-                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Expected High</span>
-                <h4 className="text-lg font-black text-white mt-1">{aiPrediction?.expectedAttendance || 450}</h4>
+              <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Expected High</span>
+                <h4 className="text-lg font-black text-slate-800 mt-1">{aiPrediction?.expectedAttendance || 450}</h4>
               </div>
-              <div className="bg-[#121624]/60 border border-slate-800/80 rounded-2xl p-4">
-                <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Risk Factor</span>
-                <h4 className="text-lg font-black text-emerald-400 mt-1">Low</h4>
+              <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Risk Factor</span>
+                <h4 className="text-lg font-black text-emerald-600 mt-1">Low</h4>
               </div>
             </div>
 
           </div>
 
           {/* tip caption */}
-          <p className="text-[10px] text-slate-500 italic mt-6">
+          <p className="text-[10px] text-slate-400 italic mt-6 font-medium">
             "Historical data suggests mid-morning sessions yield 15% higher retention."
           </p>
 
@@ -347,18 +347,18 @@ export const FacultyDashboard: React.FC = () => {
       </div>
 
       {/* Row 3: Active Events Table */}
-      <div className="bg-[#0b0e17] border border-slate-900 rounded-3xl p-6 md:p-8">
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
         
         {/* Table Header */}
         <div className="flex justify-between items-center mb-6">
-          <h3 className="font-extrabold text-base tracking-tight text-white">
+          <h3 className="font-extrabold text-sm tracking-tight text-slate-900">
             Active Events Table
           </h3>
           <div className="flex gap-2">
-            <button onClick={() => alert("Filtering events list...")} className="p-2 rounded-xl border border-slate-800 bg-[#0d111d] text-slate-400 hover:text-white transition-colors">
+            <button onClick={() => alert("Filtering events list...")} className="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors shadow-sm">
               <SlidersHorizontal className="h-4 w-4" />
             </button>
-            <button onClick={() => alert("Downloading attendance spreadsheet report...")} className="p-2 rounded-xl border border-slate-800 bg-[#0d111d] text-slate-400 hover:text-white transition-colors">
+            <button onClick={() => alert("Downloading attendance spreadsheet report...")} className="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors shadow-sm">
               <Download className="h-4 w-4" />
             </button>
           </div>
@@ -368,7 +368,7 @@ export const FacultyDashboard: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-900 text-slate-500 font-bold uppercase tracking-wider">
+              <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[9px]">
                 <th className="pb-4 font-bold">Event Details</th>
                 <th className="pb-4 font-bold">Coordinator</th>
                 <th className="pb-4 font-bold">Status</th>
@@ -376,36 +376,36 @@ export const FacultyDashboard: React.FC = () => {
                 <th className="pb-4 font-bold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900">
+            <tbody className="divide-y divide-slate-100">
               
               {events.map((event: Event) => {
-                const regCount = event.registrationCount || 0;
-                const capacityRatio = regCount / event.maxCapacity;
-                const statusLabel = event.status === 'APPROVED' ? 'Live' : event.status === 'PENDING' ? 'Upcoming' : 'Completed';
+                const regCount = event.registrationCount || 0
+                const capacityRatio = regCount / event.maxCapacity
+                const statusLabel = event.status === 'APPROVED' ? 'Live' : event.status === 'PENDING' ? 'Upcoming' : 'Completed'
                 const statusColor = event.status === 'APPROVED' 
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
                   : event.status === 'PENDING' 
-                    ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' 
-                    : 'bg-slate-900 text-slate-400 border border-slate-800';
+                    ? 'bg-blue-50 text-blue-600 border border-blue-100' 
+                    : 'bg-slate-50 text-slate-400 border border-slate-200'
 
                 return (
-                  <tr key={event.id} className="hover:bg-slate-900/20 transition-colors">
+                  <tr key={event.id} className="hover:bg-slate-50/50 transition-colors">
                     
                     {/* Event details */}
                     <td className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+                        <div className="h-8 w-8 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
                           <FlaskConical className="h-4 w-4" />
                         </div>
                         <div>
-                          <p className="font-bold text-white text-xs">{event.title}</p>
-                          <p className="text-[10px] text-slate-500 mt-0.5">{event.location} • {event.time}</p>
+                          <p className="font-bold text-slate-800 text-xs">{event.title}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5 font-medium">{event.location} • {event.time}</p>
                         </div>
                       </div>
                     </td>
 
                     {/* Coordinator */}
-                    <td className="py-4 font-semibold text-slate-300">
+                    <td className="py-4 font-semibold text-slate-600">
                       Dr. Sarah Jenkins
                     </td>
 
@@ -419,12 +419,12 @@ export const FacultyDashboard: React.FC = () => {
                     {/* Capacity Indicator Progress */}
                     <td className="py-4 w-36">
                       <div>
-                        <div className="flex justify-between items-center text-[9px] font-bold text-slate-400 mb-1">
+                        <div className="flex justify-between items-center text-[9px] font-bold text-slate-500 mb-1">
                           <span>{regCount} / {event.maxCapacity}</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
                           <div 
-                            className={`h-full rounded-full ${event.status === 'APPROVED' ? 'bg-emerald-500' : 'bg-indigo-500'}`} 
+                            className={`h-full rounded-full ${event.status === 'APPROVED' ? 'bg-emerald-500' : 'bg-blue-500'}`} 
                             style={{ width: `${Math.min(100, capacityRatio * 100)}%` }} 
                           />
                         </div>
@@ -441,7 +441,7 @@ export const FacultyDashboard: React.FC = () => {
                             setSelectedEventId(event.id)
                             setAttendanceOpen(true)
                           }}
-                          className="p-1.5 rounded-lg bg-[#121624]/60 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+                          className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
                           title="Verify Registrations Attendance"
                         >
                           <BarChart3 className="h-3.5 w-3.5" />
@@ -450,13 +450,13 @@ export const FacultyDashboard: React.FC = () => {
                         {/* Cancel/Delete */}
                         <button 
                           onClick={() => handleDeleteEvent(event.id)}
-                          className="p-1.5 rounded-lg bg-[#121624]/60 border border-slate-800 text-rose-400 hover:text-rose-300 transition-colors"
+                          className="p-1.5 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 hover:text-rose-700 transition-colors cursor-pointer"
                           title="Cancel Event"
                         >
                           <XCircle className="h-3.5 w-3.5" />
                         </button>
 
-                        <button className="text-slate-500 hover:text-white">
+                        <button className="text-slate-400 hover:text-slate-700">
                           <MoreVertical className="h-4 w-4" />
                         </button>
 
@@ -469,7 +469,7 @@ export const FacultyDashboard: React.FC = () => {
 
               {events.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-slate-500 font-medium">
+                  <td colSpan={5} className="py-8 text-center text-slate-400 font-medium">
                     You have not scheduled any events yet. Fill in the event creator above to start.
                   </td>
                 </tr>
@@ -487,7 +487,7 @@ export const FacultyDashboard: React.FC = () => {
         onClose={() => setCreateOpen(false)}
         title="Schedule Campus Event"
       >
-        <form onSubmit={handleCreateEventSubmit} className="space-y-4">
+        <form onSubmit={handleCreateEventSubmit} className="space-y-4 text-left">
           <Input
             label="Event Title"
             id="event-title"
@@ -496,9 +496,9 @@ export const FacultyDashboard: React.FC = () => {
             required
           />
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-muted-foreground uppercase pl-1">Description</label>
+            <label className="text-xs font-semibold text-slate-500 uppercase pl-1">Description</label>
             <textarea
-              className="w-full px-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all min-h-[80px]"
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 transition-all min-h-[80px] text-slate-800"
               value={formDesc}
               onChange={(e) => setFormDesc(e.target.value)}
               required
@@ -555,12 +555,12 @@ export const FacultyDashboard: React.FC = () => {
             <Select
               label="Hosting Club"
               id="event-club"
-              options={clubs.map((c: Club) => ({ value: c.id, label: c.name }))}
+              options={clubs.map((c: Club) => ({ value: c.id.toString(), label: c.name }))}
               value={formClubId}
               onChange={(e) => setFormClubId(e.target.value)}
             />
           </div>
-          <Button type="submit" className="w-full mt-4">
+          <Button type="submit" className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white">
             Publish Event Schedule
           </Button>
         </form>
@@ -577,7 +577,7 @@ export const FacultyDashboard: React.FC = () => {
         }}
         title="Event Attendance Tracker"
       >
-        <div className="space-y-6 text-slate-300">
+        <div className="space-y-6 text-slate-700 text-left">
           
           {/* Mock QR Scan Code Entry Form */}
           <form onSubmit={handleScanCheckIn} className="space-y-3">
@@ -590,14 +590,14 @@ export const FacultyDashboard: React.FC = () => {
               required
             />
             <div className="flex gap-2">
-              <Button type="submit" className="flex-1 flex gap-1.5 items-center justify-center">
+              <Button type="submit" className="flex-1 flex gap-1.5 items-center justify-center bg-blue-600 text-white hover:bg-blue-700">
                 <ScanLine className="h-4 w-4" />
                 Scan Pass
               </Button>
             </div>
             {scanMessage && (
               <div className={`p-3 rounded-xl text-xs font-semibold ${
-                scanMessage.type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500' : 'bg-rose-500/10 border border-rose-500/20 text-rose-500'
+                scanMessage.type === 'success' ? 'bg-emerald-50 border border-emerald-100 text-emerald-600' : 'bg-rose-50 border border-rose-100 text-rose-600'
               }`}>
                 {scanMessage.text}
               </div>
@@ -606,25 +606,25 @@ export const FacultyDashboard: React.FC = () => {
 
           {/* Attendee status list */}
           <div>
-            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 pl-1">
+            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">
               Attendee Checklist
             </h4>
             <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
               {attendees.map((a: Attendee) => (
-                <div key={a.studentId} className="p-3 rounded-2xl bg-[#121624] border border-slate-900 flex justify-between items-center text-xs">
+                <div key={a.studentId} className="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
                   <div>
-                    <p className="font-bold text-white">{a.name}</p>
-                    <p className="text-[10px] text-slate-500">{a.department} • {a.email}</p>
+                    <p className="font-bold text-slate-800">{a.name}</p>
+                    <p className="text-[10px] text-slate-400 font-medium">{a.department} • {a.email}</p>
                   </div>
                   <div className="flex items-center gap-1.5 font-semibold">
-                    <span className="text-[10px] text-slate-500 font-mono">{a.passCode}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{a.passCode}</span>
                     {a.checkedIn ? (
-                      <span className="text-emerald-500 flex items-center gap-1">
+                      <span className="text-emerald-600 flex items-center gap-1 font-bold">
                         <CheckCircle2 className="h-4 w-4" />
                         Checked-In
                       </span>
                     ) : (
-                      <span className="text-slate-500 flex items-center gap-1">
+                      <span className="text-slate-400 flex items-center gap-1 font-medium">
                         <HelpCircle className="h-4 w-4" />
                         Awaiting
                       </span>
@@ -633,7 +633,7 @@ export const FacultyDashboard: React.FC = () => {
                 </div>
               ))}
               {attendees.length === 0 && (
-                <p className="text-xs text-slate-500 text-center py-6">No registrations found for this event yet.</p>
+                <p className="text-xs text-slate-400 text-center py-6">No registrations found for this event yet.</p>
               )}
             </div>
           </div>

@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
-import { useNotifications, useReadNotification } from '../hooks/useApi'
+import { useNotifications, useReadNotification, useMyRegistrations } from '../hooks/useApi'
 import type { Notification } from '../types'
 import { Badge } from './ui/Badge'
+import { Dialog } from './ui/Dialog'
+import { DigitalPass } from './DigitalPass'
 import { 
   LayoutDashboard, Calendar, Users, Bell, LogOut, 
   Menu, X, Search, Mail, BookOpen, GraduationCap, Award, Settings, HelpCircle,
   Activity, Database, Server, RefreshCw, CheckCircle, FileText,
-  Sparkles, CalendarDays
+  Sparkles, CalendarDays, Bot
 } from 'lucide-react'
 
 // Course Catalog Mock Data
@@ -84,6 +86,8 @@ export const Layout: React.FC = () => {
 
   const { data: notifications = [] } = useNotifications()
   const readNotifMutation = useReadNotification()
+  const { data: registrations = [] } = useMyRegistrations()
+  const [selectedPass, setSelectedPass] = useState<{ event: any; passCode: string } | null>(null)
 
   const unreadCount = notifications.filter((n: Notification) => !n.isRead).length
 
@@ -92,11 +96,15 @@ export const Layout: React.FC = () => {
     navigate('/login')
   }
 
+  const isStudent = user?.role === 'STUDENT'
+  const isFaculty = user?.role === 'FACULTY'
+  const isAdmin = user?.role === 'ADMIN'
+
   // Navigation items based on role
   const getNavItems = () => {
     const common = [
-      { path: '/events', label: 'Explore Events', icon: Calendar },
-      { path: '/clubs', label: 'Clubs & Societies', icon: Users },
+      { path: '/dashboard/events', label: 'Explore Events', icon: Calendar },
+      { path: '/dashboard/clubs', label: 'Clubs & Societies', icon: Users },
       { path: '#academic-record', label: 'Academic Record', icon: GraduationCap },
       { path: '#course-catalog', label: 'Course Catalog', icon: BookOpen },
       { path: '#faculty-hub', label: 'Faculty Hub', icon: Users },
@@ -104,21 +112,21 @@ export const Layout: React.FC = () => {
       { path: '#system-admin', label: 'System Admin', icon: Settings },
     ]
 
-    if (user?.role === 'STUDENT') {
+    if (isStudent) {
       return [
-        { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+        { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         ...common
       ]
     }
-    if (user?.role === 'FACULTY') {
+    if (isFaculty) {
       return [
-        { path: '/', label: 'Faculty Suite', icon: LayoutDashboard },
+        { path: '/dashboard', label: 'Faculty Suite', icon: LayoutDashboard },
         ...common
       ]
     }
-    if (user?.role === 'ADMIN') {
+    if (isAdmin) {
       return [
-        { path: '/', label: 'Admin Command', icon: LayoutDashboard },
+        { path: '/dashboard', label: 'Admin Command', icon: LayoutDashboard },
         ...common
       ]
     }
@@ -201,13 +209,15 @@ export const Layout: React.FC = () => {
             </div>
             <div className="space-y-3">
               {INITIAL_ANNOUNCEMENTS.map(item => (
-                <div key={item.id} className="p-4 rounded-2xl bg-[#121624]/60 border border-slate-800/80 hover:border-slate-700 transition-all">
+                <div key={item.id} className={`p-4 rounded-2xl border transition-all ${
+                  'bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-800'
+                }`}>
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-[10px] font-bold text-slate-500">{item.sender} • {item.time}</span>
                     {item.pinned && <span className="text-[9px] px-1.5 py-0.5 rounded bg-indigo-900/60 text-indigo-300 font-bold uppercase">Pinned</span>}
                   </div>
-                  <h4 className="font-extrabold text-xs text-white mb-1">{item.title}</h4>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">{item.content}</p>
+                  <h4 className={`font-extrabold text-xs mb-1 ${'text-slate-900'}`}>{item.title}</h4>
+                  <p className={`text-[11px] leading-relaxed ${'text-slate-600'}`}>{item.content}</p>
                 </div>
               ))}
             </div>
@@ -224,8 +234,10 @@ export const Layout: React.FC = () => {
             </div>
 
             {/* Calendar grid (June 2026) */}
-            <div className="bg-[#121624]/40 border border-slate-800/80 rounded-2xl p-4">
-              <div className="text-center font-bold text-xs text-white mb-3">June 2026</div>
+            <div className={`border rounded-2xl p-4 ${
+              'bg-slate-50 border-slate-200'
+            }`}>
+              <div className={`text-center font-bold text-xs mb-3 ${'text-slate-900'}`}>June 2026</div>
               <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-500 mb-2">
                 <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
               </div>
@@ -243,8 +255,8 @@ export const Layout: React.FC = () => {
                         isSelected 
                           ? 'bg-indigo-600 text-white font-black scale-105 shadow-md shadow-indigo-600/35' 
                           : hasEvent
-                            ? 'bg-indigo-950/40 text-indigo-400 border border-indigo-600/30 font-extrabold hover:bg-indigo-900/40'
-                            : 'text-slate-400 hover:bg-slate-900/60 hover:text-white'
+                            ? 'bg-blue-50 text-blue-600 border border-blue-200 font-extrabold hover:bg-blue-100/60'
+                            : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                       }`}
                     >
                       {day}
@@ -270,10 +282,12 @@ export const Layout: React.FC = () => {
                 <div className="p-4 rounded-xl border border-dashed border-slate-800 text-center text-xs text-slate-500">No scheduled events.</div>
               ) : (
                 filteredReminders.map((r, index) => (
-                  <div key={index} className="p-3.5 rounded-xl bg-[#121624]/60 border border-slate-800/80 flex items-start gap-3 justify-between">
+                  <div key={index} className={`p-3.5 rounded-xl border flex items-start gap-3 justify-between ${
+                    'bg-slate-50 border-slate-200 text-slate-800'
+                  }`}>
                     <div>
                       <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-900 text-indigo-400 tracking-wider mr-2">Day {r.day}</span>
-                      <span className="text-xs text-white font-semibold">{r.title}</span>
+                      <span className={`text-xs font-semibold ${'text-slate-900'}`}>{r.title}</span>
                     </div>
                     <Badge variant={r.type === 'TECH' ? 'purple' : r.type === 'ACADEMIC' ? 'default' : 'info'} className="text-[8px] font-black uppercase shrink-0">
                       {r.type}
@@ -284,7 +298,9 @@ export const Layout: React.FC = () => {
             </div>
 
             {/* Custom reminder form */}
-            <form onSubmit={handleAddReminder} className="p-4 rounded-2xl bg-[#121624]/30 border border-slate-800/60 space-y-3">
+            <form onSubmit={handleAddReminder} className={`p-4 rounded-2xl border space-y-3 ${
+              'bg-slate-50 border-slate-200'
+            }`}>
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Add Custom Task</span>
               <div className="grid grid-cols-3 gap-2">
                 <input
@@ -293,14 +309,18 @@ export const Layout: React.FC = () => {
                   max="30"
                   value={newReminderDay}
                   onChange={(e) => setNewReminderDay(Number(e.target.value))}
-                  className="bg-[#0b0e17] border border-slate-800 text-xs text-white rounded-lg p-2 focus:outline-none focus:border-indigo-600 text-center font-bold"
+                  className={`border text-xs rounded-lg p-2 focus:outline-none focus:border-indigo-600 text-center font-bold ${
+                    'bg-white border-slate-200 text-slate-800'
+                  }`}
                 />
                 <input
                   type="text"
                   placeholder="Task title..."
                   value={newReminderTitle}
                   onChange={(e) => setNewReminderTitle(e.target.value)}
-                  className="col-span-2 bg-[#0b0e17] border border-slate-800 text-xs text-white rounded-lg p-2 focus:outline-none focus:border-indigo-600"
+                  className={`col-span-2 border text-xs rounded-lg p-2 focus:outline-none focus:border-indigo-600 ${
+                    'bg-white border-slate-200 text-slate-800'
+                  }`}
                 />
               </div>
               <button type="submit" className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all">
@@ -326,18 +346,22 @@ export const Layout: React.FC = () => {
                 placeholder="Search name, role, department..."
                 value={drawerSearchQuery}
                 onChange={(e) => setDrawerSearchQuery(e.target.value)}
-                className="w-full bg-[#121624]/60 border border-slate-800/80 text-xs text-white rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-indigo-600 transition-all"
+                className={`w-full border text-xs rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-indigo-600 transition-all ${
+                  'bg-slate-50 border-slate-200 text-slate-800'
+                }`}
               />
             </div>
 
             <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
               {filteredPeople.map((person, index) => (
-                <div key={index} className="p-3.5 rounded-xl bg-[#121624]/40 border border-slate-800/60 hover:border-slate-800 flex items-center justify-between gap-3 transition-colors">
+                <div key={index} className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 transition-colors ${
+                  'bg-slate-50 border-slate-200 text-slate-800'
+                }`}>
                   <div className="flex items-center gap-3">
                     <img src={person.avatar} alt={person.name} className="h-9 w-9 rounded-full object-cover border border-slate-800" />
                     <div>
-                      <h4 className="font-extrabold text-xs text-white">{person.name}</h4>
-                      <p className="text-[10px] text-slate-400 mt-0.5">{person.role} • {person.dept}</p>
+                      <h4 className={`font-extrabold text-xs ${'text-slate-800'}`}>{person.name}</h4>
+                      <p className={`text-[10px] mt-0.5 ${'text-slate-500'}`}>{person.role} • {person.dept}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -372,17 +396,54 @@ export const Layout: React.FC = () => {
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#121624]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
+              <div className={`p-4 text-center rounded-2xl border ${
+                'bg-white border-slate-200 text-slate-800 shadow-sm'
+              }`}>
                 <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Cumulative GPA</span>
-                <h3 className="text-2xl font-black text-white mt-1">3.92 / 4.00</h3>
-                <span className="text-[9px] text-emerald-400 font-semibold mt-0.5 block">Summa Cum Laude Track</span>
+                <h3 className={`text-2xl font-black mt-1 ${'text-slate-900'}`}>3.92 / 4.00</h3>
+                <span className="text-[9px] text-emerald-500 font-semibold mt-0.5 block">Summa Cum Laude Track</span>
               </div>
-              <div className="bg-[#121624]/60 border border-slate-800/80 rounded-2xl p-4 text-center">
+              <div className={`p-4 text-center rounded-2xl border ${
+                'bg-white border-slate-200 text-slate-800 shadow-sm'
+              }`}>
                 <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Completed Credits</span>
-                <h3 className="text-2xl font-black text-white mt-1">108 / 120</h3>
-                <span className="text-[9px] text-indigo-400 font-semibold mt-0.5 block">Senior Status</span>
+                <h3 className={`text-2xl font-black mt-1 ${'text-slate-900'}`}>108 / 120</h3>
+                <span className={`text-[9px] font-semibold mt-0.5 block ${isStudent ? 'text-indigo-400' : 'text-[#006680]'}`}>Senior Status</span>
               </div>
             </div>
+
+            {/* Boarding Passes wallet section for student */}
+            {isStudent && (
+              <div className="space-y-3">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Active Event Boarding Tickets</span>
+                <div className="space-y-2">
+                  {registrations.length > 0 ? (
+                    registrations.map((event: any) => (
+                      <div 
+                        key={event.id}
+                        onClick={() => setSelectedPass({
+                          event,
+                          passCode: event.passCode || `PASS-${event.id}-${100000 + event.id * 73}`
+                        })}
+                        className="p-4 bg-slate-50 border border-slate-200 hover:border-blue-600/40 hover:bg-blue-50/30 rounded-2xl flex justify-between items-center cursor-pointer transition-all duration-200 shadow-sm group"
+                      >
+                        <div className="min-w-0">
+                          <span className="text-[9px] font-bold text-blue-600 uppercase tracking-wider block">
+                            {event.category || 'EVENT'} PASS
+                          </span>
+                          <h4 className="font-extrabold text-xs text-slate-800 truncate mt-0.5">{event.title}</h4>
+                        </div>
+                        <span className="text-[9px] text-blue-600 font-bold shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">View Pass →</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-slate-500 text-center py-4 bg-slate-50 border border-slate-200 border-dashed rounded-2xl">
+                      No active tickets in your wallet.
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Courses listing */}
             <div className="space-y-3">
@@ -394,12 +455,14 @@ export const Layout: React.FC = () => {
                   { id: 'DS-302', name: 'Applied Machine Learning', grade: 'A', credits: 3 },
                   { id: 'MATH-201', name: 'Linear Algebra & Applications', grade: 'B+', credits: 3 }
                 ].map((c) => (
-                  <div key={c.id} className="p-3.5 rounded-xl bg-[#121624]/40 border border-slate-800/60 flex justify-between items-center">
+                  <div key={c.id} className="p-3.5 rounded-xl border flex justify-between items-center bg-white border-slate-200 text-slate-800">
                     <div>
                       <span className="text-[9px] font-bold text-slate-500">{c.id} • {c.credits} Credits</span>
-                      <h4 className="font-extrabold text-xs text-white mt-0.5">{c.name}</h4>
+                      <h4 className={`font-extrabold text-xs mt-0.5 ${'text-slate-800'}`}>{c.name}</h4>
                     </div>
-                    <span className="h-8 w-8 rounded-lg bg-indigo-900/30 border border-indigo-600/20 flex items-center justify-center font-black text-xs text-indigo-400">
+                    <span className={`h-8 w-8 rounded-lg flex items-center justify-center font-black text-xs ${
+                      'bg-[#e6f2f5] border border-[#006680]/20 text-[#006680]'
+                    }`}>
                       {c.grade}
                     </span>
                   </div>
@@ -408,21 +471,25 @@ export const Layout: React.FC = () => {
             </div>
 
             {/* Request Transcript section */}
-            <div className="p-4 rounded-2xl bg-[#121624]/30 border border-slate-800/60 space-y-3">
+            <div className={`p-4 rounded-2xl border space-y-3 ${
+              'bg-white border-slate-200 text-slate-800 shadow-sm'
+            }`}>
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Registrar Clearance</span>
               {transcriptRequestStatus ? (
-                <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-600/30 text-xs text-emerald-400">
+                <div className="p-3 rounded-xl text-xs font-semibold bg-emerald-50 border border-emerald-100 text-emerald-700">
                   {transcriptRequestStatus}
                 </div>
               ) : (
                 <button
                   onClick={handleRequestTranscript}
                   disabled={transcriptRequestLoading}
-                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+                  className={`w-full py-3 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                    'bg-[#006680] hover:bg-[#00556c] disabled:bg-slate-200 disabled:text-slate-400'
+                  }`}
                 >
                   {transcriptRequestLoading ? (
                     <>
-                      <RefreshCw className="h-4 w-4 animate-spin text-white" />
+                      <RefreshCw className={`h-4 w-4 animate-spin ${isStudent ? 'text-white' : 'text-[#006680]'}`} />
                       <span>Generating PDF Transcript...</span>
                     </>
                   ) : (
@@ -447,27 +514,33 @@ export const Layout: React.FC = () => {
           <div className="space-y-4">
             {/* Search Input */}
             <div className="relative">
-              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-450" />
               <input
                 type="text"
                 placeholder="Search course title, syllabus, code..."
                 value={drawerSearchQuery}
                 onChange={(e) => setDrawerSearchQuery(e.target.value)}
-                className="w-full bg-[#121624]/60 border border-slate-800/80 text-xs text-white rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-indigo-600 transition-all"
+                className={`w-full border text-xs rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-indigo-600 transition-all ${
+                  'bg-slate-50 border-slate-200 text-slate-800'
+                }`}
               />
             </div>
 
             <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-1">
               {filteredCourses.map((c) => (
-                <div key={c.id} className="p-4 rounded-xl bg-[#121624]/40 border border-slate-800/60 flex flex-col gap-3 justify-between">
+                <div key={c.id} className={`p-4 rounded-xl border flex flex-col gap-3 justify-between ${
+                  'bg-slate-50 border-slate-200 text-slate-800'
+                }`}>
                   <div>
                     <div className="flex justify-between items-start">
-                      <span className="text-[9px] font-black text-indigo-400 tracking-wider uppercase bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-600/20">{c.id}</span>
+                      <span className={`text-[9px] font-black tracking-wider uppercase px-2 py-0.5 rounded border ${
+                        'bg-blue-50 text-blue-600 border border-blue-200'
+                      }`}>{c.id}</span>
                       <span className="text-[10px] text-slate-500 font-bold">{c.credits} Semester Credits</span>
                     </div>
-                    <h4 className="font-extrabold text-xs text-white mt-2">{c.name}</h4>
-                    <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">Professor: {c.professor}</span>
-                    <p className="text-[11px] text-slate-500 leading-relaxed mt-2">{c.desc}</p>
+                    <h4 className={`font-extrabold text-xs mt-2 ${'text-slate-800'}`}>{c.name}</h4>
+                    <span className={`text-[10px] font-semibold block mt-0.5 ${'text-slate-500'}`}>Professor: {c.professor}</span>
+                    <p className={`text-[11px] leading-relaxed mt-2 ${'text-slate-500'}`}>{c.desc}</p>
                   </div>
                   <div className="border-t border-slate-900/60 pt-3 flex justify-end">
                     {enrolledCourseRequests[c.id] ? (
@@ -477,7 +550,9 @@ export const Layout: React.FC = () => {
                     ) : (
                       <button
                         onClick={() => setEnrolledCourseRequests(prev => ({ ...prev, [c.id]: true }))}
-                        className="px-3.5 py-1.5 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 text-indigo-400 hover:text-indigo-300 rounded-lg text-[10px] font-bold transition-all"
+                        className={`px-3.5 py-1.5 border rounded-lg text-[10px] font-bold transition-all ${
+                          'bg-[#006680]/10 hover:bg-[#006680]/20 border border-[#006680]/20 text-[#006680]'
+                        }`}
                       >
                         Enroll Syllabus
                       </button>
@@ -505,11 +580,13 @@ export const Layout: React.FC = () => {
                   { name: 'Prof. Alan Turing', office: 'CSE-310', hours: 'Mon/Wed 10:00 AM - 12:00 AM', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
                   { name: 'Prof. Ada Lovelace', office: 'SE-204', hours: 'Fri 1:00 PM - 3:00 PM', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' }
                 ].map((f, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-[#121624]/40 border border-slate-800/60 flex items-center gap-3">
+                  <div key={i} className={`p-3 rounded-xl border flex items-center gap-3 ${
+                    'bg-slate-50 border-slate-200 text-slate-800'
+                  }`}>
                     <img src={f.image} alt={f.name} className="h-9 w-9 rounded-full object-cover border border-slate-800" />
                     <div>
-                      <h4 className="font-extrabold text-xs text-white">{f.name}</h4>
-                      <p className="text-[10px] text-slate-400 mt-0.5">Office: {f.office} • Hours: {f.hours}</p>
+                      <h4 className={`font-extrabold text-xs ${'text-slate-800'}`}>{f.name}</h4>
+                      <p className={`text-[10px] mt-0.5 ${'text-slate-500'}`}>Office: {f.office} • Hours: {f.hours}</p>
                     </div>
                   </div>
                 ))}
@@ -517,20 +594,22 @@ export const Layout: React.FC = () => {
             </div>
 
             {/* Schedule Booking Matrix */}
-            <div className="p-4 rounded-2xl bg-[#121624]/30 border border-slate-800/60 space-y-4">
+            <div className={`p-4 rounded-2xl border space-y-4 ${
+              'bg-slate-50 border-slate-200'
+            }`}>
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Book Office Consultation</span>
               
               {officeHoursBooking ? (
-                <div className="p-4 rounded-xl bg-[#121624]/60 border border-indigo-500/30 text-xs space-y-2">
-                  <div className="text-indigo-400 font-extrabold flex items-center gap-1.5">
-                    <CheckCircle className="h-4 w-4 text-indigo-400" /> Consultation Booked Successfully!
+                <div className="p-4 rounded-xl border text-xs space-y-2 bg-blue-50 border-blue-200">
+                  <div className="font-extrabold flex items-center gap-1.5 text-blue-600">
+                    <CheckCircle className="h-4 w-4" /> Consultation Booked Successfully!
                   </div>
-                  <p className="text-slate-300 mt-1"><strong>Advisor:</strong> {officeHoursBooking.professor}</p>
-                  <p className="text-slate-300"><strong>Time Slot:</strong> {officeHoursBooking.time}</p>
-                  <p className="text-slate-300"><strong>Topic:</strong> {officeHoursBooking.topic}</p>
+                  <p className="text-slate-700"><strong>Advisor:</strong> {officeHoursBooking.professor}</p>
+                  <p className="text-slate-700"><strong>Time Slot:</strong> {officeHoursBooking.time}</p>
+                  <p className="text-slate-700"><strong>Topic:</strong> {officeHoursBooking.topic}</p>
                   <button 
                     onClick={() => setOfficeHoursBooking(null)}
-                    className="text-[10px] text-slate-500 hover:text-slate-300 font-bold block mt-2"
+                    className="text-[10px] text-slate-500 hover:text-slate-700 font-bold block mt-2"
                   >
                     Schedule another...
                   </button>
@@ -538,11 +617,13 @@ export const Layout: React.FC = () => {
               ) : (
                 <div className="space-y-3 text-xs">
                   <div>
-                    <label className="text-slate-400 font-bold block mb-1">Select Professor</label>
+                    <label className={`font-bold block mb-1 ${'text-slate-600'}`}>Select Professor</label>
                     <select
                       value={officeHoursProfessor}
                       onChange={(e) => setOfficeHoursProfessor(e.target.value)}
-                      className="w-full bg-[#0b0e17] border border-slate-800 text-white rounded-lg p-2.5 focus:outline-none focus:border-indigo-600"
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 cursor-pointer ${
+                        'bg-white border-slate-200 text-slate-800'
+                      }`}
                     >
                       <option>Dr. Sarah Jenkins</option>
                       <option>Prof. Alan Turing</option>
@@ -550,11 +631,13 @@ export const Layout: React.FC = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-400 font-bold block mb-1">Choose Timeslot</label>
+                    <label className={`font-bold block mb-1 ${'text-slate-600'}`}>Choose Timeslot</label>
                     <select
                       value={officeHoursTime}
                       onChange={(e) => setOfficeHoursTime(e.target.value)}
-                      className="w-full bg-[#0b0e17] border border-slate-800 text-white rounded-lg p-2.5 focus:outline-none focus:border-indigo-600"
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 cursor-pointer ${
+                        'bg-white border-slate-200 text-slate-800'
+                      }`}
                     >
                       <option>Tuesday, 2:00 PM</option>
                       <option>Wednesday, 11:00 AM</option>
@@ -562,13 +645,15 @@ export const Layout: React.FC = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-slate-400 font-bold block mb-1">Topic details</label>
+                    <label className={`font-bold block mb-1 ${'text-slate-600'}`}>Topic details</label>
                     <input
                       type="text"
                       placeholder="e.g. Thesis advice, exam review..."
                       value={officeHoursTopic}
                       onChange={(e) => setOfficeHoursTopic(e.target.value)}
-                      className="w-full bg-[#0b0e17] border border-slate-800 text-white rounded-lg p-2.5 focus:outline-none focus:border-indigo-600"
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 ${
+                        'bg-white border-slate-200 text-slate-800'
+                      }`}
                     />
                   </div>
                   <button
@@ -577,7 +662,7 @@ export const Layout: React.FC = () => {
                       setOfficeHoursBooking({ professor: officeHoursProfessor, time: officeHoursTime, topic: officeHoursTopic })
                       setOfficeHoursTopic('')
                     }}
-                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all"
+                    className="w-full py-3 bg-[#5c68f2] hover:bg-[#4b55e0] text-white rounded-xl text-xs font-bold transition-all"
                   >
                     Confirm Booking Slot
                   </button>
@@ -590,45 +675,53 @@ export const Layout: React.FC = () => {
       case 'student-affairs':
         return (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-slate-300 leading-relaxed space-y-2">
-              <span className="font-extrabold text-indigo-400 uppercase tracking-widest block text-[9px]">Campus Amenities</span>
+            <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-2 ${
+              'bg-blue-50 border-blue-100 text-slate-700'
+            }`}>
+              <span className={`font-extrabold uppercase tracking-widest block text-[9px] ${isStudent ? 'text-indigo-400' : 'text-blue-600'}`}>Campus Amenities</span>
               <p>📍 <strong>Student Housing:</strong> Dorm room requests, dining plan adjustments, maintenance orders.</p>
               <p>📍 <strong>Career Desk:</strong> Placements schedules, resume reviews, guest recruiter seminars.</p>
               <p>📍 <strong>Health Clinic:</strong> General wellness visits, sports clearances, counseling appointments.</p>
             </div>
 
             {/* Support Ticket form */}
-            <div className="p-4 rounded-2xl bg-[#121624]/30 border border-slate-800/60 space-y-4">
+            <div className={`p-4 rounded-2xl border space-y-4 ${
+              'bg-slate-50 border-slate-200'
+            }`}>
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Submit Support Inquiry / Ticket</span>
               
               {affairsSuccess ? (
-                <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-600/30 text-xs space-y-1">
-                  <div className="text-emerald-400 font-extrabold flex items-center gap-1.5">
-                    <CheckCircle className="h-4 w-4 text-emerald-400" /> Ticket Submitted Successfully!
+                <div className="p-4 rounded-xl border text-xs space-y-1 bg-emerald-50 border-emerald-250 text-emerald-700">
+                  <div className="text-emerald-700 font-extrabold flex items-center gap-1.5">
+                    <CheckCircle className="h-4 w-4 text-emerald-700" /> Ticket Submitted Successfully!
                   </div>
-                  <p className="text-slate-400 mt-1"><strong>Ticket Reference:</strong> US-2026-0941-AR</p>
-                  <p className="text-slate-400">Our support coordinators will review this within 24 hours.</p>
+                  <p className="text-slate-600 mt-1"><strong>Ticket Reference:</strong> US-2026-0941-AR</p>
+                  <p className="text-slate-500">Our support coordinators will review this within 24 hours.</p>
                 </div>
               ) : (
                 <div className="space-y-3 text-xs">
                   <div>
-                    <label className="text-slate-400 font-bold block mb-1">Subject Topic</label>
+                    <label className={`font-bold block mb-1 ${'text-slate-600'}`}>Subject Topic</label>
                     <input
                       type="text"
                       placeholder="e.g. Housing swap request, career guidance..."
                       value={affairsSubject}
                       onChange={(e) => setAffairsSubject(e.target.value)}
-                      className="w-full bg-[#0b0e17] border border-slate-800 text-white rounded-lg p-2.5 focus:outline-none focus:border-indigo-600"
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 ${
+                        'bg-white border-slate-200 text-slate-800'
+                      }`}
                     />
                   </div>
                   <div>
-                    <label className="text-slate-400 font-bold block mb-1">Detailed Inquiry</label>
+                    <label className={`font-bold block mb-1 ${'text-slate-600'}`}>Detailed Inquiry</label>
                     <textarea
                       placeholder="Explain your case in detail..."
                       rows={4}
                       value={affairsMessage}
                       onChange={(e) => setAffairsMessage(e.target.value)}
-                      className="w-full bg-[#0b0e17] border border-slate-800 text-white rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 resize-none"
+                      className={`w-full border rounded-lg p-2.5 focus:outline-none focus:border-indigo-600 resize-none ${
+                        'bg-white border-slate-200 text-slate-800'
+                      }`}
                     />
                   </div>
                   <button
@@ -638,7 +731,7 @@ export const Layout: React.FC = () => {
                       setAffairsSubject('')
                       setAffairsMessage('')
                     }}
-                    className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all"
+                    className="w-full py-3 bg-[#5c68f2] hover:bg-[#4b55e0] text-white rounded-xl text-xs font-bold transition-all"
                   >
                     Send Support Request
                   </button>
@@ -652,12 +745,16 @@ export const Layout: React.FC = () => {
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#121624]/60 border border-slate-800/80 rounded-xl p-3 flex flex-col items-center">
+              <div className={`border rounded-xl p-3 flex flex-col items-center ${
+                'bg-slate-50 border-slate-200 text-slate-800'
+              }`}>
                 <Server className="h-5 w-5 text-emerald-400 mb-1" />
                 <span className="text-[9px] font-bold text-slate-500 uppercase">Express Backend</span>
                 <span className="text-xs font-black text-emerald-400 mt-0.5">ONLINE</span>
               </div>
-              <div className="bg-[#121624]/60 border border-slate-800/80 rounded-xl p-3 flex flex-col items-center">
+              <div className={`border rounded-xl p-3 flex flex-col items-center ${
+                'bg-slate-50 border-slate-200 text-slate-800'
+              }`}>
                 <Database className="h-5 w-5 text-indigo-400 mb-1" />
                 <span className="text-[9px] font-bold text-slate-500 uppercase">SQLite Database</span>
                 <span className="text-xs font-black text-indigo-400 mt-0.5">ACTIVE</span>
@@ -665,10 +762,12 @@ export const Layout: React.FC = () => {
             </div>
 
             {/* Diagnostic Parameters list */}
-            <div className="space-y-2.5 text-xs bg-[#121624]/20 border border-slate-800/40 rounded-xl p-4">
+            <div className={`space-y-2.5 text-xs border rounded-xl p-4 ${
+              'bg-slate-50 border border-slate-200 text-slate-700'
+            }`}>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">API Status:</span>
-                <span className="text-white font-extrabold">200 OK (Swagger docs ready)</span>
+                <span className={`font-extrabold ${'text-slate-800'}`}>200 OK (Swagger docs ready)</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">Redis Cache Server:</span>
@@ -676,7 +775,7 @@ export const Layout: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">RAG Vector Engine:</span>
-                <span className="text-white font-extrabold">Ready (Cosine Heuristics)</span>
+                <span className={`font-extrabold ${'text-slate-800'}`}>Ready (Cosine Heuristics)</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 font-bold">Active Sessions:</span>
@@ -689,7 +788,9 @@ export const Layout: React.FC = () => {
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Administrative Operations</span>
               
               {adminActionStatus && (
-                <div className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-600/30 text-xs text-indigo-400 leading-relaxed">
+                <div className={`p-3.5 rounded-xl border text-xs leading-relaxed ${
+                  'bg-blue-50 border border-blue-200 text-blue-600'
+                }`}>
                   {adminActionStatus}
                 </div>
               )}
@@ -698,7 +799,9 @@ export const Layout: React.FC = () => {
                 <button
                   onClick={() => handleAdminDiagnosticAction('seed')}
                   disabled={adminActionLoading}
-                  className="py-3 px-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                  className={`py-3 px-2 border rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700'
+                  }`}
                 >
                   <RefreshCw className={`h-4 w-4 text-indigo-400 ${adminActionLoading ? 'animate-spin' : ''}`} />
                   <span>Sync DB Seed</span>
@@ -706,7 +809,9 @@ export const Layout: React.FC = () => {
                 <button
                   onClick={() => handleAdminDiagnosticAction('cache')}
                   disabled={adminActionLoading}
-                  className="py-3 px-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                  className={`py-3 px-2 border rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    'bg-white hover:bg-slate-50 border border-slate-200 text-slate-700'
+                  }`}
                 >
                   <Settings className={`h-4 w-4 text-indigo-400 ${adminActionLoading ? 'animate-spin' : ''}`} />
                   <span>Clear Cache</span>
@@ -724,7 +829,7 @@ export const Layout: React.FC = () => {
                   }
                   alert(`Diagnostic Server Export JSON:\n\n${JSON.stringify(dump, null, 2)}`)
                 }}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-[#5c68f2] hover:bg-[#4b55e0] text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
               >
                 <Activity className="h-4 w-4 text-white" />
                 <span>Export JSON Diagnostics</span>
@@ -739,27 +844,36 @@ export const Layout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#060814] text-slate-100 flex transition-colors duration-300">
+    <div className="min-h-screen flex transition-colors duration-300 bg-slate-50 text-slate-800">
       
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-[#0b0e17] border-r border-slate-900 shrink-0 fixed h-screen z-20 justify-between select-none">
+      <aside className="hidden md:flex flex-col w-64 shrink-0 fixed h-screen z-20 justify-between select-none bg-slate-50 border-r border-slate-200 text-slate-800">
         
         <div>
           {/* Logo Brand */}
-          <div className="p-6 flex flex-col items-start gap-0.5">
+          <div className="p-6 flex flex-col items-start gap-0.5 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight text-white font-sans">UniSphere</span>
+              <span className="font-extrabold text-xl tracking-tight font-sans text-blue-900">
+                {isStudent ? 'UniSphere' : 'EduCore Enterprise'}
+              </span>
             </div>
-            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Higher Ed Systems</span>
+            <span className="text-[9px] font-black uppercase tracking-wider text-slate-450 text-slate-400">
+              {isAdmin ? 'ADMIN PORTAL' : isFaculty ? 'FACULTY PORTAL' : 'STUDENT PORTAL'}
+            </span>
           </div>
 
           {/* Nav List */}
-          <nav className="px-4 py-4 space-y-1">
+          <nav className="px-4 py-6 space-y-3">
             {navItems.map((item) => {
               const Icon = item.icon
               const isHash = item.path.startsWith('#')
               const isActive = isHash ? false : location.pathname === item.path
               
+              const linkClass = isActive
+                ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600 rounded-r-xl font-bold'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/50 rounded-xl transition-all font-semibold'
+              const iconColor = isActive ? 'text-blue-600' : 'text-slate-400'
+
               return (
                 <Link
                   key={item.label}
@@ -771,13 +885,9 @@ export const Layout: React.FC = () => {
                       setActiveDrawer(drawerId)
                     }
                   }}
-                  className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 ${
-                    isActive 
-                      ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-600/20' 
-                      : 'text-slate-400 hover:text-white hover:bg-slate-900/40 border border-transparent'
-                  }`}
+                  className={`flex items-center gap-3.5 px-4 py-3 text-xs font-bold transition-all duration-200 ${linkClass}`}
                 >
-                  <Icon className={`h-4.5 w-4.5 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
+                  <Icon className={`h-4.5 w-4.5 ${iconColor}`} />
                   <span>{item.label}</span>
                 </Link>
               )
@@ -786,34 +896,61 @@ export const Layout: React.FC = () => {
         </div>
 
         {/* Sidebar Bottom Actions */}
-        <div className="p-4 space-y-3 border-t border-slate-900">
-          
-          {user?.role === 'STUDENT' && (
-            <button
-              onClick={() => setActiveDrawer('student-affairs')}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-3 rounded-2xl transition-all duration-200 shadow-lg shadow-indigo-600/15"
-            >
-              Raise Ticket
-            </button>
+        <div className="p-4 space-y-3 border-t border-slate-200">
+          {isStudent ? (
+            <>
+
+              {/* Profile Row */}
+              <div className="flex items-center gap-3 pt-2 px-1">
+                <img 
+                  src={user?.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} 
+                  className="h-9 w-9 rounded-full object-cover border border-slate-200" 
+                  alt="Alex Johnson" 
+                />
+                <div className="min-w-0">
+                  <p className="font-bold text-slate-800 text-xs truncate">{user?.name || 'Alex Johnson'}</p>
+                  <p className="text-[10px] text-slate-500 truncate mt-0.5">{user?.department || 'Computer Science'}, Yr 3</p>
+                </div>
+              </div>
+
+              {/* Sidebar bottom navigation actions (Support & Logout) for student */}
+              <div className="space-y-1 mt-2">
+                <button 
+                  onClick={() => setActiveDrawer('student-affairs')}
+                  className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
+                >
+                  <HelpCircle className="h-4.5 w-4.5 text-slate-400" />
+                  <span>Support</span>
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 cursor-pointer"
+                >
+                  <LogOut className="h-4.5 w-4.5 text-rose-500" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="space-y-1">
+                <button 
+                  onClick={() => setActiveDrawer('student-affairs')}
+                  className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
+                >
+                  <HelpCircle className="h-4.5 w-4.5 text-slate-400" />
+                  <span>Support</span>
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 cursor-pointer"
+                >
+                  <LogOut className="h-4.5 w-4.5 text-rose-500" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </>
           )}
-
-          <div className="space-y-1">
-            <button 
-              onClick={() => setActiveDrawer('student-affairs')}
-              className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900/40"
-            >
-              <HelpCircle className="h-4.5 w-4.5 text-slate-500" />
-              <span>Support</span>
-            </button>
-            <button 
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3.5 px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-950/10"
-            >
-              <LogOut className="h-4.5 w-4.5 text-rose-500" />
-              <span>Logout</span>
-            </button>
-          </div>
-
         </div>
 
       </aside>
@@ -822,11 +959,11 @@ export const Layout: React.FC = () => {
       <div className="flex-1 md:pl-64 flex flex-col min-w-0">
         
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-[#060814]/80 backdrop-blur-md border-b border-slate-900 h-16 px-4 md:px-8 flex items-center justify-between select-none">
+        <header className="sticky top-0 z-30 backdrop-blur-md h-16 px-4 md:px-8 flex items-center justify-between select-none border-b bg-white/80 border-slate-200 text-slate-800">
           
           {/* Mobile menu button */}
           <button 
-            className="md:hidden p-2 rounded-xl hover:bg-slate-900 text-slate-200"
+            className="md:hidden p-2 rounded-xl transition-colors hover:bg-slate-100 text-slate-800"
             onClick={() => setMobileMenuOpen(true)}
           >
             <Menu className="h-6 w-6" />
@@ -837,19 +974,19 @@ export const Layout: React.FC = () => {
             
             {/* Search Input */}
             <div className="relative flex items-center w-full max-w-xs">
-              <Search className="absolute left-3.5 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3.5 h-4 w-4 text-slate-450" />
               <input 
                 type="text" 
-                placeholder="Search resources..." 
-                className="w-full bg-[#0d111d] border border-slate-900 focus:border-indigo-600 text-white rounded-xl py-2 pl-10 pr-4 text-xs focus:outline-none transition-all duration-200 placeholder-slate-600 shadow-inner"
+                placeholder={isStudent ? "Search courses, events, or resources..." : "Search systems, students, or logs..."} 
+                className="w-full border rounded-xl py-2 pl-10 pr-4 text-xs focus:outline-none transition-all duration-200 bg-slate-50 border-slate-200 text-slate-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 placeholder-slate-400"
               />
             </div>
 
             {/* Nav Links */}
-            <div className="flex gap-6 text-xs font-semibold text-slate-400">
-              <a href="#" onClick={(e) => { e.preventDefault(); setActiveDrawer('announcements'); }} className="hover:text-white transition-colors">Announcements</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); setActiveDrawer('calendar'); }} className="hover:text-white transition-colors">Calendar</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); setActiveDrawer('directory'); }} className="hover:text-white transition-colors">Directory</a>
+            <div className={`flex gap-6 text-xs font-semibold ${'text-slate-500'}`}>
+              <a href="#" onClick={(e) => { e.preventDefault(); setActiveDrawer('announcements'); }} className={`transition-colors ${isStudent ? 'hover:text-white' : 'hover:text-slate-900'}`}>Announcements</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setActiveDrawer('calendar'); }} className={`transition-colors ${isStudent ? 'hover:text-white' : 'hover:text-slate-900'}`}>Calendar</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setActiveDrawer('directory'); }} className={`transition-colors ${isStudent ? 'hover:text-white' : 'hover:text-slate-900'}`}>Directory</a>
             </div>
 
           </div>
@@ -861,22 +998,22 @@ export const Layout: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="p-2 rounded-xl hover:bg-slate-900 text-slate-500 hover:text-slate-300 transition-colors relative"
+                className="p-2 rounded-xl transition-colors relative cursor-pointer hover:bg-slate-100 text-slate-400 hover:text-slate-700"
               >
                 <Bell className="h-4.5 w-4.5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 h-3.5 w-3.5 bg-rose-500 text-[9px] text-white font-extrabold flex items-center justify-center rounded-full">
+                  <span className="absolute top-1 right-1 h-3.5 w-3.5 bg-rose-500 text-[9px] text-white font-extrabold flex items-center justify-center rounded-full">
                     {unreadCount}
                   </span>
                 )}
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-3 w-80 bg-[#0c101d] border border-slate-800 rounded-2xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-3 duration-200 z-50">
-                  <div className="flex items-center justify-between mb-3 border-b border-slate-900 pb-2">
-                    <span className="font-bold text-xs text-white">Notifications</span>
+                <div className="absolute right-0 mt-3 w-80 rounded-2xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-3 duration-200 z-50 bg-white border border-slate-200 text-slate-800">
+                  <div className="flex items-center justify-between mb-3 border-b pb-2 border-slate-100">
+                    <span className="font-bold text-xs text-slate-900">Notifications</span>
                     {unreadCount > 0 && (
-                      <span className="text-[10px] text-indigo-400 font-bold">{unreadCount} Unread</span>
+                      <span className="text-[10px] font-bold text-blue-600">{unreadCount} Unread</span>
                     )}
                   </div>
                   <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -886,16 +1023,18 @@ export const Layout: React.FC = () => {
                       notifications.map((n: Notification) => (
                         <div 
                           key={n.id} 
-                          className={`p-2.5 rounded-xl text-[11px] transition-colors ${
-                            n.isRead ? 'opacity-60 bg-transparent' : 'bg-slate-900/60 border-l-2 border-indigo-500'
+                          className={`p-2.5 rounded-xl text-[11px] transition-colors border border-transparent ${
+                            n.isRead 
+                              ? 'opacity-60 bg-transparent' 
+                              : 'bg-blue-50/50 border-l-2 border-l-blue-600 text-slate-950 font-semibold'
                           }`}
                           onClick={() => !n.isRead && readNotifMutation.mutate(n.id)}
                         >
                           <div className="flex justify-between items-start gap-1">
-                            <span className="font-bold text-white">{n.title}</span>
+                            <span className="font-bold text-slate-900">{n.title}</span>
                           </div>
-                          <p className="text-slate-400 mt-1">{n.message}</p>
-                          <span className="text-[9px] text-slate-600 block mt-1">
+                          <p className="mt-1 text-slate-600">{n.message}</p>
+                          <span className="text-[9px] text-slate-400 block mt-1">
                             {new Date(n.createdAt).toLocaleDateString()}
                           </span>
                         </div>
@@ -906,21 +1045,37 @@ export const Layout: React.FC = () => {
               )}
             </div>
 
+            {/* AI Assistant Robot Button */}
+            <button
+              onClick={() => setActiveDrawer('system-admin')}
+              className="p-2 rounded-xl transition-colors cursor-pointer hover:bg-slate-100 text-slate-400 hover:text-slate-700"
+            >
+              <Bot className="h-4.5 w-4.5" />
+            </button>
+
             {/* Messages Mail Icon */}
             <button
-              onClick={() => alert("Mail box inbox is empty.")}
-              className="p-2 rounded-xl hover:bg-slate-900 text-slate-500 hover:text-slate-300 transition-colors"
+              onClick={() => alert("Mailbox is currently empty.")}
+              className="p-2 rounded-xl transition-colors cursor-pointer hover:bg-slate-100 text-slate-400 hover:text-slate-700"
             >
               <Mail className="h-4.5 w-4.5" />
             </button>
 
-            {/* User Profile Avatar */}
-            <div className="h-8 w-8 rounded-full overflow-hidden border border-slate-800">
-              <img 
-                src={user?.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} 
-                alt="Profile" 
-                className="h-full w-full object-cover"
-              />
+            {/* User Profile Widget */}
+            <div className="flex items-center gap-3">
+              <div className="text-right hidden sm:block">
+                <p className={`font-extrabold text-xs ${'text-slate-800'}`}>{user?.name || 'Admin Chief'}</p>
+                <p className={`text-[9px] font-black tracking-wider uppercase mt-0.5 ${'text-emerald-600'}`}>
+                  {isAdmin ? 'LEVEL 4 ACCESS' : isFaculty ? 'FACULTY COORDINATOR' : 'STUDENT LEVEL 3'}
+                </p>
+              </div>
+              <div className={`h-9 w-9 rounded-full overflow-hidden border ${'border-slate-200'}`}>
+                <img 
+                  src={user?.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} 
+                  alt="Profile" 
+                  className="h-full w-full object-cover"
+                />
+              </div>
             </div>
 
           </div>
@@ -951,13 +1106,13 @@ export const Layout: React.FC = () => {
           
           {/* Drawer container panel */}
           <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-            <div className="w-screen max-w-md sm:max-w-lg bg-[#0b0e17] border-l border-slate-900 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="w-screen max-w-md sm:max-w-lg border-l shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 bg-white border-slate-200 text-slate-800">
               
               {/* Header */}
-              <div className="p-6 border-b border-slate-900 flex items-center justify-between">
+              <div className="p-6 border-b flex items-center justify-between border-slate-100">
                 <div className="flex items-center gap-2">
                   {getDrawerIcon()}
-                  <h3 className="font-extrabold text-base text-white">{getDrawerTitle()}</h3>
+                  <h3 className="font-extrabold text-base text-slate-800">{getDrawerTitle()}</h3>
                 </div>
                 <button 
                   onClick={() => {
@@ -967,19 +1122,19 @@ export const Layout: React.FC = () => {
                     setAffairsSuccess(false)
                     setTranscriptRequestStatus(null)
                   }}
-                  className="p-1.5 rounded-xl hover:bg-slate-900 text-slate-400 hover:text-white transition-colors"
+                  className="p-1.5 rounded-xl transition-colors hover:bg-slate-100 text-slate-400 hover:text-slate-700"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className={`flex-1 overflow-y-auto p-6 space-y-6 ${'text-slate-700'}`}>
                 {renderDrawerContent()}
               </div>
 
               {/* Drawer Footer */}
-              <div className="p-6 border-t border-slate-900 bg-[#080b12] text-center text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+              <div className="p-6 border-t text-center text-[10px] font-bold uppercase tracking-wider border-slate-100 bg-slate-50 text-slate-400">
                 UniSphere Portal • Interactive Sandbox
               </div>
 
@@ -992,19 +1147,23 @@ export const Layout: React.FC = () => {
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <nav className="relative flex flex-col w-64 h-full bg-[#0b0e17] p-6 animate-in slide-in-from-left duration-200">
+          <nav className="relative flex flex-col w-64 h-full p-6 animate-in slide-in-from-left duration-200 bg-slate-50 border-r border-slate-200 text-slate-800">
             <div className="flex items-center justify-between mb-8">
-              <span className="font-extrabold text-xl text-white">UniSphere</span>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 rounded-xl hover:bg-slate-900">
+              <span className="font-extrabold text-xl text-blue-900">UniSphere</span>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-700">
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex-1 space-y-1">
+            <div className="flex-1 space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon
                 const isHash = item.path.startsWith('#')
                 const isActive = isHash ? false : location.pathname === item.path
                 
+                const linkClass = isActive
+                  ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600 rounded-r-xl font-bold'
+                  : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/50 rounded-xl transition-all font-semibold'
+
                 return (
                   <Link
                     key={item.label}
@@ -1017,11 +1176,7 @@ export const Layout: React.FC = () => {
                         setActiveDrawer(drawerId)
                       }
                     }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
-                      isActive 
-                        ? 'bg-indigo-600/10 text-indigo-400' 
-                        : 'text-slate-400 hover:bg-slate-900/40'
-                    }`}
+                    className={`flex items-center gap-3 px-4 py-3 text-xs transition-all ${linkClass}`}
                   >
                     <Icon className="h-4.5 w-4.5" />
                     <span>{item.label}</span>
@@ -1029,10 +1184,10 @@ export const Layout: React.FC = () => {
                 )
               })}
             </div>
-            <div className="border-t border-slate-900 pt-4">
+            <div className="border-t pt-4 border-slate-200">
               <button 
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-950/15 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl font-bold transition-all"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all bg-rose-50 text-rose-600 hover:bg-rose-100"
               >
                 <LogOut className="h-4 w-4" />
                 Sign Out
@@ -1041,6 +1196,21 @@ export const Layout: React.FC = () => {
           </nav>
         </div>
       )}
+
+      {/* Digital Pass Ticket Dialog */}
+      <Dialog
+        isOpen={!!selectedPass}
+        onClose={() => setSelectedPass(null)}
+        title="Event Boarding Ticket"
+      >
+        {selectedPass && (
+          <DigitalPass
+            event={selectedPass.event}
+            studentName={user?.name || 'Student Name'}
+            passCode={selectedPass.passCode}
+          />
+        )}
+      </Dialog>
 
     </div>
   )

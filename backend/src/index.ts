@@ -101,7 +101,7 @@ async function startServer() {
     console.log('Database connection authenticated successfully.')
 
     // Sync models (alter table structure if needed)
-    await sequelize.sync({ alter: true })
+    await sequelize.sync()
     console.log('Database tables synchronized.')
 
     // Seed Data
