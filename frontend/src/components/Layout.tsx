@@ -854,7 +854,7 @@ export const Layout: React.FC = () => {
           <div className="p-6 flex flex-col items-start gap-0.5 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-xl tracking-tight font-sans text-[#006680]">
-                {isStudent ? 'UniSphere' : 'EduCore Coordinator'}
+                UniSphere
               </span>
             </div>
             <span className="text-[9px] font-black uppercase tracking-wider text-slate-450 text-slate-400">
