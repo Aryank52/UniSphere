@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Calendar, MapPin, User, Printer, Copy, Check } from 'lucide-react'
 import { Card } from './ui/Card'
 import { Button } from './ui/Button'
-import { useState } from 'react'
 import { Badge } from './ui/Badge'
+import { QRCodeSVG } from 'qrcode.react'
 import type { Event } from '../types'
 
 interface DigitalPassProps {
@@ -14,48 +14,6 @@ interface DigitalPassProps {
 
 export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, passCode }) => {
   const [copied, setCopied] = useState(false)
-
-  // Generate a realistic, unique 17x17 QR pattern based on the passCode string
-  const generateQRMatrix = (code: string) => {
-    // Generate simple hash from string
-    let hash = 0
-    for (let i = 0; i < code.length; i++) {
-      hash = code.charCodeAt(i) + ((hash << 5) - hash)
-    }
-    
-    const size = 17
-    const matrix: boolean[][] = []
-    
-    for (let r = 0; r < size; r++) {
-      matrix[r] = []
-      for (let c = 0; c < size; c++) {
-        // Corners are static alignment patterns
-        const isCorner = 
-          (r < 5 && c < 5) || 
-          (r < 5 && c >= size - 5) || 
-          (r >= size - 5 && c < 5)
-        
-        if (isCorner) {
-          // Alignment outer border and center square
-          const innerR = r < 5 ? r : r - (size - 5)
-          const innerC = c < 5 ? c : c - (size - 5)
-          const isBorder = innerR === 0 || innerR === 4 || innerC === 0 || innerC === 4
-          const isCenter = innerR === 2 && innerC === 2
-          matrix[r][c] = isBorder || isCenter
-        } else {
-          // Heuristic bit generator
-          const seed = Math.sin(hash + r * 19 + c * 37) * 10000
-          matrix[r][c] = (seed - Math.floor(seed)) > 0.45
-        }
-      }
-    }
-    return matrix
-  }
-
-  const qrMatrix = generateQRMatrix(passCode)
-  const cellSize = 12
-  const padding = 16
-  const svgSize = qrMatrix.length * cellSize + padding * 2
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(passCode)
@@ -123,25 +81,13 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
         {/* QR Section */}
         <div className="flex flex-col items-center gap-3">
           <div className="bg-white p-4 rounded-2xl shadow-inner border border-slate-100 select-none">
-            {/* SVG Rendered QR Code */}
-            <svg width={svgSize} height={svgSize} viewBox={`0 0 ${svgSize} ${svgSize}`} className="w-40 h-40">
-              <rect width="100%" height="100%" fill="white" />
-              {qrMatrix.map((row, r) => 
-                row.map((val, c) => 
-                  val ? (
-                    <rect
-                      key={`${r}-${c}`}
-                      x={padding + c * cellSize}
-                      y={padding + r * cellSize}
-                      width={cellSize}
-                      height={cellSize}
-                      fill="#1e293b" // Deep slate-800 color for standard reader legibility
-                      rx={2}
-                    />
-                  ) : null
-                )
-              )}
-            </svg>
+            <QRCodeSVG 
+              value={passCode} 
+              size={160} 
+              level="H"
+              fgColor="#1e293b"
+              bgColor="#ffffff"
+            />
           </div>
           <div className="text-center">
             <p className="text-[10px] text-slate-400 font-bold tracking-wide uppercase">Digital Pass Code</p>

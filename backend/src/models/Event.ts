@@ -2,6 +2,7 @@ import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../config/database'
 import { User } from './User'
 import { Club } from './Club'
+import { Venue } from './Venue'
 
 export class Event extends Model {
   public id!: number
@@ -17,6 +18,7 @@ export class Event extends Model {
   public category!: 'TECH' | 'SPORTS' | 'ACADEMIC' | 'CULTURAL'
   public clubId!: number
   public coordinatorId!: number
+  public venueId!: number | null
   public engagementScore!: number
 }
 
@@ -85,6 +87,14 @@ Event.init(
         key: 'id'
       }
     },
+    venueId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: Venue,
+        key: 'id'
+      }
+    },
     engagementScore: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -103,3 +113,6 @@ Club.hasMany(Event, { foreignKey: 'clubId' })
 
 Event.belongsTo(User, { as: 'coordinator', foreignKey: 'coordinatorId' })
 User.hasMany(Event, { foreignKey: 'coordinatorId' })
+
+Event.belongsTo(Venue, { as: 'venue', foreignKey: 'venueId' })
+Venue.hasMany(Event, { foreignKey: 'venueId' })

@@ -8,6 +8,7 @@ import { Notification } from '../models/Notification'
 import { User } from '../models/User'
 import { AIService } from '../services/aiService'
 import { NotificationService } from '../services/notificationService'
+import { GamificationService } from '../services/gamificationService'
 import { getCachedData, setCachedData, invalidateCache } from '../config/cache'
 
 async function clearEventsCache() {
@@ -192,11 +193,18 @@ export async function registerForEvent(req: AuthRequest, res: Response): Promise
     // Call simulated SMTP email notification service
     const studentUser = await User.findByPk(req.user.id)
     if (studentUser) {
-      await NotificationService.sendEmailNotification(
+      await NotificationService.sendEmail(
         studentUser.email,
-        studentUser.name,
         `UniSphere Confirmed Reservation: ${event.title}`,
-        `Hello ${studentUser.name},\n\nYour boarding pass QR code for "${event.title}" is confirmed! \nBoarding Ticket Passcode: ${code}\nLocation: ${event.location}\nDate: ${event.date} at ${event.time}.\n\nThank you,\nUniSphere Campus Hub`
+        `<div style="font-family: sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;">
+          <h2 style="color: #10b981;">Registration Confirmed!</h2>
+          <p>Hello ${studentUser.name},</p>
+          <p>Your boarding pass QR code for <strong>"${event.title}"</strong> is confirmed!</p>
+          <p><strong>Ticket Passcode:</strong> ${code}<br/>
+          <strong>Location:</strong> ${event.location}<br/>
+          <strong>Date & Time:</strong> ${event.date} at ${event.time}</p>
+          <p>Thank you,<br/>UniSphere Campus Hub</p>
+        </div>`
       )
     }
 
@@ -227,6 +235,9 @@ export async function submitFeedback(req: AuthRequest, res: Response): Promise<v
       rating,
       comment
     })
+
+    // Award 10 XP for leaving feedback
+    await GamificationService.awardXP(req.user.id, 10, `Submitted feedback for event: ${event.title}`)
 
     // Recalculate engagement score
     const newScore = await AIService.calculateEngagementScore(event)

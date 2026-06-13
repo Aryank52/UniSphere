@@ -10,6 +10,7 @@ class Attendance extends sequelize_1.Model {
     eventId;
     studentId;
     checkedInAt;
+    checkedOutAt;
     checkedById;
 }
 exports.Attendance = Attendance;
@@ -40,9 +41,13 @@ Attendance.init({
         allowNull: false,
         defaultValue: sequelize_1.DataTypes.NOW
     },
+    checkedOutAt: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: true
+    },
     checkedById: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: User_1.User,
             key: 'id'

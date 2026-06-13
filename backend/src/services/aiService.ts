@@ -39,7 +39,9 @@ export class AIService {
   }
 
   public static async calculateHeuristicScore(student: User, event: Event, studentRegs: Registration[]): Promise<number> {
-    const studentText = `${student.department} cs computer data science AI coding software development athletics sports`
+    const interestsStr = (student.interests || []).join(' ')
+    const skillsStr = (student.skills || []).join(' ')
+    const studentText = `${student.department || ''} ${interestsStr} ${skillsStr}`.trim()
     const eventText = `${event.title} ${event.description} ${event.category} ${event.location}`
     
     const studentVec = this.getTermVector(studentText)
@@ -65,7 +67,9 @@ export class AIService {
   }
 
   public static calculateHeuristicReason(student: User, event: Event, studentRegs: Registration[]): string {
-    const studentText = `${student.department} cs computer data science AI coding software development athletics sports`
+    const interestsStr = (student.interests || []).join(' ')
+    const skillsStr = (student.skills || []).join(' ')
+    const studentText = `${student.department || ''} ${interestsStr} ${skillsStr}`.trim()
     const eventText = `${event.title} ${event.description} ${event.category}`
     
     const studentVec = this.getTermVector(studentText)
@@ -74,7 +78,7 @@ export class AIService {
     const similarity = this.cosineSimilarity(studentVec, eventVec)
     
     if (similarity > 0.08) {
-      return `RAG Vector Match: This event matches ${(similarity * 100).toFixed(0)}% of your profile tags in ${student.department}.`
+      return `RAG Vector Match: This event matches ${(similarity * 100).toFixed(0)}% of your profile tags in ${student.department || 'your profile'}.`
     }
 
     const category = event.category ? event.category.toUpperCase() : ''

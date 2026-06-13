@@ -41,10 +41,15 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
+const node_cron_1 = __importDefault(require("node-cron"));
 const database_1 = require("./config/database");
 const cache_1 = require("./config/cache");
 const seed_1 = require("./services/seed");
 const auth_1 = require("./middleware/auth");
+const security_1 = require("./middleware/security");
+const rateLimiter_1 = require("./middleware/rateLimiter");
+const models_1 = require("./models");
+const notificationService_1 = require("./services/notificationService");
 const authController = __importStar(require("./controllers/authController"));
 const eventController = __importStar(require("./controllers/eventController"));
 const clubController = __importStar(require("./controllers/clubController"));
@@ -57,6 +62,8 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8080;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use(security_1.securityHeaders);
+app.use(rateLimiter_1.rateLimiter);
 // Initialize Redis Cache Server
 (0, cache_1.initRedis)();
 // Swagger Setup
@@ -82,6 +89,14 @@ app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.de
 // Auth Routes
 app.post('/api/auth/register', authController.register);
 app.post('/api/auth/login', authController.login);
+app.post('/api/auth/logout', auth_1.authenticateToken, authController.logout);
+app.post('/api/auth/verify-email', authController.verifyEmail);
+app.post('/api/auth/reset-password-request', authController.resetPasswordRequest);
+app.post('/api/auth/reset-password', authController.resetPassword);
+app.put('/api/auth/onboarding', auth_1.authenticateToken, authController.updateOnboarding);
+app.post('/api/auth/2fa/enable', auth_1.authenticateToken, authController.enable2FA);
+app.post('/api/auth/2fa/verify', auth_1.authenticateToken, authController.verify2FA);
+app.get('/api/auth/sessions', auth_1.authenticateToken, authController.getSessions);
 // Events Routes
 app.get('/api/events', auth_1.authenticateToken, eventController.getEvents);
 app.get('/api/events/coordinator', auth_1.authenticateToken, (0, auth_1.authorizeRoles)('FACULTY'), eventController.getCoordinatorEvents);
@@ -114,6 +129,78 @@ app.get('/api/admin/users', auth_1.authenticateToken, (0, auth_1.authorizeRoles)
 app.get('*', (req, res) => {
     res.status(404).json({ message: 'Resource not found' });
 });
+function startNotificationScheduler() {
+    console.log('Initializing Real-time Event Reminders Cron Scheduler...');
+    // Cron job running every minute
+    node_cron_1.default.schedule('* * * * *', async () => {
+        try {
+            const activeRegistrations = await models_1.Registration.findAll({
+                where: { status: 'REGISTERED' },
+                include: [
+                    { model: models_1.Event, as: 'event' },
+                    { model: models_1.User, as: 'student' }
+                ]
+            });
+            for (const reg of activeRegistrations) {
+                const event = reg.event;
+                const student = reg.student;
+                if (!event || !student)
+                    continue;
+                // Parse event start time
+                const eventDateTime = new Date(`${event.date}T${event.time}`);
+                const diffMs = eventDateTime.getTime() - Date.now();
+                const diffHours = diffMs / (1000 * 60 * 60);
+                const diffMinutes = diffMs / (1000 * 60);
+                // 1. 24h email reminder
+                if (diffHours <= 24 && diffHours > 1) {
+                    const logKey = `registrationId:${reg.id}`;
+                    const alreadySent = await models_1.AuditLog.findOne({
+                        where: { action: 'EMAIL_REMINDER_24H', details: logKey }
+                    });
+                    if (!alreadySent) {
+                        const htmlContent = `
+              <h2>Upcoming Event Reminder</h2>
+              <p>Hi ${student.name},</p>
+              <p>This is a reminder that <strong>${event.title}</strong> is starting in less than 24 hours!</p>
+              <p><strong>Date:</strong> ${event.date}</p>
+              <p><strong>Time:</strong> ${event.time}</p>
+              <p><strong>Location:</strong> ${event.location}</p>
+              <p>We look forward to seeing you there!</p>
+              <p>Best regards,<br/>UniSphere Campus Team</p>
+            `;
+                        await notificationService_1.NotificationService.sendEmail(student.email, `Reminder: ${event.title} is starting tomorrow!`, htmlContent);
+                        await models_1.AuditLog.create({ userId: student.id, action: 'EMAIL_REMINDER_24H', details: logKey });
+                    }
+                }
+                // 2. 1h SMS reminder
+                if (diffHours <= 1 && diffMinutes > 10) {
+                    const logKey = `registrationId:${reg.id}`;
+                    const alreadySent = await models_1.AuditLog.findOne({
+                        where: { action: 'SMS_REMINDER_1H', details: logKey }
+                    });
+                    if (!alreadySent) {
+                        await notificationService_1.NotificationService.sendSMS('+1234567890', `Reminder: "${event.title}" starts in 1 hour at ${event.location}.`);
+                        await models_1.AuditLog.create({ userId: student.id, action: 'SMS_REMINDER_1H', details: logKey });
+                    }
+                }
+                // 3. 10m Push reminder
+                if (diffMinutes <= 10 && diffMinutes > 0) {
+                    const logKey = `registrationId:${reg.id}`;
+                    const alreadySent = await models_1.AuditLog.findOne({
+                        where: { action: 'PUSH_REMINDER_10M', details: logKey }
+                    });
+                    if (!alreadySent) {
+                        await notificationService_1.NotificationService.sendPushNotification('mock-user-device-token', 'Event Starting Soon!', `"${event.title}" starts in 10 minutes at ${event.location}.`);
+                        await models_1.AuditLog.create({ userId: student.id, action: 'PUSH_REMINDER_10M', details: logKey });
+                    }
+                }
+            }
+        }
+        catch (error) {
+            console.error('Error running notification scheduler:', error);
+        }
+    });
+}
 // Database Sync and Server Listen
 async function startServer() {
     try {
@@ -124,6 +211,8 @@ async function startServer() {
         console.log('Database tables synchronized.');
         // Seed Data
         await (0, seed_1.seedDatabase)();
+        // Start Notification Cron Scheduler
+        startNotificationScheduler();
         app.listen(PORT, () => {
             console.log(`Node.js Express Server is listening on http://localhost:${PORT}`);
             console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);

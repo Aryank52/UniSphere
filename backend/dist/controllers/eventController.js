@@ -15,6 +15,7 @@ const Notification_1 = require("../models/Notification");
 const User_1 = require("../models/User");
 const aiService_1 = require("../services/aiService");
 const notificationService_1 = require("../services/notificationService");
+const gamificationService_1 = require("../services/gamificationService");
 const cache_1 = require("../config/cache");
 async function clearEventsCache() {
     await (0, cache_1.invalidateCache)('events_list_ALL');
@@ -183,7 +184,15 @@ async function registerForEvent(req, res) {
         // Call simulated SMTP email notification service
         const studentUser = await User_1.User.findByPk(req.user.id);
         if (studentUser) {
-            await notificationService_1.NotificationService.sendEmailNotification(studentUser.email, studentUser.name, `UniSphere Confirmed Reservation: ${event.title}`, `Hello ${studentUser.name},\n\nYour boarding pass QR code for "${event.title}" is confirmed! \nBoarding Ticket Passcode: ${code}\nLocation: ${event.location}\nDate: ${event.date} at ${event.time}.\n\nThank you,\nUniSphere Campus Hub`);
+            await notificationService_1.NotificationService.sendEmail(studentUser.email, `UniSphere Confirmed Reservation: ${event.title}`, `<div style="font-family: sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;">
+          <h2 style="color: #10b981;">Registration Confirmed!</h2>
+          <p>Hello ${studentUser.name},</p>
+          <p>Your boarding pass QR code for <strong>"${event.title}"</strong> is confirmed!</p>
+          <p><strong>Ticket Passcode:</strong> ${code}<br/>
+          <strong>Location:</strong> ${event.location}<br/>
+          <strong>Date & Time:</strong> ${event.date} at ${event.time}</p>
+          <p>Thank you,<br/>UniSphere Campus Hub</p>
+        </div>`);
         }
         res.status(201).json(registration);
     }
@@ -210,6 +219,8 @@ async function submitFeedback(req, res) {
             rating,
             comment
         });
+        // Award 10 XP for leaving feedback
+        await gamificationService_1.GamificationService.awardXP(req.user.id, 10, `Submitted feedback for event: ${event.title}`);
         // Recalculate engagement score
         const newScore = await aiService_1.AIService.calculateEngagementScore(event);
         event.engagementScore = newScore;

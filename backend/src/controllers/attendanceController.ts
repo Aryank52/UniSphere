@@ -6,6 +6,7 @@ import { User } from '../models/User'
 import { Notification } from '../models/Notification'
 import { Event } from '../models/Event'
 import { NotificationService } from '../services/notificationService'
+import { GamificationService } from '../services/gamificationService'
 
 export async function getEventAttendees(req: AuthRequest, res: Response): Promise<void> {
   const { eventId } = req.params
@@ -67,6 +68,9 @@ export async function checkInAttendance(req: AuthRequest, res: Response): Promis
 
     const event = await Event.findByPk(eventId)
 
+    // Award 50 XP for event attendance check-in
+    await GamificationService.awardXP(reg.studentId, 50, `Checked into event: ${event ? event.title : eventId}`)
+
     // Notify Student
     await Notification.create({
       userId: reg.studentId,
@@ -78,11 +82,15 @@ export async function checkInAttendance(req: AuthRequest, res: Response): Promis
     // Simulated email dispatch on scan check-in
     const studentUser = await User.findByPk(reg.studentId)
     if (studentUser) {
-      await NotificationService.sendEmailNotification(
+      await NotificationService.sendEmail(
         studentUser.email,
-        studentUser.name,
         `UniSphere Boarding Scan Complete: ${event ? event.title : 'Event'}`,
-        `Hello ${studentUser.name},\n\nYour digital pass QR code was successfully scanned for "${event ? event.title : 'Event'}". Your attendance is checked in!\n\nThank you,\nUniSphere Boarding Desk`
+        `<div style="font-family: sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;">
+          <h2 style="color: #0ea5e9;">Scan Complete!</h2>
+          <p>Hello ${studentUser.name},</p>
+          <p>Your digital pass QR code was successfully scanned for <strong>"${event ? event.title : 'Event'}"</strong>. Your attendance is marked as checked in!</p>
+          <p>Thank you,<br/>UniSphere Boarding Desk</p>
+        </div>`
       )
     }
 

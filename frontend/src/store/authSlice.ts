@@ -4,9 +4,17 @@ export interface User {
   id: number
   name: string
   email: string
-  role: 'STUDENT' | 'FACULTY' | 'ADMIN'
-  department: string
-  profileImage?: string
+  role: 'STUDENT' | 'FACULTY' | 'COORDINATOR' | 'ADMIN'
+  department: string | null
+  academicYear?: number | null
+  interests?: string[] | null
+  skills?: string[] | null
+  preferredCategories?: string[] | null
+  xpPoints?: number
+  level?: number
+  isEmailVerified?: boolean
+  isTwoFactorEnabled?: boolean
+  profileImage?: string | null
 }
 
 interface AuthState {

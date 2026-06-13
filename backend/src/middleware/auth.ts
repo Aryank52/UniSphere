@@ -33,7 +33,7 @@ export async function authenticateToken(req: AuthRequest, res: Response, next: N
   }
 }
 
-export function authorizeRoles(...roles: ('STUDENT' | 'FACULTY' | 'ADMIN')[]) {
+export function authorizeRoles(...roles: ('STUDENT' | 'FACULTY' | 'COORDINATOR' | 'ADMIN')[]) {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
       res.status(403).json({ message: 'Unauthorized access' })

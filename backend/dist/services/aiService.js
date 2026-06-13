@@ -36,7 +36,9 @@ class AIService {
         return vector;
     }
     static async calculateHeuristicScore(student, event, studentRegs) {
-        const studentText = `${student.department} cs computer data science AI coding software development athletics sports`;
+        const interestsStr = (student.interests || []).join(' ');
+        const skillsStr = (student.skills || []).join(' ');
+        const studentText = `${student.department || ''} ${interestsStr} ${skillsStr}`.trim();
         const eventText = `${event.title} ${event.description} ${event.category} ${event.location}`;
         const studentVec = this.getTermVector(studentText);
         const eventVec = this.getTermVector(eventText);
@@ -55,13 +57,15 @@ class AIService {
         return Math.min(1.0, score);
     }
     static calculateHeuristicReason(student, event, studentRegs) {
-        const studentText = `${student.department} cs computer data science AI coding software development athletics sports`;
+        const interestsStr = (student.interests || []).join(' ');
+        const skillsStr = (student.skills || []).join(' ');
+        const studentText = `${student.department || ''} ${interestsStr} ${skillsStr}`.trim();
         const eventText = `${event.title} ${event.description} ${event.category}`;
         const studentVec = this.getTermVector(studentText);
         const eventVec = this.getTermVector(eventText);
         const similarity = this.cosineSimilarity(studentVec, eventVec);
         if (similarity > 0.08) {
-            return `RAG Vector Match: This event matches ${(similarity * 100).toFixed(0)}% of your profile tags in ${student.department}.`;
+            return `RAG Vector Match: This event matches ${(similarity * 100).toFixed(0)}% of your profile tags in ${student.department || 'your profile'}.`;
         }
         const category = event.category ? event.category.toUpperCase() : '';
         const sameCategoryRegs = studentRegs.filter(r => {

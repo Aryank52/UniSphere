@@ -8,6 +8,7 @@ const User_1 = require("../models/User");
 const Notification_1 = require("../models/Notification");
 const Event_1 = require("../models/Event");
 const notificationService_1 = require("../services/notificationService");
+const gamificationService_1 = require("../services/gamificationService");
 async function getEventAttendees(req, res) {
     const { eventId } = req.params;
     try {
@@ -60,6 +61,8 @@ async function checkInAttendance(req, res) {
             checkedById: req.user.id
         });
         const event = await Event_1.Event.findByPk(eventId);
+        // Award 50 XP for event attendance check-in
+        await gamificationService_1.GamificationService.awardXP(reg.studentId, 50, `Checked into event: ${event ? event.title : eventId}`);
         // Notify Student
         await Notification_1.Notification.create({
             userId: reg.studentId,
@@ -70,7 +73,12 @@ async function checkInAttendance(req, res) {
         // Simulated email dispatch on scan check-in
         const studentUser = await User_1.User.findByPk(reg.studentId);
         if (studentUser) {
-            await notificationService_1.NotificationService.sendEmailNotification(studentUser.email, studentUser.name, `UniSphere Boarding Scan Complete: ${event ? event.title : 'Event'}`, `Hello ${studentUser.name},\n\nYour digital pass QR code was successfully scanned for "${event ? event.title : 'Event'}". Your attendance is checked in!\n\nThank you,\nUniSphere Boarding Desk`);
+            await notificationService_1.NotificationService.sendEmail(studentUser.email, `UniSphere Boarding Scan Complete: ${event ? event.title : 'Event'}`, `<div style="font-family: sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;">
+          <h2 style="color: #0ea5e9;">Scan Complete!</h2>
+          <p>Hello ${studentUser.name},</p>
+          <p>Your digital pass QR code was successfully scanned for <strong>"${event ? event.title : 'Event'}"</strong>. Your attendance is marked as checked in!</p>
+          <p>Thank you,<br/>UniSphere Boarding Desk</p>
+        </div>`);
         }
         res.status(200).json({ success: true, studentId: reg.studentId });
     }

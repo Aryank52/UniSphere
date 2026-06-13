@@ -37,7 +37,7 @@ Registration.init(
       }
     },
     status: {
-      type: DataTypes.ENUM('REGISTERED', 'CANCELLED'),
+      type: DataTypes.ENUM('REGISTERED', 'CANCELLED', 'WAITLISTED'),
       allowNull: false,
       defaultValue: 'REGISTERED'
     },

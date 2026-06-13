@@ -2,6 +2,10 @@ import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { User } from '../models/User'
+import { SessionTrack } from '../models/SessionTrack'
+import { AuditLog } from '../models/AuditLog'
+import { NotificationService } from '../services/notificationService'
+import { AuthRequest } from '../middleware/auth'
 
 const JWT_SECRET = process.env.JWT_SECRET || '5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437'
 const JWT_EXPIRATION = '24h'
@@ -22,15 +26,52 @@ export async function register(req: Request, res: Response): Promise<void> {
       email,
       password: hashedPassword,
       role: role || 'STUDENT',
-      department: department || 'General Science',
-      profileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
+      department: department || null,
+      xpPoints: 0,
+      level: 1,
+      isEmailVerified: false,
+      profileImage: `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150`
     })
 
+    // Create activation token
+    const activationToken = jwt.sign({ id: newUser.id }, JWT_SECRET, { expiresIn: '1h' })
+    const verificationUrl = `http://localhost:5173/verify-email?token=${activationToken}`
+
+    await NotificationService.sendEmail(
+      newUser.email,
+      'Welcome to UniSphere - Please Verify Your Email',
+      `<div style="font-family: sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;">
+        <h2 style="color: #38bdf8;">Welcome, ${newUser.name}!</h2>
+        <p>Thank you for registering on UniSphere. To access your student dashboard and campus events, please verify your email address:</p>
+        <a href="${verificationUrl}" style="display: inline-block; background-color: #0ea5e9; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0;">Verify My Email</a>
+        <p style="color: #94a3b8; font-size: 11px;">If you didn't request this registration, you can safely ignore this email.</p>
+       </div>`
+    )
+
+    // Generate login token
+    const tokenJti = `jti_${Date.now()}_${newUser.id}`
     const token = jwt.sign(
-      { id: newUser.id, email: newUser.email, role: newUser.role },
+      { id: newUser.id, email: newUser.email, role: newUser.role, jti: tokenJti },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRATION }
     )
+
+    // Track active session device
+    await SessionTrack.create({
+      userId: newUser.id,
+      tokenJti,
+      deviceInfo: req.headers['user-agent'] || 'Unknown Device',
+      ipAddress: req.ip || '127.0.0.1',
+      isActive: true
+    })
+
+    // Log security audit trail
+    await AuditLog.create({
+      userId: newUser.id,
+      action: 'USER_REGISTERED',
+      ipAddress: req.ip || '127.0.0.1',
+      details: `User registered with role ${newUser.role} and email ${newUser.email}`
+    })
 
     res.status(201).json({ user: newUser, token })
   } catch (err: any) {
@@ -54,14 +95,279 @@ export async function login(req: Request, res: Response): Promise<void> {
       return
     }
 
+    const tokenJti = `jti_${Date.now()}_${user.id}`
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role, jti: tokenJti },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRATION }
     )
 
+    // Track active session device
+    await SessionTrack.create({
+      userId: user.id,
+      tokenJti,
+      deviceInfo: req.headers['user-agent'] || 'Unknown Device',
+      ipAddress: req.ip || '127.0.0.1',
+      isActive: true
+    })
+
+    // Log security audit trail
+    await AuditLog.create({
+      userId: user.id,
+      action: 'USER_LOGIN',
+      ipAddress: req.ip || '127.0.0.1',
+      details: `User logged in from ${req.headers['user-agent'] || 'unknown'}`
+    })
+
     res.status(200).json({ user, token })
   } catch (err: any) {
     res.status(500).json({ message: err.message || 'Error occurred during login' })
+  }
+}
+
+export async function logout(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (req.user) {
+      const authHeader = req.headers['authorization']
+      const token = authHeader && authHeader.split(' ')[1]
+      
+      if (token) {
+        const decoded = jwt.decode(token) as { jti?: string }
+        if (decoded && decoded.jti) {
+          await SessionTrack.update(
+            { isActive: false },
+            { where: { tokenJti: decoded.jti } }
+          )
+        }
+      }
+
+      await AuditLog.create({
+        userId: req.user.id,
+        action: 'USER_LOGOUT',
+        ipAddress: req.ip || '127.0.0.1',
+        details: 'User logged out and session terminated'
+      })
+    }
+    res.status(200).json({ message: 'Logged out successfully' })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Logout failed' })
+  }
+}
+
+export async function verifyEmail(req: Request, res: Response): Promise<void> {
+  const { token } = req.body
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number }
+    const user = await User.findByPk(decoded.id)
+    
+    if (!user) {
+      res.status(404).json({ message: 'User not found' })
+      return
+    }
+
+    user.isEmailVerified = true
+    await user.save()
+
+    await AuditLog.create({
+      userId: user.id,
+      action: 'EMAIL_VERIFIED',
+      ipAddress: req.ip || '127.0.0.1',
+      details: 'Email successfully verified'
+    })
+
+    res.status(200).json({ message: 'Email verified successfully', user })
+  } catch (err: any) {
+    res.status(400).json({ message: 'Invalid or expired verification token' })
+  }
+}
+
+export async function resetPasswordRequest(req: Request, res: Response): Promise<void> {
+  const { email } = req.body
+
+  try {
+    const user = await User.findOne({ where: { email } })
+    if (!user) {
+      res.status(404).json({ message: 'User with this email does not exist' })
+      return
+    }
+
+    const resetToken = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '30m' })
+    const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`
+
+    await NotificationService.sendEmail(
+      user.email,
+      'UniSphere - Password Reset Request',
+      `<div style="font-family: sans-serif; padding: 20px; background-color: #0f172a; color: #f8fafc; border-radius: 12px;">
+        <h2 style="color: #f97316;">Reset Your Password</h2>
+        <p>A password reset request has been received for your account. Click the button below to change your password (expires in 30 mins):</p>
+        <a href="${resetUrl}" style="display: inline-block; background-color: #f97316; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0;">Reset Password</a>
+        <p style="color: #94a3b8; font-size: 11px;">If you didn't request a password reset, you can safely ignore this email.</p>
+       </div>`
+    )
+
+    await AuditLog.create({
+      userId: user.id,
+      action: 'PASSWORD_RESET_REQUESTED',
+      ipAddress: req.ip || '127.0.0.1',
+      details: 'Password reset link sent to email'
+    })
+
+    res.status(200).json({ message: 'Password reset email sent' })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to request password reset' })
+  }
+}
+
+export async function resetPassword(req: Request, res: Response): Promise<void> {
+  const { token, newPassword } = req.body
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number }
+    const user = await User.findByPk(decoded.id)
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' })
+      return
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    user.password = hashedPassword
+    await user.save()
+
+    await AuditLog.create({
+      userId: user.id,
+      action: 'PASSWORD_RESET_COMPLETED',
+      ipAddress: req.ip || '127.0.0.1',
+      details: 'Password successfully updated'
+    })
+
+    res.status(200).json({ message: 'Password reset successfully' })
+  } catch (err: any) {
+    res.status(400).json({ message: 'Invalid or expired reset token' })
+  }
+}
+
+export async function updateOnboarding(req: AuthRequest, res: Response): Promise<void> {
+  const { department, academicYear, interests, skills, preferredCategories } = req.body
+
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Unauthorized access' })
+      return
+    }
+
+    const user = await User.findByPk(req.user.id)
+    if (!user) {
+      res.status(404).json({ message: 'User not found' })
+      return
+    }
+
+    user.department = department || user.department
+    user.academicYear = academicYear !== undefined ? Number(academicYear) : user.academicYear
+    user.interests = interests || user.interests
+    user.skills = skills || user.skills
+    user.preferredCategories = preferredCategories || user.preferredCategories
+    
+    // Add XP points for completing onboarding profile (100 XP)
+    if (user.xpPoints === 0) {
+      user.xpPoints = 100
+      user.level = 1
+    }
+    
+    await user.save()
+
+    await AuditLog.create({
+      userId: user.id,
+      action: 'PROFILE_ONBOARDED',
+      ipAddress: req.ip || '127.0.0.1',
+      details: 'Completed profile onboarding wizard, awarded 100 XP'
+    })
+
+    res.status(200).json({ message: 'Profile completed successfully', user })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to update onboarding' })
+  }
+}
+
+export async function enable2FA(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Unauthorized' })
+      return
+    }
+    
+    const user = await User.findByPk(req.user.id)
+    if (!user) {
+      res.status(404).json({ message: 'User not found' })
+      return
+    }
+
+    // Mock dynamic secret generation
+    const mockSecret = `UNISPHERE_SECRET_${req.user.id}_${Date.now()}`
+    user.twoFactorSecret = mockSecret
+    await user.save()
+
+    res.status(200).json({
+      secret: mockSecret,
+      qrCodeDataUrl: `otpauth://totp/UniSphere:${user.email}?secret=${mockSecret}&issuer=UniSphere`
+    })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to enable 2FA' })
+  }
+}
+
+export async function verify2FA(req: AuthRequest, res: Response): Promise<void> {
+  const { code } = req.body
+
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Unauthorized' })
+      return
+    }
+    
+    const user = await User.findByPk(req.user.id)
+    if (!user) {
+      res.status(404).json({ message: 'User not found' })
+      return
+    }
+
+    // Mock verification: any 6 digit code starting with '12' or matching '123456'
+    const isValid = code === '123456' || (code && code.length === 6 && code.startsWith('12'))
+    
+    if (!isValid) {
+      res.status(400).json({ message: 'Invalid verification code' })
+      return
+    }
+
+    user.isTwoFactorEnabled = true
+    await user.save()
+
+    await AuditLog.create({
+      userId: user.id,
+      action: '2FA_ENABLED',
+      ipAddress: req.ip || '127.0.0.1',
+      details: 'Two-Factor Authentication activated'
+    })
+
+    res.status(200).json({ message: '2FA enabled successfully', user })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to verify 2FA' })
+  }
+}
+
+export async function getSessions(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Unauthorized' })
+      return
+    }
+    const sessions = await SessionTrack.findAll({
+      where: { userId: req.user.id },
+      order: [['lastActive', 'DESC']]
+    })
+    res.status(200).json(sessions)
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to fetch session list' })
   }
 }

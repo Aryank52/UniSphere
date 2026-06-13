@@ -38,7 +38,7 @@ Registration.init({
         }
     },
     status: {
-        type: sequelize_1.DataTypes.ENUM('REGISTERED', 'CANCELLED'),
+        type: sequelize_1.DataTypes.ENUM('REGISTERED', 'CANCELLED', 'WAITLISTED'),
         allowNull: false,
         defaultValue: 'REGISTERED'
     },

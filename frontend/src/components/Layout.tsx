@@ -105,6 +105,8 @@ export const Layout: React.FC = () => {
     const common = [
       { path: '/dashboard/events', label: 'Explore Events', icon: Calendar },
       { path: '/dashboard/clubs', label: 'Clubs & Societies', icon: Users },
+      { path: '/dashboard/profile', label: 'My Profile', icon: GraduationCap },
+      { path: '/dashboard/settings', label: 'Settings', icon: Settings },
       { path: '#academic-record', label: 'Academic Record', icon: GraduationCap },
       { path: '#course-catalog', label: 'Course Catalog', icon: BookOpen },
       { path: '#faculty-hub', label: 'Faculty Hub', icon: Users },
@@ -838,7 +840,7 @@ export const Layout: React.FC = () => {
           {isStudent ? (
             <>
               {/* Profile Row */}
-              <div className="flex items-center gap-3 pt-2 px-1">
+              <Link to="/dashboard/profile" className="flex items-center gap-3 pt-2 px-1 hover:bg-slate-50/50 rounded-xl transition-all cursor-pointer">
                 <img 
                   src={user?.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} 
                   className="h-9 w-9 rounded-full object-cover border border-slate-200" 
@@ -848,7 +850,7 @@ export const Layout: React.FC = () => {
                   <p className="font-bold text-slate-800 text-xs truncate">{user?.name || 'Alex Johnson'}</p>
                   <p className="text-[10px] text-slate-450 truncate mt-0.5">{user?.department || 'Computer Science'}, Yr 3</p>
                 </div>
-              </div>
+              </Link>
 
               {/* Sidebar bottom navigation actions (Support & Logout) for student */}
               <div className="space-y-1 mt-2">
@@ -999,7 +1001,7 @@ export const Layout: React.FC = () => {
             </button>
 
             {/* User Profile Widget */}
-            <div className="flex items-center gap-3">
+            <Link to="/dashboard/profile" className="flex items-center gap-3 hover:bg-slate-50 p-1.5 rounded-xl transition-all cursor-pointer">
               <div className="text-right hidden sm:block">
                 <p className="font-extrabold text-xs text-slate-800">{user?.name || 'Admin Chief'}</p>
                 <p className="text-[9px] font-black tracking-wider uppercase mt-0.5 text-sky-500">
@@ -1013,7 +1015,7 @@ export const Layout: React.FC = () => {
                   className="h-full w-full object-cover"
                 />
               </div>
-            </div>
+            </Link>
 
           </div>
 

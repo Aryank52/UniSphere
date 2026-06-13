@@ -10,6 +10,15 @@ class User extends sequelize_1.Model {
     password;
     role;
     department;
+    academicYear;
+    interests;
+    skills;
+    preferredCategories;
+    xpPoints;
+    level;
+    isEmailVerified;
+    twoFactorSecret;
+    isTwoFactorEnabled;
     profileImage;
 }
 exports.User = User;
@@ -36,13 +45,56 @@ User.init({
         allowNull: false
     },
     role: {
-        type: sequelize_1.DataTypes.ENUM('STUDENT', 'FACULTY', 'ADMIN'),
+        type: sequelize_1.DataTypes.ENUM('STUDENT', 'FACULTY', 'COORDINATOR', 'ADMIN'),
         allowNull: false,
         defaultValue: 'STUDENT'
     },
     department: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
+    },
+    academicYear: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: true
+    },
+    interests: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: true,
+        defaultValue: []
+    },
+    skills: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: true,
+        defaultValue: []
+    },
+    preferredCategories: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: true,
+        defaultValue: []
+    },
+    xpPoints: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    level: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1
+    },
+    isEmailVerified: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    twoFactorSecret: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
+    },
+    isTwoFactorEnabled: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     },
     profileImage: {
         type: sequelize_1.DataTypes.STRING,

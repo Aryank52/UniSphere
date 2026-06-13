@@ -10,9 +10,14 @@ import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Dialog } from '../components/ui/Dialog'
 import { useAuthStore } from '../store/authStore'
+import { useAIRecommendations, useMyRegistrations, useRegisterForEvent } from '../hooks/useApi'
 
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuthStore()
+
+  const { data: recommendations = [], isLoading: isAIRecommendationsLoading } = useAIRecommendations()
+  const { data: registrations = [] } = useMyRegistrations()
+  const registerMutation = useRegisterForEvent()
 
   // Selected mock card states
   const [modalOpen, setModalOpen] = useState(false)
@@ -289,112 +294,72 @@ export const StudentDashboard: React.FC = () => {
 
         {/* Matches cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {/* Card 1 */}
-          <div className="bg-white border border-sky-100 rounded-3xl overflow-hidden shadow-travel flex flex-col justify-between min-h-[340px] hover:border-sky-300 transition-colors">
-            <div className="relative h-40 overflow-hidden bg-slate-105">
-              <img 
-                src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500" 
-                alt="AI & Robotics Society" 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-              {/* Badge */}
-              <span className="absolute top-4 right-4 bg-sky-50 border border-sky-105 text-sky-600 text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg shadow-sm">
-                98% Match
-              </span>
+          {isAIRecommendationsLoading ? (
+            <div className="col-span-3 text-center py-12 text-slate-400 font-bold">
+              Calculating profile similarities...
             </div>
-            
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Active Research Group • 140 Members</span>
-                <h4 className="font-extrabold text-base text-slate-800 mt-1">AI & Robotics Society</h4>
-                {/* tags */}
-                <div className="flex gap-1.5 mt-3">
-                  <Badge variant="default" className="px-2 py-0.5 text-[8px] font-black border-slate-200 bg-slate-50 text-slate-500 rounded-lg uppercase">Engineering</Badge>
-                  <Badge variant="default" className="px-2 py-0.5 text-[8px] font-black border-slate-200 bg-slate-50 text-slate-500 rounded-lg uppercase">Python</Badge>
+          ) : recommendations.length === 0 ? (
+            <div className="col-span-3 text-center py-12 text-slate-450 border border-dashed border-slate-200 bg-white rounded-3xl shadow-travel">
+              No matching events found for your interests yet.
+            </div>
+          ) : (
+            recommendations.slice(0, 3).map((rec: any) => {
+              const event = rec.event
+              const matchPercent = Math.round(rec.score * 100)
+              const isRegistered = registrations.some((r: any) => r.id === event.id)
+              
+              return (
+                <div key={rec.id} className="bg-white border border-sky-100 rounded-3xl overflow-hidden shadow-travel flex flex-col justify-between min-h-[340px] hover:border-sky-300 transition-colors">
+                  <div className="relative h-40 overflow-hidden bg-slate-105">
+                    <img 
+                      src={event.bannerImage || "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=500"} 
+                      alt={event.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                    {/* Match Badge */}
+                    <span className="absolute top-4 right-4 bg-sky-50 border border-sky-105 text-sky-600 text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg shadow-sm">
+                      {matchPercent}% Match
+                    </span>
+                  </div>
+                  
+                  <div className="p-5 flex-1 flex flex-col justify-between text-left">
+                    <div>
+                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">
+                        {event.category} • {event.location}
+                      </span>
+                      <h4 className="font-extrabold text-base text-slate-800 mt-1 line-clamp-2">{event.title}</h4>
+                      <p className="text-[10px] text-slate-500 mt-2 font-semibold leading-relaxed">
+                        {rec.recommendationReason}
+                      </p>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        if (isRegistered) {
+                          handleActionClick("Boarding Pass", `You are registered! Head to 'Academic Record' in the sidebar or 'Explore Events' to grab your Boarding ticket pass.`)
+                        } else {
+                          registerMutation.mutate(event.id, {
+                            onSuccess: () => {
+                              handleActionClick("Registration Complete", `Successfully registered for "${event.title}"! Your seat has been reserved and your ticket boarding pass is now in your wallet.`)
+                            }
+                          })
+                        }
+                      }}
+                      disabled={registerMutation.isPending}
+                      className={`w-full mt-6 font-extrabold text-xs py-3 rounded-2xl transition-all text-center cursor-pointer shadow-sm active:scale-[0.98] ${
+                        isRegistered 
+                          ? 'bg-sky-50 border border-sky-205 text-sky-600 hover:bg-sky-100'
+                          : 'bg-sky-500 hover:bg-sky-600 text-white'
+                      }`}
+                    >
+                      {registerMutation.isPending ? 'Processing...' : isRegistered ? 'View Boarding Pass' : 'Register Seat'}
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              <button 
-                onClick={() => handleActionClick("Club Proposal Request", "Join request for AI & Robotics Society sent. The student board will notify you shortly.")}
-                className="w-full mt-6 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs py-3 rounded-2xl transition-all text-center cursor-pointer shadow-sm active:scale-[0.98]"
-              >
-                Request to Join
-              </button>
-            </div>
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-white border border-sky-100 rounded-3xl overflow-hidden shadow-travel flex flex-col justify-between min-h-[340px] hover:border-sky-300 transition-colors">
-            <div className="relative h-40 overflow-hidden bg-slate-105">
-              <img 
-                src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500" 
-                alt="Human-Computer Lab" 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-              {/* Badge */}
-              <span className="absolute top-4 right-4 bg-orange-50 border border-orange-100 text-orange-600 text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg shadow-sm">
-                85% Match
-              </span>
-            </div>
-            
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Faculty Research • Paid Fellowship</span>
-                <h4 className="font-extrabold text-base text-slate-800 mt-1">Human-Computer Lab</h4>
-                {/* tags */}
-                <div className="flex gap-1.5 mt-3">
-                  <Badge variant="default" className="px-2 py-0.5 text-[8px] font-black border-slate-200 bg-slate-50 text-slate-500 rounded-lg uppercase">UX Design</Badge>
-                  <Badge variant="default" className="px-2 py-0.5 text-[8px] font-black border-slate-200 bg-slate-50 text-slate-500 rounded-lg uppercase">Cognitive Sci</Badge>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => handleActionClick("Research Lab Fellowship Application", "Application form for Paid Fellowship position at Human-Computer Lab has been submitted to Dr. Sarah Jenkins.")}
-                className="w-full mt-6 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs py-3 rounded-2xl transition-all text-center cursor-pointer shadow-sm active:scale-[0.98]"
-              >
-                Apply for Fellowship
-              </button>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-white border border-sky-100 rounded-3xl overflow-hidden shadow-travel flex flex-col justify-between min-h-[340px] hover:border-sky-300 transition-colors">
-            <div className="relative h-40 overflow-hidden bg-slate-105">
-              <img 
-                src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500" 
-                alt="Campus Startup Weekend" 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-              {/* Badge */}
-              <span className="absolute top-4 right-4 bg-sky-50 border border-sky-100 text-sky-600 text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg shadow-sm">
-                Trending
-              </span>
-            </div>
-            
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Oct 28 - 30 • Business Center</span>
-                <h4 className="font-extrabold text-base text-slate-800 mt-1">Campus Startup Weekend</h4>
-                {/* tags */}
-                <div className="flex gap-1.5 mt-3">
-                  <Badge variant="default" className="px-2 py-0.5 text-[8px] font-black border-slate-200 bg-slate-50 text-slate-500 rounded-lg uppercase">Entrepreneurship</Badge>
-                  <Badge variant="default" className="px-2 py-0.5 text-[8px] font-black border-slate-200 bg-slate-50 text-slate-500 rounded-lg uppercase">Prizes</Badge>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => handleActionClick("Registration Complete", "Seat registered successfully for Campus Startup Weekend! Check your Academic Record tab in the sidebar to download your Ticket Boarding Pass.")}
-                className="w-full mt-6 bg-sky-50 border border-sky-200 hover:bg-sky-100 text-sky-600 font-extrabold text-xs py-3 rounded-2xl transition-all text-center cursor-pointer shadow-sm active:scale-[0.98]"
-              >
-                Register Free
-              </button>
-            </div>
-          </div>
-
+              )
+            })
+          )}
         </div>
 
       </div>

@@ -42,9 +42,9 @@ export const FacultyDashboard: React.FC = () => {
   const [scanMessage, setScanMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   // AI attendance predictor parameters
-  const predCategory = 'TECH'
-  const predCapacity = 100
-  const predDay = 'Saturday'
+  const [predCategory, setPredCategory] = useState('TECH')
+  const [predCapacity, setPredCapacity] = useState(100)
+  const [predDay, setPredDay] = useState('Saturday')
 
   // Form states (prefilled with defaults, mapped to suggested slots)
   const [formTitle, setFormTitle] = useState('')
@@ -285,10 +285,52 @@ export const FacultyDashboard: React.FC = () => {
         <div className="lg:col-span-5 bg-white border border-sky-100 rounded-3xl p-8 flex flex-col justify-between text-center shadow-travel">
           
           <div>
-            <h3 className="font-extrabold text-sm tracking-tight text-slate-805 flex items-center justify-center gap-2 mb-6">
+            <h3 className="font-extrabold text-sm tracking-tight text-slate-805 flex items-center justify-center gap-2 mb-4">
               <BarChart3 className="h-4.5 w-4.5 text-sky-550" />
               <span>Attendance Predictor</span>
             </h3>
+
+            {/* Predictor controls */}
+            <div className="grid grid-cols-3 gap-2 mb-6 text-xs text-left">
+              <div>
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-wider block mb-1">Category</label>
+                <select
+                  value={predCategory}
+                  onChange={(e) => setPredCategory(e.target.value)}
+                  className="w-full border border-slate-200 bg-slate-50 rounded-xl p-2.5 focus:outline-none focus:border-sky-500 font-bold cursor-pointer text-slate-700"
+                >
+                  <option value="TECH">TECH</option>
+                  <option value="ACADEMIC">ACADEMIC</option>
+                  <option value="SPORTS">SPORTS</option>
+                  <option value="CULTURAL">ARTS</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-wider block mb-1">Capacity</label>
+                <input
+                  type="number"
+                  min="10"
+                  max="1000"
+                  value={predCapacity}
+                  onChange={(e) => setPredCapacity(Number(e.target.value))}
+                  className="w-full border border-slate-200 bg-slate-50 rounded-xl p-2 focus:outline-none focus:border-sky-500 font-bold text-center text-slate-700"
+                />
+              </div>
+              <div>
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-wider block mb-1">Day</label>
+                <select
+                  value={predDay}
+                  onChange={(e) => setPredDay(e.target.value)}
+                  className="w-full border border-slate-200 bg-slate-50 rounded-xl p-2.5 focus:outline-none focus:border-sky-500 font-bold cursor-pointer text-slate-700"
+                >
+                  <option value="Monday">Monday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                  <option value="Sunday">Sunday</option>
+                </select>
+              </div>
+            </div>
 
             {/* Radial progress SVG */}
             <div className="relative flex items-center justify-center h-40 mb-6">

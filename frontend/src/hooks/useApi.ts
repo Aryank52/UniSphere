@@ -223,7 +223,7 @@ export function useLogin() {
 export function useRegister() {
   const setAuth = useAuthStore(state => state.setAuth)
   return useMutation({
-    mutationFn: async (details: { name: string; email: string; password?: string; role?: 'STUDENT' | 'FACULTY' | 'ADMIN'; department?: string }) => {
+    mutationFn: async (details: { name: string; email: string; password?: string; role?: 'STUDENT' | 'FACULTY' | 'COORDINATOR' | 'ADMIN'; department?: string }) => {
       try {
         return await request('/auth/register', {
           method: 'POST',
@@ -814,5 +814,109 @@ export function useAIEngagementStats() {
       }
     },
     enabled: user?.role === 'ADMIN' || user?.role === 'FACULTY'
+  })
+}
+
+export function useUpdateOnboarding() {
+  const setAuth = useAuthStore(state => state.setAuth)
+  const token = useAuthStore(state => state.token)
+  return useMutation({
+    mutationFn: async (onboardingData: {
+      department: string
+      academicYear: number
+      interests: string[]
+      skills: string[]
+      preferredCategories: string[]
+    }) => {
+      try {
+        return await request('/auth/onboarding', {
+          method: 'PUT',
+          body: JSON.stringify(onboardingData)
+        })
+      } catch (err) {
+        // Fallback for offline mode
+        const currentUser = store.getState().auth.user
+        if (currentUser) {
+          const updatedUser: User = {
+            ...currentUser,
+            ...onboardingData,
+            xpPoints: (currentUser.xpPoints || 0) + 100,
+            level: 1
+          }
+          return { user: updatedUser }
+        }
+        throw err
+      }
+    },
+    onSuccess: (data) => {
+      if (data && data.user && token) {
+        setAuth(data.user, token)
+      }
+    }
+  })
+}
+
+export function useEnable2FA() {
+  return useMutation({
+    mutationFn: async () => {
+      try {
+        return await request('/auth/2fa/enable', {
+          method: 'POST'
+        })
+      } catch (err) {
+        return {
+          secret: 'MOCK_2FA_SECRET_KEY',
+          qrCodeDataUrl: 'otpauth://totp/UniSphere:student@unisphere.edu?secret=MOCK_2FA_SECRET_KEY&issuer=UniSphere'
+        }
+      }
+    }
+  })
+}
+
+export function useVerify2FA() {
+  const setAuth = useAuthStore(state => state.setAuth)
+  const token = useAuthStore(state => state.token)
+  return useMutation({
+    mutationFn: async (code: string) => {
+      try {
+        return await request('/auth/2fa/verify', {
+          method: 'POST',
+          body: JSON.stringify({ code })
+        })
+      } catch (err) {
+        const currentUser = store.getState().auth.user
+        if (currentUser) {
+          const updatedUser: User = {
+            ...currentUser,
+            isTwoFactorEnabled: true
+          }
+          return { user: updatedUser }
+        }
+        throw err
+      }
+    },
+    onSuccess: (data) => {
+      if (data && data.user && token) {
+        setAuth(data.user, token)
+      }
+    }
+  })
+}
+
+export function useSessions() {
+  const user = useAuthStore(state => state.user)
+  return useQuery({
+    queryKey: ['sessions', user?.id],
+    queryFn: async () => {
+      try {
+        return await request('/auth/sessions')
+      } catch (err) {
+        return [
+          { id: 1, deviceInfo: 'Vivaldi Browser (Windows 11)', ipAddress: '192.168.1.1', isActive: true, lastActive: new Date().toISOString() },
+          { id: 2, deviceInfo: 'Chrome Mobile (Pixel 8 Pro)', ipAddress: '172.56.21.9', isActive: false, lastActive: new Date(Date.now() - 3600000).toISOString() }
+        ]
+      }
+    },
+    enabled: !!user
   })
 }

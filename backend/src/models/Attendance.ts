@@ -8,7 +8,8 @@ export class Attendance extends Model {
   public eventId!: number
   public studentId!: number
   public checkedInAt!: Date
-  public checkedById!: number
+  public checkedOutAt!: Date | null
+  public checkedById!: number | null
 }
 
 Attendance.init(
@@ -39,9 +40,13 @@ Attendance.init(
       allowNull: false,
       defaultValue: DataTypes.NOW
     },
+    checkedOutAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     checkedById: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: User,
         key: 'id'
