@@ -57,8 +57,8 @@ export const AdminDashboard: React.FC = () => {
     return true
   })
 
-  // Colors for Recharts categories
-  const COLORS = ['#06b6d4', '#10b981', '#7c3aed']
+  // Colors for Recharts categories (Sky Blue, Orange, Light Blue)
+  const COLORS = ['#0ea5e9', '#f97316', '#38bdf8']
 
   // Format Recharts data safely
   const rawChartData = stats?.registrationsTrend || [
@@ -71,7 +71,7 @@ export const AdminDashboard: React.FC = () => {
     { name: 'Sun', count: 180 }
   ]
 
-  // Mock Telemetry Data matching Mockup 2
+  // Mock Telemetry Data
   const telemetryData = [
     { name: '08:00', count: 240, isPeak: false },
     { name: '12:00', count: 460, isPeak: true },
@@ -82,70 +82,70 @@ export const AdminDashboard: React.FC = () => {
   const totalPending = pendingEvents.length + pendingClubs.length
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 font-sans select-none pb-24 bg-slate-50/50 relative">
+    <div className="space-y-8 animate-in fade-in duration-500 font-sans select-none pb-24 relative text-slate-800">
       
       {/* Row 1: KPI Stats Panel */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Metric 1 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between shadow-sm">
+        <div className="bg-white border border-sky-100 rounded-3xl p-6 flex items-center justify-between shadow-travel text-left">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Users</span>
-            <h2 className="text-3xl font-black text-slate-900 mt-1.5">{usersList.length > 0 ? usersList.length + 12000 : 12482}</h2>
-            <p className="text-[10px] text-emerald-600 font-bold mt-1 flex items-center gap-0.5">
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Users</span>
+            <h2 className="text-3xl font-black text-slate-800 mt-1.5">{usersList.length > 0 ? usersList.length + 12000 : 12482}</h2>
+            <p className="text-[10px] text-sky-600 font-bold mt-1 flex items-center gap-0.5">
               <ArrowUpRight className="h-3 w-3" />
               <span>+8.4% from last week</span>
             </p>
           </div>
-          <div className="h-12 w-12 bg-cyan-50 border border-cyan-100 text-cyan-700 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-sky-50 border border-sky-100 text-sky-600 rounded-2xl flex items-center justify-center">
             <Users className="h-5 w-5" />
           </div>
         </div>
 
         {/* Metric 2 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between shadow-sm">
+        <div className="bg-white border border-sky-100 rounded-3xl p-6 flex items-center justify-between shadow-travel text-left">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pending Approvals</span>
-            <h2 className="text-3xl font-black text-slate-900 mt-1.5">{totalPending > 0 ? totalPending : 3}</h2>
-            <p className="text-[10px] text-slate-500 font-bold mt-1 flex items-center gap-1">
-              <Clock className="h-3 w-3 text-slate-400" />
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Pending Approvals</span>
+            <h2 className="text-3xl font-black text-slate-800 mt-1.5">{totalPending > 0 ? totalPending : 3}</h2>
+            <p className="text-[10px] text-orange-655 font-bold mt-1 flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5 text-orange-500 animate-pulse" />
               <span>Action required</span>
             </p>
           </div>
-          <div className="h-12 w-12 bg-amber-50 border border-amber-100 text-amber-600 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-orange-50 border border-orange-100 text-orange-600 rounded-2xl flex items-center justify-center">
             <Clock className="h-5 w-5" />
           </div>
         </div>
 
         {/* Metric 3 */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between shadow-sm">
+        <div className="bg-white border border-sky-100 rounded-3xl p-6 flex items-center justify-between shadow-travel text-left">
           <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Monthly Registrations</span>
-            <h2 className="text-3xl font-black text-slate-900 mt-1.5">1,105</h2>
-            <p className="text-[10px] text-cyan-700 font-bold mt-1">Peak activity: Mondays</p>
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Monthly Registrations</span>
+            <h2 className="text-3xl font-black text-slate-800 mt-1.5">1,105</h2>
+            <p className="text-[10px] text-sky-600 font-bold mt-1">Peak activity: Mondays</p>
           </div>
-          <div className="h-12 w-12 bg-cyan-50 border border-cyan-100 text-cyan-700 rounded-2xl flex items-center justify-center">
+          <div className="h-12 w-12 bg-sky-50 border border-sky-100 text-sky-600 rounded-2xl flex items-center justify-center">
             <Activity className="h-5 w-5 animate-pulse" />
           </div>
         </div>
 
       </div>
 
-      {/* Row 2: Density Telemetry & Quick Verify (Mockup 2 Top Layout) */}
+      {/* Row 2: Density Telemetry & Quick Verify */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Campus Density Telemetry (col-span-8) */}
-        <div className="lg:col-span-8 bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+        <div className="lg:col-span-8 bg-white border border-sky-100 rounded-3xl p-6 flex flex-col justify-between shadow-travel text-left">
           <div>
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="font-extrabold text-sm tracking-tight text-slate-900">
+                <h3 className="font-extrabold text-sm tracking-tight text-slate-800">
                   Campus Density Telemetry
                 </h3>
-                <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Real-time attendance & foot traffic analytics</p>
+                <p className="text-[10px] text-slate-400 font-bold mt-0.5">Real-time attendance & foot traffic analytics</p>
               </div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase border border-emerald-100">
-                <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-sky-50 text-sky-600 text-[9px] font-black uppercase border border-sky-100">
+                <span className="h-1.5 w-1.5 bg-sky-500 rounded-full animate-ping" />
                 <span>LIVE</span>
               </span>
             </div>
@@ -153,22 +153,22 @@ export const AdminDashboard: React.FC = () => {
             <div className="h-56 mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={telemetryData}>
-                  <XAxis dataKey="name" stroke="#64748b" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
-                  <YAxis stroke="#64748b" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
+                  <XAxis dataKey="name" stroke="#94a3b8" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
+                  <YAxis stroke="#94a3b8" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
                   <Tooltip 
                     contentStyle={{ 
-                      background: '#fff', 
-                      border: '1px solid rgba(0, 0, 0, 0.05)',
+                      background: '#ffffff', 
+                      border: '1px solid #e2e8f0',
                       borderRadius: '12px',
                       color: '#1e293b',
                       fontSize: '11px',
                       fontWeight: 'bold',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                      boxShadow: '0px 10px 30px rgba(14, 165, 233, 0.05)'
                     }} 
                   />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={32}>
                     {telemetryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.isPeak ? '#10b981' : '#b2ebf2'} />
+                      <Cell key={`cell-${index}`} fill={entry.isPeak ? '#f97316' : '#bae6fd'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -178,37 +178,37 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Quick Verify card (col-span-4) */}
-        <div className="lg:col-span-4 bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+        <div className="lg:col-span-4 bg-white border border-sky-100 rounded-3xl p-6 flex flex-col justify-between shadow-travel text-left">
           <div>
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="font-extrabold text-sm tracking-tight text-slate-900">
+                <h3 className="font-extrabold text-sm tracking-tight text-slate-800">
                   Quick Verify
                 </h3>
-                <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Security & Access Authorization</p>
+                <p className="text-[10px] text-slate-400 font-bold mt-0.5">Security & Access Authorization</p>
               </div>
               <QrCode className="h-5 w-5 text-slate-400" />
             </div>
 
             {/* Scanning Visual Representation */}
-            <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center justify-center h-32 relative overflow-hidden group">
-              <div className="w-24 h-24 border-2 border-dashed border-cyan-400 rounded-xl flex items-center justify-center bg-cyan-50/20 relative">
-                <div className="absolute inset-x-0 h-0.5 bg-cyan-400 top-1/2 animate-bounce" />
-                <ShieldCheck className="h-10 w-10 text-cyan-600" />
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col items-center justify-center h-32 relative overflow-hidden group">
+              <div className="w-24 h-24 border-2 border-dashed border-sky-300 rounded-xl flex items-center justify-center bg-sky-50/30 relative">
+                <div className="absolute inset-x-0 h-0.5 bg-sky-500 top-1/2 animate-bounce" />
+                <ShieldCheck className="h-10 w-10 text-sky-500" />
               </div>
             </div>
 
-            <div className="flex justify-between items-center text-xs font-bold text-slate-600 mt-4 border-t border-slate-100 pt-3">
+            <div className="flex justify-between items-center text-xs font-bold text-slate-400 mt-4 border-t border-slate-100 pt-3">
               <span>System Status</span>
-              <span className="text-emerald-600 flex items-center gap-1 font-extrabold">
+              <span className="text-sky-600 flex items-center gap-1 font-extrabold">
                 <ShieldCheck className="h-4 w-4" /> Secured
               </span>
             </div>
           </div>
 
           <button 
-            onClick={() => alert("Manual Override bypass activated. Access log entry logged in diagnostic ledger.")}
-            className="w-full bg-cyan-400 hover:bg-cyan-500 text-slate-900 font-extrabold py-3.5 rounded-xl transition-all cursor-pointer text-xs tracking-wider mt-4 shadow-sm"
+            onClick={() => alert("Manual Override bypass activated. Access log entry logged in ledger.")}
+            className="w-full bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold py-3.5 rounded-xl transition-all cursor-pointer text-xs tracking-wider mt-4 shadow-sm"
           >
             MANUAL OVERRIDE
           </button>
@@ -216,26 +216,26 @@ export const AdminDashboard: React.FC = () => {
 
       </div>
 
-      {/* Row 3: Event Approval Queue & AI Scheduler / System Health */}
+      {/* Row 3: Event/Club Approval Queue */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Event Approval Queue (col-span-8) */}
-        <div className="lg:col-span-8 bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+        <div className="lg:col-span-8 bg-white border border-sky-100 rounded-3xl p-6 flex flex-col justify-between shadow-travel text-left">
           <div>
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="font-extrabold text-sm tracking-tight text-slate-900">
-                  Event Approval Queue
+                <h3 className="font-extrabold text-sm tracking-tight text-slate-800">
+                  Event Approval Matrix
                 </h3>
-                <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Approve or reject coordinator proposals</p>
+                <p className="text-[10px] text-slate-400 font-bold mt-0.5">Approve or reject coordinator proposals</p>
               </div>
               
               <div className="flex items-center gap-3">
                 <button 
                   onClick={() => alert("Exporting pending lists to Excel sheet CSV.")}
-                  className="px-3.5 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm cursor-pointer"
+                  className="px-3.5 py-1.5 border border-slate-200 hover:bg-slate-50 bg-white text-slate-600 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm cursor-pointer"
                 >
-                  <Download className="h-3.5 w-3.5" />
+                  <Download className="h-3.5 w-3.5 text-slate-400" />
                   <span>Export CSV</span>
                 </button>
 
@@ -243,13 +243,13 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex bg-slate-100 border border-slate-200 rounded-lg p-0.5">
                   <button 
                     onClick={() => setApprovalsTab('events')}
-                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${approvalsTab === 'events' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all cursor-pointer ${approvalsTab === 'events' ? 'bg-white text-sky-650 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
                   >
                     Events
                   </button>
                   <button 
                     onClick={() => setApprovalsTab('clubs')}
-                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${approvalsTab === 'clubs' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                    className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all cursor-pointer ${approvalsTab === 'clubs' ? 'bg-white text-sky-655 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
                   >
                     Clubs
                   </button>
@@ -261,7 +261,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="overflow-x-auto min-h-[160px]">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                  <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[9px] pb-3">
                     <th className="pb-3 font-bold">Event Name</th>
                     <th className="pb-3 font-bold">Organizer</th>
                     <th className="pb-3 font-bold">Priority</th>
@@ -277,30 +277,30 @@ export const AdminDashboard: React.FC = () => {
                         const isMedium = event.id % 3 === 2;
                         const priorityLabel = isUrgent ? 'URGENT' : isMedium ? 'MEDIUM' : 'ROUTINE';
                         const priorityBadge = isUrgent 
-                          ? 'bg-red-50 text-red-600 border border-red-100' 
+                          ? 'bg-orange-50 text-orange-600 border border-orange-100' 
                           : isMedium 
-                            ? 'bg-cyan-50 text-cyan-705 border border-cyan-100' 
-                            : 'bg-slate-100 text-slate-600 border border-slate-200';
+                            ? 'bg-sky-50 text-sky-600 border border-sky-100' 
+                            : 'bg-slate-50 text-slate-500 border border-slate-100';
 
                         return (
                           <tr key={event.id} className="hover:bg-slate-50/50 transition-colors">
-                            <td className="py-3.5 font-bold text-slate-800">{event.title}</td>
-                            <td className="py-3.5 text-slate-600 font-medium">{event.category} Faculty</td>
+                            <td className="py-3.5 font-bold text-slate-850">{event.title}</td>
+                            <td className="py-3.5 text-slate-500 font-bold">{event.category} Faculty</td>
                             <td className="py-3.5">
-                              <Badge className={`text-[8px] font-bold ${priorityBadge}`}>{priorityLabel}</Badge>
+                              <Badge className={`text-[8px] font-black tracking-wider ${priorityBadge}`}>{priorityLabel}</Badge>
                             </td>
-                            <td className="py-3.5 font-semibold text-slate-500">{event.date}, {event.time}</td>
+                            <td className="py-3.5 font-semibold text-slate-400">{event.date}, {event.time}</td>
                             <td className="py-3.5">
                               <div className="flex gap-1.5 justify-center">
                                 <button 
                                   onClick={() => handleApproveEvent(event.id, true)}
-                                  className="p-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 cursor-pointer"
+                                  className="p-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-600 cursor-pointer border border-sky-100"
                                 >
                                   <Check className="h-3.5 w-3.5" />
                                 </button>
                                 <button 
                                   onClick={() => handleApproveEvent(event.id, false)}
-                                  className="p-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 cursor-pointer"
+                                  className="p-1 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-600 cursor-pointer border border-orange-100"
                                 >
                                   <X className="h-3.5 w-3.5" />
                                 </button>
@@ -310,22 +310,21 @@ export const AdminDashboard: React.FC = () => {
                         );
                       })
                     ) : (
-                      // Mock entries if empty matching Mockup 2
                       <>
                         <tr className="hover:bg-slate-50/50 transition-colors">
                           <td className="py-3.5">
                             <p className="font-bold text-slate-800">Quantum Physics Symposium</p>
                             <p className="text-[9px] text-slate-400 mt-0.5">Auditorium A</p>
                           </td>
-                          <td className="py-3.5 text-slate-600 font-medium">Physics Faculty</td>
+                          <td className="py-3.5 text-slate-500 font-bold">Physics Faculty</td>
                           <td className="py-3.5">
-                            <Badge className="text-[8px] font-bold bg-red-50 text-red-600 border border-red-100">URGENT</Badge>
+                            <Badge className="text-[8px] font-black bg-orange-50 text-orange-655 border border-orange-100 uppercase tracking-wider">URGENT</Badge>
                           </td>
-                          <td className="py-3.5 font-semibold text-slate-500">Oct 24, 09:00 AM</td>
+                          <td className="py-3.5 font-semibold text-slate-400">Oct 24, 09:00 AM</td>
                           <td className="py-3.5">
                             <div className="flex gap-1.5 justify-center">
-                              <button onClick={() => alert("Approved!")} className="p-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 cursor-pointer"><Check className="h-3.5 w-3.5" /></button>
-                              <button onClick={() => alert("Rejected!")} className="p-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => alert("Approved!")} className="p-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-100 cursor-pointer"><Check className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => alert("Rejected!")} className="p-1 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-100 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
                             </div>
                           </td>
                         </tr>
@@ -334,15 +333,15 @@ export const AdminDashboard: React.FC = () => {
                             <p className="font-bold text-slate-800">Student AI Hackathon</p>
                             <p className="text-[9px] text-slate-400 mt-0.5">Tech Hub 2</p>
                           </td>
-                          <td className="py-3.5 text-slate-600 font-medium">ACM Chapter</td>
+                          <td className="py-3.5 text-slate-500 font-bold">ACM Chapter</td>
                           <td className="py-3.5">
-                            <Badge className="text-[8px] font-bold bg-cyan-50 text-cyan-705 border border-cyan-100">MEDIUM</Badge>
+                            <Badge className="text-[8px] font-black bg-sky-50 text-sky-600 border border-sky-100 uppercase tracking-wider">MEDIUM</Badge>
                           </td>
-                          <td className="py-3.5 font-semibold text-slate-500">Oct 28, 08:00 PM</td>
+                          <td className="py-3.5 font-semibold text-slate-400">Oct 28, 08:00 PM</td>
                           <td className="py-3.5">
                             <div className="flex gap-1.5 justify-center">
-                              <button onClick={() => alert("Approved!")} className="p-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 cursor-pointer"><Check className="h-3.5 w-3.5" /></button>
-                              <button onClick={() => alert("Rejected!")} className="p-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => alert("Approved!")} className="p-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-100 cursor-pointer"><Check className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => alert("Rejected!")} className="p-1 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-100 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
                             </div>
                           </td>
                         </tr>
@@ -351,15 +350,15 @@ export const AdminDashboard: React.FC = () => {
                             <p className="font-bold text-slate-800">Annual Gala Dinner</p>
                             <p className="text-[9px] text-slate-400 mt-0.5">Main Hall</p>
                           </td>
-                          <td className="py-3.5 text-slate-600 font-medium">Admin Affairs</td>
+                          <td className="py-3.5 text-slate-500 font-bold">Admin Affairs</td>
                           <td className="py-3.5">
-                            <Badge className="text-[8px] font-bold bg-slate-100 text-slate-600 border border-slate-200">ROUTINE</Badge>
+                            <Badge className="text-[8px] font-black bg-slate-50 text-slate-500 border border-slate-100 uppercase tracking-wider">ROUTINE</Badge>
                           </td>
-                          <td className="py-3.5 font-semibold text-slate-500">Nov 05, 07:30 PM</td>
+                          <td className="py-3.5 font-semibold text-slate-400">Nov 05, 07:30 PM</td>
                           <td className="py-3.5">
                             <div className="flex gap-1.5 justify-center">
-                              <button onClick={() => alert("Approved!")} className="p-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 cursor-pointer"><Check className="h-3.5 w-3.5" /></button>
-                              <button onClick={() => alert("Rejected!")} className="p-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => alert("Approved!")} className="p-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-100 cursor-pointer"><Check className="h-3.5 w-3.5" /></button>
+                              <button onClick={() => alert("Rejected!")} className="p-1 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-100 cursor-pointer"><X className="h-3.5 w-3.5" /></button>
                             </div>
                           </td>
                         </tr>
@@ -370,22 +369,22 @@ export const AdminDashboard: React.FC = () => {
                       pendingClubs.map((club: Club) => (
                         <tr key={club.id} className="hover:bg-slate-50/50 transition-colors">
                           <td className="py-3.5 font-bold text-slate-800">{club.name}</td>
-                          <td className="py-3.5 text-slate-600 font-medium">Student Coordinator</td>
+                          <td className="py-3.5 text-slate-500 font-bold">Student Coordinator</td>
                           <td className="py-3.5">
-                            <Badge className="text-[8px] font-bold bg-slate-100 text-slate-600 border border-slate-200">ROUTINE</Badge>
+                            <Badge className="text-[8px] font-black bg-slate-50 text-slate-500 border border-slate-100 uppercase tracking-wider">ROUTINE</Badge>
                           </td>
-                          <td className="py-3.5 font-semibold text-slate-500">Just Now</td>
+                          <td className="py-3.5 font-semibold text-slate-400">Just Now</td>
                           <td className="py-3.5">
                             <div className="flex gap-1.5 justify-center">
                               <button 
                                 onClick={() => handleApproveClub(club.id, true)}
-                                className="p-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-600 cursor-pointer"
+                                className="p-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-100 cursor-pointer"
                               >
                                 <Check className="h-3.5 w-3.5" />
                               </button>
                               <button 
                                 onClick={() => handleApproveClub(club.id, false)}
-                                className="p-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 cursor-pointer"
+                                className="p-1 rounded-lg bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-100 cursor-pointer"
                               >
                                 <X className="h-3.5 w-3.5" />
                               </button>
@@ -395,7 +394,7 @@ export const AdminDashboard: React.FC = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={5} className="py-8 text-center text-slate-400 font-medium">
+                        <td colSpan={5} className="py-8 text-center text-slate-400 font-bold">
                           No pending club approvals in this queue.
                         </td>
                       </tr>
@@ -411,71 +410,71 @@ export const AdminDashboard: React.FC = () => {
         <div className="lg:col-span-4 flex flex-col gap-6">
           
           {/* AI Scheduler card */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col gap-4 text-left">
+          <div className="bg-white border border-sky-100 rounded-3xl p-6 shadow-travel flex flex-col gap-4 text-left">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 bg-cyan-50 border border-cyan-100 text-cyan-600 rounded-lg flex items-center justify-center">
+              <div className="h-8 w-8 bg-sky-50 border border-sky-100 text-sky-600 rounded-lg flex items-center justify-center">
                 <Brain className="h-4.5 w-4.5" />
               </div>
-              <h3 className="font-extrabold text-sm tracking-tight text-slate-900">AI Scheduler</h3>
+              <h3 className="font-extrabold text-sm tracking-tight text-slate-800">AI Scheduler</h3>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-4 border border-slate-100 rounded-2xl">
-              I've analyzed the Spring 2026 course requests. There is a conflict in <span className="text-cyan-700 font-bold underline cursor-pointer">Room 402</span> between 10:00 AM - 12:00 PM.
+            <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 border border-slate-150 rounded-2xl">
+              I've analyzed the course requests. There is a conflict in <span className="text-sky-600 font-bold underline cursor-pointer hover:text-sky-700">Room 402</span> between 10:00 AM - 12:00 PM.
             </p>
 
             <div className="space-y-2">
               <button 
                 onClick={() => alert("Reassigning CS101 lecture track to Computer Lab 4...")}
-                className="w-full p-3.5 bg-slate-50 border border-slate-100 hover:border-slate-200 hover:bg-slate-100/50 text-slate-700 font-bold text-xs rounded-xl flex justify-between items-center transition-all cursor-pointer"
+                className="w-full p-3.5 bg-slate-50 border border-slate-200 hover:border-sky-300 hover:bg-slate-50 text-slate-650 font-bold text-xs rounded-xl flex justify-between items-center transition-all cursor-pointer shadow-sm"
               >
                 <span>Move CS101 to Lab 4</span>
-                <ArrowUpRight className="h-4 w-4 text-slate-400" />
+                <ArrowUpRight className="h-4 w-4 text-sky-500" />
               </button>
               <button 
                 onClick={() => alert("Invoking smart rescheduling algorithm for DS404 slot...")}
-                className="w-full p-3.5 bg-slate-50 border border-slate-100 hover:border-slate-200 hover:bg-slate-100/50 text-slate-700 font-bold text-xs rounded-xl flex justify-between items-center transition-all cursor-pointer"
+                className="w-full p-3.5 bg-slate-50 border border-slate-200 hover:border-sky-300 hover:bg-slate-50 text-slate-650 font-bold text-xs rounded-xl flex justify-between items-center transition-all cursor-pointer shadow-sm"
               >
                 <span>Reschedule DS404</span>
-                <ArrowUpRight className="h-4 w-4 text-slate-400" />
+                <ArrowUpRight className="h-4 w-4 text-sky-500" />
               </button>
             </div>
           </div>
 
           {/* System Health card */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col gap-4 text-left">
-            <h3 className="font-extrabold text-xs tracking-widest uppercase text-slate-400">System Health</h3>
+          <div className="bg-white border border-sky-100 rounded-3xl p-6 shadow-travel flex flex-col gap-4 text-left">
+            <h3 className="font-extrabold text-xs tracking-widest uppercase text-slate-400 font-sans">System Health</h3>
             
             <div className="space-y-3">
               {/* CPU */}
               <div>
-                <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-500 mb-1.5">
                   <span>CPU Load</span>
-                  <span className="text-slate-900">24%</span>
+                  <span className="text-slate-800 font-bold">24%</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-cyan-500 rounded-full" style={{ width: '24%' }} />
+                  <div className="h-full bg-sky-500 rounded-full animate-pulse" style={{ width: '24%' }} />
                 </div>
               </div>
 
               {/* Server Response */}
               <div>
-                <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-500 mb-1.5">
                   <span>Server Response</span>
-                  <span className="text-slate-900">12ms</span>
+                  <span className="text-slate-800 font-bold">12ms</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-cyan-500 rounded-full" style={{ width: '12%' }} />
+                  <div className="h-full bg-orange-400 rounded-full" style={{ width: '12%' }} />
                 </div>
               </div>
 
               {/* Network Bandwidth */}
               <div>
-                <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5">
+                <div className="flex justify-between text-xs font-bold text-slate-500 mb-1.5">
                   <span>Network Bandwidth</span>
-                  <span className="text-slate-900">8.4 Gbps</span>
+                  <span className="text-slate-800 font-bold">8.4 Gbps</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: '80%' }} />
+                  <div className="h-full bg-sky-500 rounded-full" style={{ width: '80%' }} />
                 </div>
               </div>
             </div>
@@ -485,26 +484,26 @@ export const AdminDashboard: React.FC = () => {
 
       </div>
 
-      {/* Row 4: Engagement Charts & Club Engagement (Original detailed components styled in light mode) */}
+      {/* Row 4: Engagement Charts & Club Engagement */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Registration Trend (col-span-7) */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-white border border-sky-100 rounded-3xl p-6 flex flex-col justify-between text-left shadow-travel">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-extrabold text-sm tracking-tight text-slate-900">
+            <h3 className="font-extrabold text-sm tracking-tight text-slate-800">
               Registration Volume Trend
             </h3>
             {/* Timeframe selector */}
             <div className="flex bg-slate-100 border border-slate-200 rounded-lg p-0.5">
               <button 
                 onClick={() => setTimeframe('week')}
-                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${timeframe === 'week' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all cursor-pointer ${timeframe === 'week' ? 'bg-white text-sky-600 shadow-sm' : 'text-slate-500 hover:text-slate-850'}`}
               >
                 Week
               </button>
               <button 
                 onClick={() => setTimeframe('month')}
-                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all ${timeframe === 'month' ? 'bg-white text-cyan-700 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                className={`px-3 py-1 rounded text-[9px] font-bold uppercase transition-all cursor-pointer ${timeframe === 'month' ? 'bg-white text-sky-600 shadow-sm' : 'text-slate-500 hover:text-slate-855'}`}
               >
                 Month
               </button>
@@ -514,28 +513,28 @@ export const AdminDashboard: React.FC = () => {
           <div className="h-64 mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={rawChartData}>
-                <XAxis dataKey="name" stroke="#64748b" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
-                <YAxis stroke="#64748b" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
+                <XAxis dataKey="name" stroke="#94a3b8" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
+                <YAxis stroke="#94a3b8" style={{ fontSize: '10px', fontWeight: 'bold' }} tickLine={false} />
                 <Tooltip 
                   contentStyle={{ 
-                    background: '#fff', 
-                    border: '1px solid rgba(0, 0, 0, 0.05)',
+                    background: '#ffffff', 
+                    border: '1px solid #e2e8f0',
                     borderRadius: '12px',
                     color: '#1e293b',
                     fontSize: '11px',
                     fontWeight: 'bold',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                    boxShadow: '0px 10px 30px rgba(14, 165, 233, 0.05)'
                   }} 
                 />
-                <Bar dataKey="count" fill="#06b6d4" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                <Bar dataKey="count" fill="#0ea5e9" radius={[4, 4, 0, 0]} maxBarSize={32} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Categories & Club Engagement (col-span-5) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between text-center">
-          <h3 className="font-extrabold text-sm tracking-tight text-slate-900 text-left mb-4">
+        <div className="lg:col-span-5 bg-white border border-sky-100 rounded-3xl p-6 shadow-travel flex flex-col justify-between text-center">
+          <h3 className="font-extrabold text-sm tracking-tight text-slate-800 text-left mb-4">
             Event Categories Heatmap
           </h3>
 
@@ -561,8 +560,8 @@ export const AdminDashboard: React.FC = () => {
                 </Pie>
                 <Tooltip 
                   contentStyle={{ 
-                    background: '#fff', 
-                    border: '1px solid rgba(0, 0, 0, 0.05)',
+                    background: '#ffffff', 
+                    border: '1px solid #e2e8f0',
                     borderRadius: '12px',
                     color: '#1e293b',
                     fontSize: '11px',
@@ -572,46 +571,46 @@ export const AdminDashboard: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute flex flex-col items-center justify-center">
-              <span className="text-2xl font-black text-slate-950">154</span>
-              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Total Events</span>
+              <span className="text-2xl font-black text-slate-800">154</span>
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Total Events</span>
             </div>
           </div>
 
           {/* Breakdown legend */}
-          <div className="space-y-2 text-[10px] font-bold text-slate-500 mt-4 text-left">
+          <div className="space-y-2 text-[10px] font-bold text-slate-400 mt-4 text-left">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-cyan-500" />
+                <div className="w-2.5 h-2.5 rounded-full bg-sky-500" />
                 <span>Academic</span>
               </div>
-              <span className="text-slate-800">45%</span>
+              <span className="text-slate-700">45%</span>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
                 <span>Sports</span>
               </div>
-              <span className="text-slate-800">32%</span>
+              <span className="text-slate-700">32%</span>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-violet-500" />
+                <div className="w-2.5 h-2.5 rounded-full bg-sky-300" />
                 <span>Social</span>
               </div>
-              <span className="text-slate-800">23%</span>
+              <span className="text-slate-700">23%</span>
             </div>
           </div>
         </div>
 
       </div>
 
-      {/* Row 5: User Directory Table (Original complete table styled in light mode) */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
+      {/* Row 5: User Directory Table */}
+      <div className="bg-white border border-sky-100 rounded-3xl p-6 md:p-8 shadow-travel text-left">
         
         {/* Table Header with Filters */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
-          <h3 className="font-extrabold text-sm tracking-tight text-slate-900">
-            User Directory
+          <h3 className="font-extrabold text-sm tracking-tight text-slate-800">
+            User Directory Command
           </h3>
 
           <div className="flex flex-wrap gap-2 items-center">
@@ -620,7 +619,7 @@ export const AdminDashboard: React.FC = () => {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value as 'ALL' | 'STUDENT' | 'FACULTY' | 'ADMIN')}
-              className="bg-white border border-slate-200 text-slate-700 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
+              className="bg-white border border-slate-200 text-slate-600 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-sky-500 cursor-pointer shadow-sm"
             >
               <option value="ALL">Role: All</option>
               <option value="STUDENT">Student</option>
@@ -632,7 +631,7 @@ export const AdminDashboard: React.FC = () => {
             <select
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
-              className="bg-white border border-slate-200 text-slate-700 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-cyan-500 cursor-pointer shadow-sm"
+              className="bg-white border border-slate-200 text-slate-600 font-bold text-[10px] uppercase tracking-wider py-1.5 px-3 rounded-lg focus:outline-none focus:border-sky-500 cursor-pointer shadow-sm"
             >
               <option value="ALL">Department: All</option>
               <option value="Computer Science">Computer Science</option>
@@ -642,8 +641,8 @@ export const AdminDashboard: React.FC = () => {
             </select>
 
             {/* Filter Toggle */}
-            <button className="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors shadow-sm">
-              <SlidersHorizontal className="h-4 w-4" />
+            <button className="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition-colors shadow-sm cursor-pointer">
+              <SlidersHorizontal className="h-4 w-4 text-slate-400" />
             </button>
           </div>
         </div>
@@ -652,7 +651,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+              <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[9px] pb-3">
                 <th className="pb-4 font-bold">User</th>
                 <th className="pb-4 font-bold">ID Number</th>
                 <th className="pb-4 font-bold">Role</th>
@@ -671,18 +670,18 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex items-center gap-3">
                       <img 
                         src={usr.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'} 
-                        className="h-8 w-8 rounded-full object-cover border border-slate-200" 
+                        className="h-8 w-8 rounded-full object-cover border border-slate-100" 
                         alt="" 
                       />
                       <div>
                         <p className="font-bold text-slate-800 text-xs">{usr.name}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5 font-medium">{usr.email}</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5 font-bold">{usr.email}</p>
                       </div>
                     </div>
                   </td>
 
                   {/* ID number */}
-                  <td className="py-4 font-bold text-slate-500 font-mono">
+                  <td className="py-4 font-bold text-slate-400 font-mono">
                     #{usr.id + 100}-20{usr.id + 4}
                   </td>
 
@@ -694,14 +693,14 @@ export const AdminDashboard: React.FC = () => {
                   </td>
 
                   {/* Department */}
-                  <td className="py-4 font-semibold text-slate-700">
+                  <td className="py-4 font-extrabold text-slate-500">
                     {usr.department || 'Applied Science'}
                   </td>
 
                   {/* Dot status */}
                   <td className="py-4">
-                    <span className="flex items-center gap-1.5 font-bold text-[10px] text-slate-500">
-                      <span className={`w-1.5 h-1.5 rounded-full ${usr.id % 3 === 0 ? 'bg-emerald-500' : 'bg-slate-300'}`} />
+                    <span className="flex items-center gap-1.5 font-bold text-[10px] text-slate-450">
+                      <span className={`w-1.5 h-1.5 rounded-full ${usr.id % 3 === 0 ? 'bg-sky-500 animate-pulse' : 'bg-slate-200'}`} />
                       <span>{usr.id % 3 === 0 ? 'Active' : 'Offline'}</span>
                     </span>
                   </td>
@@ -711,11 +710,11 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex items-center justify-end gap-2.5">
                       <button 
                         onClick={() => alert(`Edit profile settings for ${usr.name}`)}
-                        className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shadow-sm"
+                        className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-450 hover:text-slate-850 hover:bg-slate-100 transition-colors shadow-sm cursor-pointer"
                       >
                         <Edit2 className="h-3.5 w-3.5" />
                       </button>
-                      <button className="text-slate-400 hover:text-slate-700">
+                      <button className="text-slate-400 hover:text-slate-600 p-1">
                         <MoreVertical className="h-4 w-4" />
                       </button>
                     </div>
@@ -726,7 +725,7 @@ export const AdminDashboard: React.FC = () => {
 
               {filteredUsers.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-400 font-medium">
+                  <td colSpan={6} className="py-8 text-center text-slate-400 font-bold">
                     No directory records found matching chosen filters.
                   </td>
                 </tr>
@@ -740,20 +739,20 @@ export const AdminDashboard: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 pt-6 border-t border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           <span>Showing 1-10 of {filteredUsers.length} users</span>
           <div className="flex gap-1.5">
-            <button className="px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-all cursor-pointer">Previous</button>
-            <button className="px-3.5 py-1.5 border border-slate-200 bg-cyan-50 text-cyan-700 rounded-lg font-bold">1</button>
-            <button className="px-3.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 hover:text-slate-800 transition-all cursor-pointer">2</button>
-            <button className="px-3.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 hover:text-slate-800 transition-all cursor-pointer">3</button>
-            <button className="px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-all cursor-pointer">Next</button>
+            <button className="px-3 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition-all cursor-pointer">Previous</button>
+            <button className="px-3.5 py-1.5 border border-sky-300 bg-sky-50 text-sky-650 rounded-lg font-bold">1</button>
+            <button className="px-3.5 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">2</button>
+            <button className="px-3.5 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 hover:text-slate-800 transition-all cursor-pointer">3</button>
+            <button className="px-3 py-1.5 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-455 hover:text-slate-800 transition-all cursor-pointer">Next</button>
           </div>
         </div>
 
       </div>
 
-      {/* Floating circular + button in the bottom right corner (Mockup 2) */}
+      {/* Floating circular + button in the bottom right corner */}
       <button 
         onClick={() => alert("Initiate fast command: Create quick notice or event schedule.")}
-        className="fixed bottom-6 right-6 bg-cyan-400 hover:bg-cyan-500 text-slate-900 rounded-full p-4 shadow-xl z-20 cursor-pointer border border-cyan-300 transition-all active:scale-[0.95] flex items-center justify-center"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-full p-4 shadow-xl z-20 cursor-pointer border border-sky-400 transition-all active:scale-[0.95] flex items-center justify-center"
       >
         <Plus className="h-6 w-6" />
       </button>

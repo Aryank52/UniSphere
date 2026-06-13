@@ -62,27 +62,26 @@ export const EventsPage: React.FC = () => {
   ]
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 text-slate-800">
       
       {/* Title Header Banner */}
-      {/* Title Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white border border-sky-100 rounded-3xl p-6 md:p-8 shadow-travel text-left">
         <div>
-          <h2 className="text-3xl font-black tracking-tight text-slate-900">
+          <h2 className="text-3xl font-black tracking-tight text-slate-800">
             {isStudent ? 'Discover Campus Life' : 'Explore Events'}
           </h2>
-          <p className="text-xs text-slate-500 mt-1.5 font-medium">
+          <p className="text-xs text-slate-500 mt-1.5 font-bold">
             {isStudent 
               ? 'Find events that match your interests, from late-night hackathons to morning yoga on the quad.' 
-              : 'Find upcoming technology bootcamps, athletic tournaments, and academic forums'
+              : 'Find upcoming technology bootcamps, athletic tournaments, and academic forums.'
             }
           </p>
         </div>
         
         {isStudent && (
-          <div className="shrink-0">
-            <div className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 rounded-2xl text-xs font-bold text-slate-800 shadow-sm hover:bg-slate-50 transition-colors">
-              <Zap className="h-4.5 w-4.5 text-[#006680] fill-[#006680]/20" />
+          <div className="shrink-0 flex justify-start">
+            <div className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-50 border border-sky-100 rounded-2xl text-xs font-bold text-sky-600 shadow-sm hover:bg-sky-100/60 transition-colors">
+              <Zap className="h-4.5 w-4.5 text-sky-555 fill-sky-100" />
               <span>12 New Events Today</span>
             </div>
           </div>
@@ -100,7 +99,7 @@ export const EventsPage: React.FC = () => {
               placeholder="Search events, keywords, or clubs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-slate-200 text-slate-800 focus:border-[#006680] focus:ring-1 focus:ring-[#006680]"
+              className="pl-10 bg-slate-50 border border-slate-205 text-slate-800 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:bg-white font-semibold"
             />
             <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
           </div>
@@ -113,8 +112,8 @@ export const EventsPage: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.key)}
                 className={`px-4 py-2 text-xs font-bold rounded-xl transition-all shrink-0 cursor-pointer shadow-sm ${
                   selectedCategory === cat.key
-                    ? 'bg-[#006680] text-white'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                    ? 'bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-650 hover:to-sky-700 text-white shadow-sm'
+                    : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-550 hover:text-slate-800'
                 }`}
               >
                 {cat.label}
@@ -124,9 +123,9 @@ export const EventsPage: React.FC = () => {
             {/* Filters button */}
             <button 
               onClick={() => alert("Advance filter modal opened.")}
-              className="px-4 py-2 text-xs font-bold rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+              className="px-4 py-2 text-xs font-bold rounded-xl bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-colors flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
             >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
+              <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
               <span>Filters</span>
             </button>
           </div>
@@ -139,7 +138,7 @@ export const EventsPage: React.FC = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'DATE' | 'TITLE' | 'SCORE')}
-            className="px-3 py-1.5 border rounded-xl text-xs font-semibold focus:outline-none transition-all cursor-pointer bg-white border-slate-200 text-slate-800 focus:border-[#006680]"
+            className="px-3 py-1.5 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none transition-all cursor-pointer bg-white text-slate-700 focus:border-sky-500"
           >
             <option value="DATE">🗓️ Date (Upcoming first)</option>
             <option value="TITLE">🔤 Title (A-Z)</option>
@@ -150,7 +149,7 @@ export const EventsPage: React.FC = () => {
 
       {/* Events Grid */}
       {isLoading ? (
-        <div className="text-center py-12 text-slate-400">Loading active catalog...</div>
+        <div className="text-center py-12 text-slate-450">Loading active catalog...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedEvents.map((event: Event) => {
@@ -176,7 +175,7 @@ export const EventsPage: React.FC = () => {
             )
           })}
           {sortedEvents.length === 0 && (
-            <Card className="col-span-3 p-12 text-center text-slate-400 border-dashed bg-card/40">
+            <Card className="col-span-3 p-12 text-center text-slate-400 border-dashed border-slate-200 bg-white shadow-travel">
               No matching events found in the catalogue. Try adjusting your filters.
             </Card>
           )}
@@ -188,7 +187,7 @@ export const EventsPage: React.FC = () => {
         <div className="flex flex-col items-center gap-3 pt-8">
           <button 
             onClick={() => alert("Loading next page of campus events catalogues...")}
-            className="px-6 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-extrabold text-xs rounded-2xl transition-all shadow-sm cursor-pointer"
+            className="px-6 py-3 border border-slate-200 hover:bg-slate-50 text-slate-550 font-bold text-xs rounded-2xl transition-all shadow-sm cursor-pointer"
           >
             Load More Events
           </button>
@@ -205,24 +204,26 @@ export const EventsPage: React.FC = () => {
         title="Event Boarding Ticket"
       >
         {selectedPass && (
-          <DigitalPass
-            event={selectedPass.event}
-            studentName={user?.name || 'Student Name'}
-            passCode={selectedPass.passCode}
-          />
+          <div className="bg-white p-2 rounded-2xl">
+            <DigitalPass
+              event={selectedPass.event}
+              studentName={user?.name || 'Student Name'}
+              passCode={selectedPass.passCode}
+            />
+          </div>
         )}
       </Dialog>
 
-      {/* Custom light-theme Footer for events portal */}
-      <footer className="border-t border-slate-200 mt-16 pt-8 pb-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
-        <div>
-          <span className="font-extrabold text-sm text-[#006680] mr-2">UniSphere</span>
+      {/* Footer */}
+      <footer className="border-t border-slate-100 mt-16 pt-8 pb-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
+        <div className="flex items-center gap-2">
+          <span className="font-extrabold text-sm text-slate-800 mr-2">UniSphere</span>
           <span>&copy; 2026 UniSphere Systems Inc. All rights reserved.</span>
         </div>
         <div className="flex gap-6 font-semibold">
           <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Privacy Policy</a>
           <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Terms of Service</a>
-          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Campus Partners</a>
+          <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Studio Partners</a>
           <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 transition-colors">Contact Support</a>
         </div>
       </footer>

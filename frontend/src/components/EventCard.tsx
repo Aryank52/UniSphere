@@ -71,7 +71,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   const registrationCount = event.registrationCount || Math.floor(event.maxCapacity * 0.4)
   const occupancyPercentage = Math.min(100, Math.floor((registrationCount / event.maxCapacity) * 100))
 
-  // Custom capacity texts to match the image precisely
+  // Custom capacity descriptions
   const getCapacityDescription = () => {
     if (event.category?.toUpperCase() === 'CULTURAL' || event.category?.toUpperCase() === 'ARTS') return "Tickets Required"
     if (event.category?.toUpperCase() === 'SPORTS' && event.id % 2 === 0) return "Spectators Welcome"
@@ -81,7 +81,7 @@ export const EventCard: React.FC<EventCardProps> = ({
     return `${registrationCount} / ${event.maxCapacity} Registered`
   }
 
-  // Action labels matching the image dynamically
+  // Action labels
   const getBtnLabel = () => {
     if (isRegistered) return "View Pass"
     if (actionLabel) {
@@ -98,23 +98,21 @@ export const EventCard: React.FC<EventCardProps> = ({
   return (
     <Card 
       variant='default' 
-      className={`overflow-hidden flex flex-col h-full select-none border ${
-        'bg-white border-slate-200 shadow-sm rounded-3xl hover:border-slate-300'
-      }`}
+      className="overflow-hidden flex flex-col h-full select-none border border-sky-100 bg-white shadow-travel hover:shadow-travel-hover transition-all text-left rounded-3xl"
     >
-      <div className="relative h-44 overflow-hidden group">
+      <div className="relative h-44 overflow-hidden group rounded-t-3xl">
         <img 
           src={event.bannerImage || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800'} 
           alt={event.title} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
         
         {/* Match rating badge top-left */}
         <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
           {isStudent ? (
-            <span className="inline-flex items-center gap-1 bg-[#e6f2f5] text-[#006680] text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-sm">
-              <Zap className="h-3 w-3 fill-[#006680]/20" />
+            <span className="inline-flex items-center gap-1 bg-orange-50 text-orange-600 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-sm border border-orange-100">
+              <Zap className="h-3 w-3 fill-orange-200 text-orange-500" />
               <span>{getMatchRateString()} Match</span>
             </span>
           ) : (
@@ -127,13 +125,13 @@ export const EventCard: React.FC<EventCardProps> = ({
         {/* Category badge top-right */}
         <div className="absolute top-4 right-4">
           {isStudent ? (
-            <span className="bg-white/90 backdrop-blur text-slate-800 border border-slate-200/50 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg shadow-sm">
+            <span className="bg-white/90 backdrop-blur text-slate-700 border border-slate-200 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg shadow-sm">
               {event.category || 'Tech'}
             </span>
           ) : (
             event.engagementScore !== undefined && event.engagementScore > 0 && (
-              <div className="glass px-2.5 py-1 rounded-full text-xs font-bold text-[#006680] flex items-center gap-1 border border-white/20">
-                <Award className="h-3 w-3" />
+              <div className="bg-sky-50 px-2.5 py-1 rounded-full text-xs font-bold text-sky-600 flex items-center gap-1 border border-sky-100">
+                <Award className="h-3 w-3 text-sky-500" />
                 AI Score: {event.engagementScore.toFixed(1)}
               </div>
             )
@@ -146,9 +144,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         <div>
           {/* Header block with Bookmark */}
           <div className="flex justify-between items-start gap-3 mb-2.5">
-            <h4 className={`font-black text-base tracking-tight truncate-2-lines line-clamp-2 min-h-[48px] ${
-              'text-slate-800'
-            }`}>
+            <h4 className="font-black text-base tracking-tight truncate-2-lines line-clamp-2 min-h-[48px] text-slate-800">
               {event.title}
             </h4>
             {isStudent && (
@@ -156,32 +152,32 @@ export const EventCard: React.FC<EventCardProps> = ({
                 onClick={() => setBookmarked(!bookmarked)}
                 className={`p-1.5 rounded-lg border transition-colors shrink-0 ${
                   bookmarked 
-                    ? 'bg-[#e6f2f5] border-[#006680]/20 text-[#006680]' 
+                    ? 'bg-orange-50 border-orange-200 text-orange-600' 
                     : 'border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <Bookmark className={`h-4 w-4 ${bookmarked ? 'fill-[#006680]' : ''}`} />
+                <Bookmark className={`h-4 w-4 ${bookmarked ? 'fill-orange-500' : ''}`} />
               </button>
             )}
           </div>
           
           {/* Description */}
-          <p className="text-xs text-slate-500 line-clamp-3 mb-4">
+          <p className="text-xs text-slate-500 line-clamp-3 mb-4 leading-relaxed">
             {event.description}
           </p>
 
           {/* Details list */}
-          <div className={`space-y-2 mb-5 text-xs font-semibold ${'text-slate-500'}`}>
+          <div className="space-y-2 mb-5 text-xs font-semibold text-slate-500">
             <div className="flex items-center gap-2">
-              <Calendar className={`h-4 w-4 shrink-0 text-[#006680]`} />
+              <Calendar className="h-4 w-4 shrink-0 text-sky-500" />
               <span>{isStudent ? formatEventDateTime(event.date, event.time) : `${event.date} at ${event.time}`}</span>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className={`h-4 w-4 shrink-0 text-[#006680]`} />
+              <MapPin className="h-4 w-4 shrink-0 text-sky-500" />
               <span className="truncate">{event.location}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Users className={`h-4 w-4 shrink-0 text-[#006680]`} />
+              <Users className="h-4 w-4 shrink-0 text-sky-500" />
               <span className="truncate">
                 {isStudent ? getCapacityDescription() : `${registrationCount} / ${event.maxCapacity} Seats Filled`}
               </span>
@@ -189,24 +185,30 @@ export const EventCard: React.FC<EventCardProps> = ({
           </div>
         </div>
 
-        {/* Occupancy Indicator (Faculty/Admin/Dark Mode) */}
+        {/* Occupancy Indicator */}
         {!isStudent && (
-          <div className="w-full bg-secondary/50 rounded-full h-2 mb-5">
+          <div className="w-full bg-slate-100 rounded-full h-1.5 mb-5 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-[#006680] to-cyan-500 h-2 rounded-full transition-all duration-500" 
+              className="bg-sky-500 h-1.5 rounded-full transition-all duration-500" 
               style={{ width: `${occupancyPercentage}%` }}
             />
           </div>
         )}
 
+        {/* Boarding Ticket Tear-off Dash & Notches */}
+        <div className="border-t border-dashed border-sky-100 my-4 relative">
+          <div className="absolute -left-8 -top-1.5 w-3 h-3 bg-[#f0f9ff] rounded-full border-r border-sky-100"></div>
+          <div className="absolute -right-8 -top-1.5 w-3 h-3 bg-[#f0f9ff] rounded-full border-l border-sky-100"></div>
+        </div>
+
         {/* Footer Actions section */}
-        <div className="mt-auto">
+        <div className="mt-auto pt-1">
           {showAdminActions && onApprove ? (
             <div className="grid grid-cols-2 gap-2">
               <Button 
                 variant="glass" 
                 size="sm" 
-                className="text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/10"
+                className="text-sky-600 border border-sky-100 bg-sky-50 hover:bg-sky-100 py-1.5"
                 onClick={() => onApprove(true)}
               >
                 Approve
@@ -214,7 +216,7 @@ export const EventCard: React.FC<EventCardProps> = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="text-rose-500 hover:bg-rose-500/10"
+                className="text-orange-600 border border-orange-100 bg-orange-50 hover:bg-orange-100 py-1.5"
                 onClick={() => onApprove(false)}
               >
                 Reject
@@ -223,20 +225,20 @@ export const EventCard: React.FC<EventCardProps> = ({
           ) : onDelete ? (
             <div className="flex gap-2">
               {onAction && (
-                <Button variant="primary" className="flex-1" onClick={onAction}>
+                <Button variant="primary" className="flex-1 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold cursor-pointer" onClick={onAction}>
                   {getBtnLabel()}
                 </Button>
               )}
               <Button 
                 variant="outline" 
-                className="text-rose-500 hover:bg-rose-500/10 shrink-0"
+                className="text-orange-600 hover:bg-orange-50 shrink-0 border-slate-200"
                 onClick={onDelete}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           ) : isStudent ? (
-            <div className="flex justify-between items-center gap-3 pt-3 border-t border-slate-100">
+            <div className="flex justify-between items-center gap-3">
               {/* Avatars */}
               <div className="flex items-center gap-1.5 shrink-0">
                 <div className="flex items-center -space-x-1.5">
@@ -245,7 +247,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                     <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=80" className="h-5.5 w-5.5 rounded-full object-cover border border-white shadow-sm" alt="" />
                   )}
                 </div>
-                <span className="text-[10px] font-extrabold text-slate-400">
+                <span className="text-[10px] font-bold text-slate-400">
                   +{event.id * 14 + 12}
                 </span>
               </div>
@@ -253,7 +255,7 @@ export const EventCard: React.FC<EventCardProps> = ({
               {isRegistered ? (
                 <button 
                   onClick={onAction}
-                  className="bg-[#e6f2f5] hover:bg-[#d5ebf0] text-[#006680] text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-inner shrink-0"
+                  className="bg-sky-50 border border-sky-100 hover:bg-sky-100 text-sky-600 text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-inner shrink-0 cursor-pointer"
                 >
                   View Pass
                 </button>
@@ -263,8 +265,8 @@ export const EventCard: React.FC<EventCardProps> = ({
                     onClick={onAction}
                     className={`text-xs font-black px-5 py-2 rounded-xl transition-all active:scale-[0.98] shrink-0 cursor-pointer shadow-sm ${
                       getBtnLabel().toUpperCase() === 'RSVP' 
-                        ? 'border border-[#006680] text-[#006680] bg-white hover:bg-[#e6f2f5]/30' 
-                        : 'bg-[#006680] hover:bg-[#00556c] text-white'
+                        ? 'border border-sky-200 text-sky-600 bg-white hover:bg-sky-50' 
+                        : 'bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white'
                     }`}
                   >
                     {getBtnLabel()}
@@ -273,15 +275,15 @@ export const EventCard: React.FC<EventCardProps> = ({
               )}
             </div>
           ) : isRegistered ? (
-            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <span className="text-xs text-emerald-500 font-bold flex items-center gap-1">
-                <ShieldCheck className="h-4 w-4" />
+            <div className="flex items-center justify-between p-2 rounded-xl bg-sky-50 border border-sky-100 text-sky-650">
+              <span className="text-xs font-bold flex items-center gap-1">
+                <ShieldCheck className="h-4 w-4 text-sky-500" />
                 Registered
               </span>
               {onAction && (
                 <button 
                   onClick={onAction}
-                  className="text-xs text-primary font-bold hover:underline"
+                  className="text-xs text-sky-600 font-extrabold hover:underline"
                 >
                   View Pass
                 </button>
@@ -291,7 +293,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             onAction && (
               <Button 
                 variant={actionLabel?.includes('Pass') ? 'glass' : 'primary'} 
-                className="w-full" 
+                className="w-full bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold py-2.5 cursor-pointer" 
                 onClick={onAction}
               >
                 {getBtnLabel()}

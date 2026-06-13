@@ -15,7 +15,7 @@ interface DigitalPassProps {
 export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, passCode }) => {
   const [copied, setCopied] = useState(false)
 
-  // Generate a realistic, unique 15x15 QR pattern based on the passCode string
+  // Generate a realistic, unique 17x17 QR pattern based on the passCode string
   const generateQRMatrix = (code: string) => {
     // Generate simple hash from string
     let hash = 0
@@ -68,23 +68,23 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
   }
 
   return (
-    <div className="w-full flex flex-col items-center gap-6">
+    <div className="w-full flex flex-col items-center gap-6 select-none">
       {/* Boarding Pass Container */}
-      <Card variant="glow" className="relative w-full max-w-sm overflow-hidden bg-gradient-to-br from-[#006680] via-[#00556c] to-cyan-950 text-white border border-cyan-500/20 shadow-2xl p-6 flex flex-col gap-6">
+      <Card variant="default" className="relative w-full max-w-sm overflow-hidden bg-white text-slate-800 border border-sky-100 shadow-travel p-6 flex flex-col gap-6 rounded-3xl">
         
         {/* Glow Effects */}
-        <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-sky-300/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-orange-400/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Ticket Header */}
-        <div className="flex justify-between items-center border-b border-white/10 pb-4">
+        <div className="flex justify-between items-center border-b border-slate-100 pb-4">
           <div>
-            <span className="text-[10px] uppercase tracking-widest font-extrabold text-cyan-300">BOARDING PASS</span>
-            <h5 className="font-extrabold text-md tracking-tight text-white truncate max-w-[200px]">
+            <span className="text-[10px] uppercase tracking-widest font-black text-sky-650">BOARDING TICKET</span>
+            <h5 className="font-extrabold text-md tracking-tight text-slate-800 truncate max-w-[200px] mt-0.5">
               {event?.title}
             </h5>
           </div>
-          <Badge variant="info" className="font-extrabold text-[9px] bg-cyan-400/20 text-cyan-200 border-cyan-400/30">
+          <Badge className="font-extrabold text-[9px] bg-sky-50 text-sky-600 border border-sky-100">
             {event?.category}
           </Badge>
         </div>
@@ -92,37 +92,37 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
         {/* Ticket Body details */}
         <div className="grid grid-cols-2 gap-4 text-xs">
           <div className="space-y-1">
-            <span className="text-[10px] text-cyan-200 font-semibold uppercase">Attendee</span>
-            <div className="flex items-center gap-1.5 font-bold text-white">
-              <User className="h-3.5 w-3.5 text-cyan-300" />
+            <span className="text-[10px] text-slate-400 font-bold uppercase">Attendee</span>
+            <div className="flex items-center gap-1.5 font-bold text-slate-800">
+              <User className="h-3.5 w-3.5 text-sky-500" />
               <span className="truncate">{studentName}</span>
             </div>
           </div>
           <div className="space-y-1">
-            <span className="text-[10px] text-cyan-200 font-semibold uppercase">Location</span>
-            <div className="flex items-center gap-1.5 font-bold text-white">
-              <MapPin className="h-3.5 w-3.5 text-cyan-300" />
+            <span className="text-[10px] text-slate-400 font-bold uppercase">Location</span>
+            <div className="flex items-center gap-1.5 font-bold text-slate-800">
+              <MapPin className="h-3.5 w-3.5 text-sky-500" />
               <span className="truncate">{event?.location}</span>
             </div>
           </div>
           <div className="space-y-1 col-span-2">
-            <span className="text-[10px] text-cyan-200 font-semibold uppercase">Date & Time</span>
-            <div className="flex items-center gap-1.5 font-bold text-white">
-              <Calendar className="h-3.5 w-3.5 text-cyan-300" />
+            <span className="text-[10px] text-slate-400 font-bold uppercase">Date & Time</span>
+            <div className="flex items-center gap-1.5 font-bold text-slate-800">
+              <Calendar className="h-3.5 w-3.5 text-sky-500" />
               <span>{event?.date} — {event?.time}</span>
             </div>
           </div>
         </div>
 
         {/* Dashed separator */}
-        <div className="relative border-t-2 border-dashed border-white/10 my-1">
-          <div className="absolute -left-[30px] -top-3 w-6 h-6 rounded-full bg-background dark:bg-background border-r border-cyan-500/20" />
-          <div className="absolute -right-[30px] -top-3 w-6 h-6 rounded-full bg-background dark:bg-background border-l border-cyan-500/20" />
+        <div className="relative border-t-2 border-dashed border-sky-100 my-1">
+          <div className="absolute -left-[30px] -top-3 w-6 h-6 rounded-full bg-[#f0f9ff] border-r border-sky-100" />
+          <div className="absolute -right-[30px] -top-3 w-6 h-6 rounded-full bg-[#f0f9ff] border-l border-sky-100" />
         </div>
 
         {/* QR Section */}
         <div className="flex flex-col items-center gap-3">
-          <div className="bg-white p-4 rounded-2xl shadow-inner border border-white/20 select-none">
+          <div className="bg-white p-4 rounded-2xl shadow-inner border border-slate-100 select-none">
             {/* SVG Rendered QR Code */}
             <svg width={svgSize} height={svgSize} viewBox={`0 0 ${svgSize} ${svgSize}`} className="w-40 h-40">
               <rect width="100%" height="100%" fill="white" />
@@ -135,7 +135,7 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
                       y={padding + r * cellSize}
                       width={cellSize}
                       height={cellSize}
-                      fill="#00556c" // Deep Teal/Cyan
+                      fill="#1e293b" // Deep slate-800 color for standard reader legibility
                       rx={2}
                     />
                   ) : null
@@ -144,19 +144,19 @@ export const DigitalPass: React.FC<DigitalPassProps> = ({ event, studentName, pa
             </svg>
           </div>
           <div className="text-center">
-            <p className="text-[10px] text-cyan-200 font-semibold tracking-wide uppercase">Digital Pass Code</p>
-            <p className="text-sm font-extrabold font-mono tracking-wider text-cyan-300">{passCode}</p>
+            <p className="text-[10px] text-slate-400 font-bold tracking-wide uppercase">Digital Pass Code</p>
+            <p className="text-sm font-extrabold font-mono tracking-wider text-orange-600 mt-0.5">{passCode}</p>
           </div>
         </div>
       </Card>
 
       {/* Action Controls */}
       <div className="flex gap-2 w-full max-w-sm justify-center">
-        <Button variant="glass" size="sm" onClick={handleCopyCode} className="flex-1 flex gap-1.5 items-center">
-          {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+        <Button variant="glass" size="sm" onClick={handleCopyCode} className="flex-1 flex gap-1.5 items-center justify-center cursor-pointer border border-slate-200 bg-white text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition-colors shadow-sm">
+          {copied ? <Check className="h-4 w-4 text-sky-600" /> : <Copy className="h-4 w-4" />}
           {copied ? 'Copied' : 'Copy Code'}
         </Button>
-        <Button variant="glass" size="sm" onClick={handlePrint} className="flex-1 flex gap-1.5 items-center">
+        <Button variant="glass" size="sm" onClick={handlePrint} className="flex-1 flex gap-1.5 items-center justify-center cursor-pointer border border-slate-200 bg-white text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition-colors shadow-sm">
           <Printer className="h-4 w-4" />
           Print Pass
         </Button>
