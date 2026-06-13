@@ -244,14 +244,14 @@ export const LandingPage: React.FC = () => {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/60 border border-sky-200 text-sky-600 text-[10px] font-black uppercase tracking-wider">
             <Sparkles className="h-3 w-3 animate-pulse text-sky-500" />
-            <span>Interactive Travel SaaS Workspace</span>
+            <span>Interactive Campus Engagement Workspace</span>
           </div>
           <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-none text-slate-900 font-sans">
-            All Your Travel Plans. <br />
-            <span className="text-sky-500">One Simple Place.</span>
+            UniSphere – <br />
+            <span className="text-sky-500">Smart Campus Engagement</span>
           </h1>
           <p className="text-slate-550 text-sm sm:text-base max-w-xl mx-auto leading-relaxed text-slate-650">
-            Store tickets, itineraries, bookings and documents — automatically organized for every trip. Experience the playful interface, real-time calendars, and automatic schedule layouts.
+            Discover student clubs, reserve event tickets, manage academic calendars, and receive personalized AI recommendations. Experience the unified portal for student life, academic coordination, and campus telemetry.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
             <button 
