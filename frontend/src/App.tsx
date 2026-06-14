@@ -57,9 +57,7 @@ export default function App() {
           {/* Public Landing Path */}
           <Route 
             path="/" 
-            element={
-              token ? <Navigate to="/dashboard" replace /> : <LandingPage />
-            } 
+            element={<LandingPage />} 
           />
 
           {/* Public Authentication Paths */}

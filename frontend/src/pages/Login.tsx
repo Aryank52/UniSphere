@@ -19,6 +19,7 @@ import { useAuthStore } from '../store/authStore'
 export const Login: React.FC = () => {
   const navigate = useNavigate()
   const token = useAuthStore(state => state.token)
+  const user = useAuthStore(state => state.user)
   
   const [isRegister, setIsRegister] = useState(false)
   const [email, setEmail] = useState('')
@@ -35,8 +36,14 @@ export const Login: React.FC = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (token) navigate('/')
-  }, [token, navigate])
+    if (token) {
+      if (user?.role === 'STUDENT' && !user?.department) {
+        navigate('/onboarding')
+      } else {
+        navigate('/dashboard')
+      }
+    }
+  }, [token, user, navigate])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,12 +56,24 @@ export const Login: React.FC = () => {
 
     if (isRegister) {
       registerMutation.mutate({ name, email, password, role, department }, {
-        onSuccess: () => navigate('/'),
+        onSuccess: (data) => {
+          if (data.user?.role === 'STUDENT' && !data.user?.department) {
+            navigate('/onboarding')
+          } else {
+            navigate('/dashboard')
+          }
+        },
         onError: (err: Error) => setFormError(err.message || 'Registration failed.')
       })
     } else {
       loginMutation.mutate({ email, password }, {
-        onSuccess: () => navigate('/'),
+        onSuccess: (data) => {
+          if (data.user?.role === 'STUDENT' && !data.user?.department) {
+            navigate('/onboarding')
+          } else {
+            navigate('/dashboard')
+          }
+        },
         onError: (err: Error) => setFormError(err.message || 'Authentication failed.')
       })
     }
@@ -76,7 +95,13 @@ export const Login: React.FC = () => {
     // Submit after tiny timeout to show prefill effect
     setTimeout(() => {
       loginMutation.mutate({ email: prefilledEmail, password: 'password' }, {
-        onSuccess: () => navigate('/'),
+        onSuccess: (data) => {
+          if (data.user?.role === 'STUDENT' && !data.user?.department) {
+            navigate('/onboarding')
+          } else {
+            navigate('/dashboard')
+          }
+        },
         onError: (err: Error) => setFormError(err.message || 'Authentication failed.')
       })
     }, 150)
