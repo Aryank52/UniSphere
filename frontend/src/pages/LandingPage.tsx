@@ -15,7 +15,6 @@ import {
   Calendar
 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { useAuthStore } from '../store/authStore'
 
 // Floating Airline Ticket Card with countdown timer
 const AirlineTicketCard: React.FC = () => (
@@ -156,7 +155,6 @@ const ItineraryPanel: React.FC = () => (
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate()
-  const { token, user } = useAuthStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'student' | 'faculty' | 'admin'>('student')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -205,22 +203,12 @@ export const LandingPage: React.FC = () => {
             <a href="#examples" className="hover:text-sky-600 transition-colors">Examples</a>
             <a href="#pricing" className="hover:text-sky-600 transition-colors">Pricing</a>
             <a href="#help" className="hover:text-sky-600 transition-colors">Help</a>
-            {token ? (
-              <button 
-                onClick={() => navigate(user?.role === 'STUDENT' && !user?.department ? '/onboarding' : '/dashboard')}
-                className="bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-5 py-2.5 rounded-xl shadow-md shadow-sky-200 hover:shadow-lg transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5"
-              >
-                <span>Go to Portal</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            ) : (
-              <button 
-                onClick={() => navigate('/login')}
-                className="bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-5 py-2.5 rounded-xl shadow-md shadow-sky-200 hover:shadow-lg transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5"
-              >
-                <span>Sign In</span>
-              </button>
-            )}
+            <button 
+              onClick={() => navigate('/login')}
+              className="bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-5 py-2.5 rounded-xl shadow-md shadow-sky-200 hover:shadow-lg transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Sign In</span>
+            </button>
           </div>
 
           {/* Mobile Menu Btn */}
@@ -236,22 +224,12 @@ export const LandingPage: React.FC = () => {
             <a href="#examples" onClick={() => setMobileMenuOpen(false)} className="hover:text-sky-600 py-2">Examples</a>
             <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="hover:text-sky-600 py-2">Pricing</a>
             <a href="#help" onClick={() => setMobileMenuOpen(false)} className="hover:text-sky-600 py-2">Help</a>
-            {token ? (
-              <button 
-                onClick={() => { setMobileMenuOpen(false); navigate(user?.role === 'STUDENT' && !user?.department ? '/onboarding' : '/dashboard'); }}
-                className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 rounded-xl mt-2 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Go to Portal</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            ) : (
-              <button 
-                onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
-                className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 rounded-xl mt-2 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Sign In</span>
-              </button>
-            )}
+            <button 
+              onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
+              className="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 rounded-xl mt-2 shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Sign In</span>
+            </button>
           </div>
         )}
       </nav>
@@ -283,21 +261,12 @@ export const LandingPage: React.FC = () => {
               <span>Download App</span>
               <ArrowRight className="h-4.5 w-4.5" />
             </button>
-            {token ? (
-              <button 
-                onClick={() => navigate(user?.role === 'STUDENT' && !user?.department ? '/onboarding' : '/dashboard')}
-                className="bg-white hover:bg-slate-50 text-slate-700 font-extrabold px-8 py-4 rounded-2xl border border-sky-100 flex items-center justify-center transition-all shadow-sm shadow-sky-100/50"
-              >
-                Go to Portal
-              </button>
-            ) : (
-              <a 
-                href="#demo"
-                className="bg-white hover:bg-slate-50 text-slate-700 font-extrabold px-8 py-4 rounded-2xl border border-sky-100 flex items-center justify-center transition-all shadow-sm shadow-sky-100/50"
-              >
-                Explore Sandbox Portal
-              </a>
-            )}
+            <a 
+              href="#demo"
+              className="bg-white hover:bg-slate-50 text-slate-700 font-extrabold px-8 py-4 rounded-2xl border border-sky-100 flex items-center justify-center transition-all shadow-sm shadow-sky-100/50"
+            >
+              Explore Sandbox Portal
+            </a>
           </div>
         </motion.div>
 
@@ -410,10 +379,10 @@ export const LandingPage: React.FC = () => {
             </div>
             
             <button 
-              onClick={() => navigate(token ? (user?.role === 'STUDENT' && !user?.department ? '/onboarding' : '/dashboard') : '/login')}
+              onClick={() => navigate('/login')}
               className="mt-8 bg-sky-50 border border-sky-200 hover:bg-sky-100 text-sky-600 py-3.5 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer w-full"
             >
-              <span>{token ? 'Go to Active Portal Dashboard' : 'Test Live in Sandbox Profile'}</span>
+              <span>Test Live in Sandbox Profile</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -434,8 +403,8 @@ export const LandingPage: React.FC = () => {
               <h4 className="text-xl font-bold mb-3 text-slate-800">Local Creator</h4>
               <div className="text-3xl font-black mb-6 text-slate-900">$0 <span className="text-xs text-slate-400 font-medium">/ forever</span></div>
             </div>
-            <button onClick={() => navigate(token ? (user?.role === 'STUDENT' && !user?.department ? '/onboarding' : '/dashboard') : '/login')} className="w-full py-3.5 border border-slate-200 bg-white text-slate-700 rounded-xl text-xs font-bold cursor-pointer">
-              {token ? 'Open Portal' : 'Launch Localhost Dev'}
+            <button onClick={() => navigate('/login')} className="w-full py-3.5 border border-slate-200 bg-white text-slate-700 rounded-xl text-xs font-bold cursor-pointer">
+              Launch Localhost Dev
             </button>
           </div>
           
@@ -446,8 +415,8 @@ export const LandingPage: React.FC = () => {
               <h4 className="text-xl font-bold mb-3 text-slate-800">Studio Pro</h4>
               <div className="text-3xl font-black mb-6 text-slate-900">$129 <span className="text-xs text-slate-400 font-medium">/ month</span></div>
             </div>
-            <button onClick={() => navigate(token ? (user?.role === 'STUDENT' && !user?.department ? '/onboarding' : '/dashboard') : '/login')} className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold cursor-pointer">
-              {token ? 'Open Portal' : 'Initiate Inst. Setup'}
+            <button onClick={() => navigate('/login')} className="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold cursor-pointer">
+              Initiate Inst. Setup
             </button>
           </div>
           
