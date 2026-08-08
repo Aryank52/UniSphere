@@ -20,6 +20,9 @@ import { FacultyDirectoryPage } from './pages/FacultyDirectoryPage'
 import { StudentDirectoryPage } from './pages/StudentDirectoryPage'
 import { TeammateMatcherPage } from './pages/TeammateMatcherPage'
 import { CampusMarketplacePage } from './pages/CampusMarketplacePage'
+import { LabReservationPage } from './pages/LabReservationPage'
+import { ResearchAssistantshipPage } from './pages/ResearchAssistantshipPage'
+import { LostAndFoundPage } from './pages/LostAndFoundPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -105,6 +108,9 @@ export default function App() {
             <Route path="clubs" element={<ClubsPage />} />
             <Route path="teammates" element={<TeammateMatcherPage />} />
             <Route path="marketplace" element={<CampusMarketplacePage />} />
+            <Route path="labs" element={<LabReservationPage />} />
+            <Route path="research" element={<ResearchAssistantshipPage />} />
+            <Route path="lost-found" element={<LostAndFoundPage />} />
             <Route path="faculty" element={<FacultyDirectoryPage />} />
             <Route path="students" element={<StudentDirectoryPage />} />
             <Route path="profile" element={<Profile />} />

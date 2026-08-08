@@ -455,9 +455,9 @@ export const ClubsPage: React.FC = () => {
                   role: 'ADMIN' as const
                 } : {
                   id: 2,
-                  name: 'Dr. Sarah Jenkins',
-                  email: 'faculty@unisphere.edu',
-                  department: 'Data Science',
+                  name: 'Dr. Hitesh Kumar Sharma',
+                  email: 'hksharma@upes.ac.in',
+                  department: 'School of Computer Science',
                   profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
                   role: 'FACULTY' as const
                 })

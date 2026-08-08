@@ -10,27 +10,47 @@ import {
   LayoutDashboard, Calendar, Users, Bell, LogOut, 
   Menu, X, Search, Mail, BookOpen, GraduationCap, Award, Settings, HelpCircle,
   Activity, Database, Server, RefreshCw, CheckCircle, FileText,
-  Sparkles, CalendarDays, Bot, Globe, UserPlus, ShoppingBag
+  Sparkles, CalendarDays, Bot, Globe, UserPlus, ShoppingBag, Sun, Moon, Cpu, Briefcase
 } from 'lucide-react'
 import { VoiceAIAssistant } from './VoiceAIAssistant'
 
-// Course Catalog Mock Data
+// Course Catalog Mock Data with Real UPES Faculty
 const CATALOG_COURSES = [
-  { id: 'CS-412', name: 'Distributed Systems', credits: 3, professor: 'Prof. Samuel', desc: 'Designing cloud architectures, Consensus algorithms, RPC protocols, and horizontal scalability.' },
-  { id: 'DS-450', name: 'Deep Learning & Vision', credits: 4, professor: 'Dr. Sarah Jenkins', desc: 'Neural networks, CNNs, Transformers, and LLM fine-tuning with PyTorch.' },
-  { id: 'CS-301', name: 'Cryptography & Security', credits: 3, professor: 'Prof. Rivest', desc: 'Public key infrastructure, Zero-Knowledge proofs, Blockchain fundamentals, and secure hashing.' },
-  { id: 'MATH-302', name: 'Probability & Random Processes', credits: 3, professor: 'Prof. Gauss', desc: 'Random variables, stochastic processes, Markov chains, and queuing theories.' },
-  { id: 'CS-499', name: 'Senior Honors Capstone', credits: 4, professor: 'CS Department', desc: 'Independent research project under faculty advisor guidance for thesis defense.' }
+  { id: 'CS-412', name: 'Distributed Systems & Cloud Computing', credits: 3, professor: 'Prof. (Dr.) Sanjay Biswash', desc: 'Designing cloud architectures, Fog & Edge computing protocols, RPC, and horizontal scalability.' },
+  { id: 'DS-450', name: 'Deep Learning & Vision Intelligence', credits: 4, professor: 'Dr. Hitesh Kumar Sharma', desc: 'Neural networks, CNNs, Transformers, and LLM fine-tuning with PyTorch.' },
+  { id: 'CS-301', name: 'Cryptography & Cyber Security', credits: 3, professor: 'Prof. Adarsh Kumar', desc: 'Public key infrastructure, Zero-Knowledge proofs, Blockchain fundamentals, and secure hashing.' },
+  { id: 'MATH-302', name: 'Optimization & Spatial Computing', credits: 3, professor: 'Dr. Siva Sankar', desc: 'Geospatial Intelligence, Spatial Data Science, and Optimization-based ML heuristics.' },
+  { id: 'CS-499', name: 'Senior Honors Capstone Thesis', credits: 4, professor: 'Prof. Vijaysekhar Chellaboina (Dean)', desc: 'Independent research project under UPES School of Computer Science faculty guidance.' }
 ]
 
-// Directory Mock Data
+// Directory Mock Data with Real UPES Faculty Members and Students
 const DIRECTORY_PEOPLE = [
-  { name: 'Alex Rivera', role: 'STUDENT', dept: 'Computer Science', email: 'student@unisphere.edu', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', status: 'Online' },
-  { name: 'Dr. Sarah Jenkins', role: 'FACULTY', dept: 'Data Science', email: 'faculty@unisphere.edu', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', status: 'In Meeting' },
-  { name: 'Admin Chief', role: 'ADMIN', dept: 'Administration', email: 'admin@unisphere.edu', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150', status: 'Online' },
-  { name: 'Dr. Alan Turing', role: 'FACULTY', dept: 'Computer Science', email: 'turing@unisphere.edu', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150', status: 'Online' },
-  { name: 'Prof. Ada Lovelace', role: 'FACULTY', dept: 'Software Eng', email: 'lovelace@unisphere.edu', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', status: 'Offline' },
-  { name: 'Jane Doe', role: 'STUDENT', dept: 'Mechanical Eng', email: 'jane@unisphere.edu', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', status: 'Offline' }
+  // UPES Faculty Members
+  { name: 'Prof. Vijaysekhar Chellaboina', role: 'FACULTY', dept: 'School of Computer Science (Dean)', email: 'vijaysekhar@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', status: 'Online' },
+  { name: 'Dr. Vinod Patidar', role: 'FACULTY', dept: 'School of Computer Science', email: 'vpatidar@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', status: 'Online' },
+  { name: 'Dr. Hitesh Kumar Sharma', role: 'FACULTY', dept: 'AI, Deep Learning, Blockchain', email: 'hksharma@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150', status: 'In Meeting' },
+  { name: 'Prof. (Dr.) Sanjay Biswash', role: 'FACULTY', dept: 'Cloud, Fog & Edge Computing', email: 'sbiswash@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150', status: 'Online' },
+  { name: 'Dr. Vijendra Singh', role: 'FACULTY', dept: 'Machine Learning, Big Data', email: 'vijendra@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150', status: 'Online' },
+  { name: 'Prof. Adarsh Kumar', role: 'FACULTY', dept: 'Cybersecurity, Cryptography', email: 'adarsh.kumar@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150', status: 'In Meeting' },
+  { name: 'Dr. Md. Shamsul Haque Ansari', role: 'FACULTY', dept: 'Database Technologies, Big Data', email: 'shamsul.ansari@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', status: 'Online' },
+  { name: 'Dr. Kaushik Ghosh', role: 'FACULTY', dept: 'Wireless Sensor Networks, IoT', email: 'kaushik.ghosh@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', status: 'Offline' },
+  { name: 'Dr. Subhrasankar Chatterjee', role: 'FACULTY', dept: 'Computational Neuroscience', email: 'schatterjee@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', status: 'Online' },
+  { name: 'Dr. Saurabh Shrivastava', role: 'FACULTY', dept: 'Optimization-based ML, Java', email: 'sshrivastava@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150', status: 'Online' },
+  { name: 'Dr. Siva Sankar', role: 'FACULTY', dept: 'Geospatial Intelligence', email: 'sivasankar@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150', status: 'Online' },
+  { name: 'Dr. Khushboo Jain', role: 'FACULTY', dept: 'Data Structures, Algorithms', email: 'khushboo.jain@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', status: 'In Meeting' },
+  { name: 'Dr. Uday Kumar Murali', role: 'FACULTY', dept: 'Operations Research, Analytics', email: 'uday.murali@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150', status: 'Offline' },
+  { name: 'Dr. Swadhin Das', role: 'FACULTY', dept: 'NLP, Computer Vision', email: 'swadhin.das@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150', status: 'Online' },
+  { name: 'Dr. Nutan Singh', role: 'FACULTY', dept: 'AI Healthcare, Deep Learning', email: 'nutan.singh@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', status: 'Online' },
+  { name: 'Dr. Vishal Sharma', role: 'FACULTY', dept: 'Remote Sensing, SAR Processing', email: 'vsharma@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', status: 'Offline' },
+  { name: 'Dr. Christalin Nelson S', role: 'FACULTY', dept: 'OOP, Data Structures', email: 'christalin.nelson@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', status: 'Online' },
+  { name: 'Prof. Abhishek Yadav', role: 'FACULTY', dept: 'Cyber Security, Forensics', email: 'abhishek.yadav@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150', status: 'Online' },
+  { name: 'Mr. Santanu Ghosh', role: 'FACULTY', dept: 'Quantum & Edge Computing', email: 'santanu.ghosh@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150', status: 'Offline' },
+  { name: 'Mr. Himanshu', role: 'FACULTY', dept: 'Wireless Communication', email: 'himanshu@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150', status: 'Online' },
+  { name: 'Dr. Ravi S Iyer', role: 'FACULTY', dept: 'School of Computer Science', email: 'ravi.iyer@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150', status: 'Online' },
+  { name: 'Mr. Anil Kumar', role: 'FACULTY', dept: 'School of Computer Science', email: 'anil.kumar@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', status: 'Offline' },
+  { name: 'Dr. Ashutosh Kumar Dikshit', role: 'FACULTY', dept: 'School of Computer Science', email: 'akdikshit@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', status: 'Online' },
+  { name: 'Dr. Mukesh Kumar Sharma', role: 'FACULTY', dept: 'Computer Science & Analytics', email: 'mksharma@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', status: 'Online' },
+  { name: 'Dr. Alind', role: 'FACULTY', dept: 'School of Computer Science', email: 'alind@upes.ac.in', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150', status: 'Offline' }
 ]
 
 // Announcements Mock Data
@@ -47,6 +67,7 @@ export const Layout: React.FC = () => {
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   // Drawer states
   const [activeDrawer, setActiveDrawer] = useState<string | null>(null)
@@ -108,6 +129,9 @@ export const Layout: React.FC = () => {
       { path: '/dashboard/clubs', label: 'Clubs & Societies', icon: Users },
       { path: '/dashboard/teammates', label: 'AI Teammate Finder', icon: UserPlus },
       { path: '/dashboard/marketplace', label: 'Campus Marketplace', icon: ShoppingBag },
+      { path: '/dashboard/labs', label: 'Research Lab Booking', icon: Cpu },
+      { path: '/dashboard/research', label: 'Faculty RA Desk', icon: Briefcase },
+      { path: '/dashboard/lost-found', label: 'Lost & Found Hub', icon: HelpCircle },
       { path: '/dashboard/faculty', label: 'UPES Faculty Directory', icon: GraduationCap },
       { path: '/dashboard/students', label: 'Student Leaderboard', icon: Award },
       { path: '/dashboard/profile', label: 'My Profile', icon: GraduationCap },
@@ -546,12 +570,13 @@ export const Layout: React.FC = () => {
         return (
           <div className="space-y-6">
             <div className="space-y-3">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Faculty Advisors & Office Hours</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">UPES Faculty Advisors & Office Hours</span>
               <div className="space-y-2">
                 {[
-                  { name: 'Dr. Sarah Jenkins', office: 'CSE-401', hours: 'Tue/Thu 2:00 PM - 4:00 PM', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
-                  { name: 'Prof. Alan Turing', office: 'CSE-310', hours: 'Mon/Wed 10:00 AM - 12:00 AM', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
-                  { name: 'Prof. Ada Lovelace', office: 'SE-204', hours: 'Fri 1:00 PM - 3:00 PM', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' }
+                  { name: 'Dr. Hitesh Kumar Sharma', office: 'Bidholi CS Block A-301', hours: 'Tue/Thu 2:00 PM - 4:00 PM', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+                  { name: 'Prof. Vijaysekhar Chellaboina (Dean)', office: 'Dean Office - Energy Acres', hours: 'Mon/Wed 10:00 AM - 12:00 PM', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+                  { name: 'Dr. Subhrasankar Chatterjee', office: 'Bidholi CS Block B-204', hours: 'Fri 1:00 PM - 3:00 PM', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+                  { name: 'Dr. Khushboo Jain', office: 'Bidholi CS Block A-108', hours: 'Wed/Fri 3:00 PM - 5:00 PM', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' }
                 ].map((f, i) => (
                   <div key={i} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center gap-3 shadow-sm">
                     <img src={f.image} alt={f.name} className="h-9 w-9 rounded-full object-cover border border-slate-200" />
@@ -592,9 +617,11 @@ export const Layout: React.FC = () => {
                       onChange={(e) => setOfficeHoursProfessor(e.target.value)}
                       className="w-full border border-slate-200 bg-white rounded-lg p-2.5 focus:outline-none focus:border-sky-500 cursor-pointer text-slate-700"
                     >
-                      <option>Dr. Sarah Jenkins</option>
-                      <option>Prof. Alan Turing</option>
-                      <option>Prof. Ada Lovelace</option>
+                      <option>Dr. Hitesh Kumar Sharma</option>
+                      <option>Prof. Vijaysekhar Chellaboina</option>
+                      <option>Dr. Subhrasankar Chatterjee</option>
+                      <option>Dr. Khushboo Jain</option>
+                      <option>Prof. Adarsh Kumar</option>
                     </select>
                   </div>
                   <div>
@@ -935,9 +962,26 @@ export const Layout: React.FC = () => {
 
           </div>
 
-          {/* Top Bar Actions (Notifications, Messages, Profile) */}
+          {/* Top Bar Actions (Notifications, Messages, Profile, Theme) */}
           <div className="flex items-center gap-4">
             
+            {/* Dark/Light Theme Switcher */}
+            <button
+              onClick={() => {
+                const nextDark = !isDarkMode
+                setIsDarkMode(nextDark)
+                if (nextDark) {
+                  document.documentElement.classList.add('dark')
+                } else {
+                  document.documentElement.classList.remove('dark')
+                }
+              }}
+              className="p-2 rounded-xl transition-colors relative cursor-pointer hover:bg-slate-100 text-slate-400 hover:text-sky-600"
+              title="Toggle Dark / Light Mode"
+            >
+              {isDarkMode ? <Sun className="h-4.5 w-4.5 text-amber-400" /> : <Moon className="h-4.5 w-4.5 text-slate-500" />}
+            </button>
+
             {/* Notifications */}
             <div className="relative">
               <button

@@ -152,8 +152,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             {/* Signature & Seal */}
             <div className="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-between">
               <div className="text-left">
-                <div className="font-serif italic text-lg text-indigo-300">Dr. Sarah Jenkins</div>
-                <div className="text-[11px] text-slate-400">Faculty Coordinator & Head of Events</div>
+                <div className="font-serif italic text-lg text-indigo-300">Dr. Hitesh Kumar Sharma</div>
+                <div className="text-[11px] text-slate-400">UPES Faculty Coordinator & Dean Office</div>
               </div>
               <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-400 text-[11px]">
                 <ShieldCheck className="w-3.5 h-3.5" />
