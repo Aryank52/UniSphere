@@ -4,11 +4,6 @@ exports.Achievement = void 0;
 const sequelize_1 = require("sequelize");
 const database_1 = require("../config/database");
 class Achievement extends sequelize_1.Model {
-    id;
-    title;
-    description;
-    badgeImage;
-    xpBonus;
 }
 exports.Achievement = Achievement;
 Achievement.init({

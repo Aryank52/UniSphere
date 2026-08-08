@@ -14,12 +14,14 @@ let isRedisConnected = false
 
 export async function initRedis() {
   try {
-    await redisClient.connect()
+    const connectPromise = redisClient.connect()
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Redis connection timeout')), 1000))
+    await Promise.race([connectPromise, timeoutPromise])
     isRedisConnected = true
     console.log('Connected to Redis Cache Server successfully.')
   } catch (err) {
     isRedisConnected = false
-    // Suppress error since we run with fallback
+    console.log('Redis Cache Server is offline. Running with in-memory fallback.')
   }
 }
 

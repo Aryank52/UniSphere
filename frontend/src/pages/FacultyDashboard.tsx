@@ -13,7 +13,10 @@ import {
   CheckCircle2, 
   HelpCircle, 
   ScanLine,
-  FlaskConical
+  FlaskConical,
+  Camera,
+  Compass,
+  Wand2
 } from 'lucide-react'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
@@ -25,6 +28,9 @@ import {
   useEventAttendees, useCheckInAttendance, useAIPredictAttendance, 
   useAISmartSchedule, useClubs 
 } from '../hooks/useApi'
+import { QRScannerModal } from '../components/QRScannerModal'
+import { AIEventAssistantModal } from '../components/AIEventAssistantModal'
+import { CampusMapModal } from '../components/CampusMapModal'
 import type { Event, Club, Attendee } from '../types'
 
 export const FacultyDashboard: React.FC = () => {
@@ -40,6 +46,9 @@ export const FacultyDashboard: React.FC = () => {
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null)
   const [scanPassCode, setScanPassCode] = useState('')
   const [scanMessage, setScanMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [qrScannerOpen, setQrScannerOpen] = useState(false)
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false)
+  const [mapOpen, setMapOpen] = useState(false)
 
   // AI attendance predictor parameters
   const [predCategory, setPredCategory] = useState('TECH')
@@ -175,10 +184,24 @@ export const FacultyDashboard: React.FC = () => {
                 <Calendar className="h-4.5 w-4.5 text-sky-500" />
                 <span>Schedule New Event</span>
               </h3>
-              <Badge className="px-2.5 py-1 font-extrabold text-[8px] uppercase tracking-wider bg-orange-50 border border-orange-100 text-orange-600 flex gap-1 items-center">
-                <Sparkles className="h-3 w-3 text-orange-500 animate-pulse" />
-                <span>AI Suggestion Active</span>
-              </Badge>
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setAiAssistantOpen(true)}
+                  className="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 rounded-xl text-[10px] font-extrabold flex items-center space-x-1 transition shadow-sm"
+                >
+                  <Wand2 className="w-3.5 h-3.5 text-purple-600" />
+                  <span>AI Copywriter</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMapOpen(true)}
+                  className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 rounded-xl text-[10px] font-extrabold flex items-center space-x-1 transition shadow-sm"
+                >
+                  <Compass className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Campus Map</span>
+                </button>
+              </div>
             </div>
 
             {/* Inline Fields */}
@@ -634,8 +657,16 @@ export const FacultyDashboard: React.FC = () => {
             <div className="flex gap-2">
               <Button type="submit" className="flex-1 flex gap-1.5 items-center justify-center bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-extrabold py-3 shadow-sm cursor-pointer">
                 <ScanLine className="h-4 w-4" />
-                Scan Pass
+                <span>Verify Code</span>
               </Button>
+              <button
+                type="button"
+                onClick={() => setQrScannerOpen(true)}
+                className="px-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 shadow-md transition"
+              >
+                <Camera className="h-4 w-4" />
+                <span>Open Live Camera</span>
+              </button>
             </div>
             {scanMessage && (
               <div className={`p-3 rounded-xl text-xs font-semibold ${
@@ -681,6 +712,41 @@ export const FacultyDashboard: React.FC = () => {
           </div>
         </div>
       </Dialog>
+
+      {/* Live QR Camera Scanner Modal */}
+      <QRScannerModal
+        isOpen={qrScannerOpen}
+        onClose={() => setQrScannerOpen(false)}
+        eventId={selectedEventId || 0}
+        onScanSuccess={async (scannedPassCode) => {
+          if (!selectedEventId) return
+          await checkInMutation.mutateAsync({
+            eventId: selectedEventId,
+            passCode: scannedPassCode
+          })
+          refetchAttendees()
+        }}
+      />
+
+      {/* AI Event Assistant Copywriter Modal */}
+      <AIEventAssistantModal
+        isOpen={aiAssistantOpen}
+        onClose={() => setAiAssistantOpen(false)}
+        onApplyGeneratedContent={(title, desc, cat) => {
+          setFormTitle(title)
+          setFormDesc(desc)
+          setFormCategory(cat)
+        }}
+      />
+
+      {/* Campus Map Navigator Modal */}
+      <CampusMapModal
+        isOpen={mapOpen}
+        onClose={() => setMapOpen(false)}
+        onSelectVenue={(venueName) => {
+          setFormLocation(venueName)
+        }}
+      />
 
     </div>
   )

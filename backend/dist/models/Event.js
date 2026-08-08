@@ -7,21 +7,6 @@ const User_1 = require("./User");
 const Club_1 = require("./Club");
 const Venue_1 = require("./Venue");
 class Event extends sequelize_1.Model {
-    id;
-    title;
-    description;
-    date;
-    time;
-    location;
-    campus;
-    maxCapacity;
-    status;
-    bannerImage;
-    category;
-    clubId;
-    coordinatorId;
-    venueId;
-    engagementScore;
 }
 exports.Event = Event;
 Event.init({

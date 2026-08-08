@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Search, SlidersHorizontal, Zap } from 'lucide-react'
+import { Search, SlidersHorizontal, Zap, Compass, Award } from 'lucide-react'
 import { EventCard } from '../components/EventCard'
 import { Card } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
@@ -7,6 +7,8 @@ import { useEvents, useMyRegistrations, useRegisterForEvent } from '../hooks/use
 import { useAuthStore } from '../store/authStore'
 import { Dialog } from '../components/ui/Dialog'
 import { DigitalPass } from '../components/DigitalPass'
+import { CampusMapModal } from '../components/CampusMapModal'
+import { CertificateModal } from '../components/CertificateModal'
 import type { Event } from '../types'
 
 export const EventsPage: React.FC = () => {
@@ -21,6 +23,9 @@ export const EventsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('ALL')
   const [sortBy, setSortBy] = useState<'DATE' | 'TITLE' | 'SCORE'>('DATE')
   const [selectedPass, setSelectedPass] = useState<{ event: Event; passCode: string } | null>(null)
+  const [mapOpen, setMapOpen] = useState(false)
+  const [certOpen, setCertOpen] = useState(false)
+  const [certEvent, setCertEvent] = useState<Event | null>(null)
 
   const handleRegister = (eventId: number) => {
     registerMutation.mutate(eventId)
@@ -128,6 +133,15 @@ export const EventsPage: React.FC = () => {
               <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
               <span>Filters</span>
             </button>
+
+            {/* Campus Map button */}
+            <button 
+              onClick={() => setMapOpen(true)}
+              className="px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white transition-colors flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer"
+            >
+              <Compass className="h-3.5 w-3.5 text-indigo-200" />
+              <span>Campus Map Navigator</span>
+            </button>
           </div>
 
         </div>
@@ -210,9 +224,44 @@ export const EventsPage: React.FC = () => {
               studentName={user?.name || 'Student Name'}
               passCode={selectedPass.passCode}
             />
+            <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+              <button
+                onClick={() => {
+                  setCertEvent(selectedPass.event)
+                  setSelectedPass(null)
+                  setCertOpen(true)
+                }}
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow-sm transition"
+              >
+                <Award className="w-4 h-4" />
+                <span>View Attendance Certificate</span>
+              </button>
+            </div>
           </div>
         )}
       </Dialog>
+
+      {/* Campus Map Navigator Modal */}
+      <CampusMapModal
+        isOpen={mapOpen}
+        onClose={() => setMapOpen(false)}
+        onSelectVenue={(vName) => {
+          setSearchQuery(vName.split(' ')[0])
+        }}
+      />
+
+      {/* Certificate Modal */}
+      {certEvent && (
+        <CertificateModal
+          isOpen={certOpen}
+          onClose={() => setCertOpen(false)}
+          studentName={user?.name || 'Alex Rivera'}
+          eventTitle={certEvent.title}
+          eventDate={certEvent.date}
+          location={certEvent.location}
+          category={certEvent.category}
+        />
+      )}
 
       {/* Footer */}
       <footer className="border-t border-slate-100 mt-16 pt-8 pb-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">

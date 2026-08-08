@@ -6,10 +6,6 @@ const database_1 = require("../config/database");
 const User_1 = require("./User");
 const Achievement_1 = require("./Achievement");
 class UserAchievement extends sequelize_1.Model {
-    id;
-    userId;
-    achievementId;
-    earnedAt;
 }
 exports.UserAchievement = UserAchievement;
 UserAchievement.init({

@@ -6,11 +6,6 @@ const database_1 = require("../config/database");
 const User_1 = require("./User");
 const Event_1 = require("./Event");
 class Feedback extends sequelize_1.Model {
-    id;
-    eventId;
-    studentId;
-    rating;
-    comment;
 }
 exports.Feedback = Feedback;
 Feedback.init({

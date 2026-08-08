@@ -6,13 +6,6 @@ const database_1 = require("../config/database");
 const User_1 = require("./User");
 const Event_1 = require("./Event");
 class Registration extends sequelize_1.Model {
-    id;
-    eventId;
-    studentId;
-    status;
-    passCode;
-    event;
-    student;
 }
 exports.Registration = Registration;
 Registration.init({

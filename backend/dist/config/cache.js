@@ -19,13 +19,15 @@ exports.redisClient.on('error', (err) => {
 let isRedisConnected = false;
 async function initRedis() {
     try {
-        await exports.redisClient.connect();
+        const connectPromise = exports.redisClient.connect();
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Redis connection timeout')), 1000));
+        await Promise.race([connectPromise, timeoutPromise]);
         isRedisConnected = true;
         console.log('Connected to Redis Cache Server successfully.');
     }
     catch (err) {
         isRedisConnected = false;
-        // Suppress error since we run with fallback
+        console.log('Redis Cache Server is offline. Running with in-memory fallback.');
     }
 }
 async function getCachedData(key) {

@@ -6,10 +6,6 @@ const database_1 = require("../config/database");
 const User_1 = require("./User");
 const Club_1 = require("./Club");
 class ClubMember extends sequelize_1.Model {
-    id;
-    clubId;
-    userId;
-    joinedAt;
 }
 exports.ClubMember = ClubMember;
 ClubMember.init({

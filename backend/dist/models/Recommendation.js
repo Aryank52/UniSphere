@@ -6,11 +6,6 @@ const database_1 = require("../config/database");
 const User_1 = require("./User");
 const Event_1 = require("./Event");
 class Recommendation extends sequelize_1.Model {
-    id;
-    studentId;
-    eventId;
-    score;
-    recommendationReason;
 }
 exports.Recommendation = Recommendation;
 Recommendation.init({

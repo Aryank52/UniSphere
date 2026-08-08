@@ -4,12 +4,6 @@ exports.Venue = void 0;
 const sequelize_1 = require("sequelize");
 const database_1 = require("../config/database");
 class Venue extends sequelize_1.Model {
-    id;
-    name;
-    locationDetails;
-    latitude;
-    longitude;
-    capacity;
 }
 exports.Venue = Venue;
 Venue.init({
