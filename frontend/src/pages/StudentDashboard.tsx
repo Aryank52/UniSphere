@@ -11,6 +11,8 @@ import { Button } from '../components/ui/Button'
 import { Dialog } from '../components/ui/Dialog'
 import { useAuthStore } from '../store/authStore'
 import { useAIRecommendations, useMyRegistrations, useRegisterForEvent } from '../hooks/useApi'
+import { AttendanceDangerAlert } from '../components/AttendanceDangerAlert'
+import { ShuttleTrackerWidget } from '../components/ShuttleTrackerWidget'
 
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuthStore()
@@ -50,6 +52,12 @@ export const StudentDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 75% Attendance Danger Alert */}
+      <AttendanceDangerAlert />
+
+      {/* Real-time UPES Transit Bus Tracker */}
+      <ShuttleTrackerWidget />
 
       {/* Main Grid Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

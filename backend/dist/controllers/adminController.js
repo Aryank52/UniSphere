@@ -5,6 +5,8 @@ exports.approveEvent = approveEvent;
 exports.getPendingClubs = getPendingClubs;
 exports.approveClub = approveClub;
 exports.getUsersList = getUsersList;
+exports.getFacultyDirectory = getFacultyDirectory;
+exports.getStudentsDirectory = getStudentsDirectory;
 const Event_1 = require("../models/Event");
 const Club_1 = require("../models/Club");
 const User_1 = require("../models/User");
@@ -86,10 +88,35 @@ async function approveClub(req, res) {
 }
 async function getUsersList(req, res) {
     try {
-        const users = await User_1.User.findAll({ attributes: ['id', 'name', 'email', 'role', 'department', 'profileImage'] });
+        const users = await User_1.User.findAll({ attributes: ['id', 'name', 'email', 'role', 'department', 'skills', 'interests', 'profileImage', 'level', 'xpPoints', 'academicYear'] });
         res.status(200).json(users);
     }
     catch (err) {
         res.status(500).json({ message: err.message || 'Failed to fetch users' });
+    }
+}
+async function getFacultyDirectory(req, res) {
+    try {
+        const facultyList = await User_1.User.findAll({
+            where: { role: 'FACULTY' },
+            attributes: ['id', 'name', 'email', 'role', 'department', 'skills', 'interests', 'profileImage']
+        });
+        res.status(200).json(facultyList);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message || 'Failed to fetch faculty directory' });
+    }
+}
+async function getStudentsDirectory(req, res) {
+    try {
+        const studentsList = await User_1.User.findAll({
+            where: { role: 'STUDENT' },
+            attributes: ['id', 'name', 'email', 'role', 'department', 'academicYear', 'xpPoints', 'level', 'skills', 'interests', 'profileImage'],
+            order: [['xpPoints', 'DESC']]
+        });
+        res.status(200).json(studentsList);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message || 'Failed to fetch student directory' });
     }
 }

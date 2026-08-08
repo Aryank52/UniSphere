@@ -16,6 +16,10 @@ import { EventsPage } from './pages/EventsPage'
 import { ClubsPage } from './pages/ClubsPage'
 import { Unauthorized } from './pages/Unauthorized'
 import { LandingPage } from './pages/LandingPage'
+import { FacultyDirectoryPage } from './pages/FacultyDirectoryPage'
+import { StudentDirectoryPage } from './pages/StudentDirectoryPage'
+import { TeammateMatcherPage } from './pages/TeammateMatcherPage'
+import { CampusMarketplacePage } from './pages/CampusMarketplacePage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +103,10 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="clubs" element={<ClubsPage />} />
+            <Route path="teammates" element={<TeammateMatcherPage />} />
+            <Route path="marketplace" element={<CampusMarketplacePage />} />
+            <Route path="faculty" element={<FacultyDirectoryPage />} />
+            <Route path="students" element={<StudentDirectoryPage />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
             <Route path="unauthorized" element={<Unauthorized />} />

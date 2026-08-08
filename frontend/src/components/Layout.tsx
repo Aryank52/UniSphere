@@ -10,8 +10,9 @@ import {
   LayoutDashboard, Calendar, Users, Bell, LogOut, 
   Menu, X, Search, Mail, BookOpen, GraduationCap, Award, Settings, HelpCircle,
   Activity, Database, Server, RefreshCw, CheckCircle, FileText,
-  Sparkles, CalendarDays, Bot, Globe
+  Sparkles, CalendarDays, Bot, Globe, UserPlus, ShoppingBag
 } from 'lucide-react'
+import { VoiceAIAssistant } from './VoiceAIAssistant'
 
 // Course Catalog Mock Data
 const CATALOG_COURSES = [
@@ -105,6 +106,10 @@ export const Layout: React.FC = () => {
     const common = [
       { path: '/dashboard/events', label: 'Explore Events', icon: Calendar },
       { path: '/dashboard/clubs', label: 'Clubs & Societies', icon: Users },
+      { path: '/dashboard/teammates', label: 'AI Teammate Finder', icon: UserPlus },
+      { path: '/dashboard/marketplace', label: 'Campus Marketplace', icon: ShoppingBag },
+      { path: '/dashboard/faculty', label: 'UPES Faculty Directory', icon: GraduationCap },
+      { path: '/dashboard/students', label: 'Student Leaderboard', icon: Award },
       { path: '/dashboard/profile', label: 'My Profile', icon: GraduationCap },
       { path: '/dashboard/settings', label: 'Settings', icon: Settings },
       { path: '#academic-record', label: 'Academic Record', icon: GraduationCap },
@@ -1152,6 +1157,9 @@ export const Layout: React.FC = () => {
           </div>
         </Dialog>
       )}
+
+      {/* Floating Voice & AI Assistant */}
+      <VoiceAIAssistant />
 
     </div>
   )

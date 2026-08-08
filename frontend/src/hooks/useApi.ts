@@ -6,10 +6,60 @@ import type { Event, Club } from '../types'
 const BASE_URL = '/api'
 
 // Client-side Mock Data Store (Fallback if backend is offline/loading)
+const MOCK_FACULTY_ROSTER: User[] = [
+  { id: 101, name: 'Prof. Vijaysekhar Chellaboina', email: 'vijaysekhar@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Professor and Dean'], interests: ['Systems Theory', 'Control Systems', 'Optimization'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+  { id: 102, name: 'Dr. Vinod Patidar', email: 'vpatidar@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Professor'], interests: ['Chaos Theory', 'Nonlinear Dynamics', 'Cryptography'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+  { id: 103, name: 'Dr. Hitesh Kumar Sharma', email: 'hksharma@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Professor - AI, Deep Learning, Blockchain'], interests: ['AI', 'Deep Learning', 'Blockchain Technologies'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+  { id: 104, name: 'Prof. (Dr.) Sanjay Biswash', email: 'sbiswash@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Professor - Cloud, Fog & Edge Computing'], interests: ['Cloud Computing', 'Fog Computing', 'Edge Architectures'], profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150' },
+  { id: 105, name: 'Dr. Vijendra Singh', email: 'vijendra@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Professor - Machine Learning, Big Data Analytics'], interests: ['Machine Learning', 'Big Data Analytics', 'Pattern Recognition'], profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150' },
+  { id: 106, name: 'Prof. Adarsh Kumar', email: 'adarsh.kumar@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Professor - Cybersecurity, Cryptography, Blockchain'], interests: ['Cybersecurity', 'Cryptography', 'Distributed Ledgers'], profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150' },
+  { id: 107, name: 'Dr. Md. Shamsul Haque Ansari', email: 'shamsul.ansari@upes.ac.in', role: 'FACULTY', department: 'Computer Science & Data Engineering', skills: ['Faculty - Database Technologies, Big Data'], interests: ['Database Technologies', 'Big Data'], profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 108, name: 'Dr. Kaushik Ghosh', email: 'kaushik.ghosh@upes.ac.in', role: 'FACULTY', department: 'Computer Science & IoT', skills: ['Faculty - Wireless Sensor Networks, IoT'], interests: ['Wireless Sensor Networks', 'IoT Architectures'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+  { id: 109, name: 'Dr. Subhrasankar Chatterjee', email: 'schatterjee@upes.ac.in', role: 'FACULTY', department: 'Computer Science & AI', skills: ['Assistant Professor Senior Scale - Computational Neuroscience'], interests: ['Computational Neuroscience', 'Transformer Architectures'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+  { id: 110, name: 'Dr. Saurabh Shrivastava', email: 'sshrivastava@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Assistant Professor Senior Scale - Optimization-based ML, Java'], interests: ['Optimization-based ML', 'Java'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+  { id: 111, name: 'Dr. Siva Sankar', email: 'sivasankar@upes.ac.in', role: 'FACULTY', department: 'Computer Science & Spatial Computing', skills: ['Assistant Professor Selection Grade - Geospatial Intelligence'], interests: ['Geospatial Intelligence', 'Spatial Data Science'], profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150' },
+  { id: 112, name: 'Dr. Khushboo Jain', email: 'khushboo.jain@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Assistant Professor - Data Structures, Algorithms'], interests: ['Data Structures', 'Algorithms', 'Data Mining'], profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
+  { id: 113, name: 'Dr. Uday Kumar Murali', email: 'uday.murali@upes.ac.in', role: 'FACULTY', department: 'Data Analytics & Decision Sciences', skills: ['Assistant Professor - Operations Research, Statistical Analytics'], interests: ['Operations Research', 'Statistical Analytics'], profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150' },
+  { id: 114, name: 'Dr. Swadhin Das', email: 'swadhin.das@upes.ac.in', role: 'FACULTY', department: 'Computer Science & Vision AI', skills: ['Assistant Professor - NLP, Computer Vision'], interests: ['NLP', 'Computer Vision', 'Image Processing'], profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150' },
+  { id: 115, name: 'Dr. Nutan Singh', email: 'nutan.singh@upes.ac.in', role: 'FACULTY', department: 'Computer Science & Bio-IT', skills: ['Faculty - AI-driven Healthcare, Deep Learning'], interests: ['AI-driven Healthcare', 'Deep Learning Applications'], profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 116, name: 'Dr. Vishal Sharma', email: 'vsharma@upes.ac.in', role: 'FACULTY', department: 'Geoinformatics & Sensing', skills: ['Faculty - Remote Sensing, SAR Image Processing'], interests: ['Remote Sensing', 'SAR Image Processing'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+  { id: 117, name: 'Dr. Christalin Nelson S', email: 'christalin.nelson@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Faculty - Object Oriented Programming, Data Structures'], interests: ['Object Oriented Programming', 'Data Structures'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+  { id: 118, name: 'Prof. Abhishek Yadav', email: 'abhishek.yadav@upes.ac.in', role: 'FACULTY', department: 'Cyber Security', skills: ['Assistant Professor - Cyber Security, Digital Forensics'], interests: ['Cyber Security', 'Digital Forensics'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+  { id: 119, name: 'Mr. Santanu Ghosh', email: 'santanu.ghosh@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Assistant Professor - Quantum & Edge Computing'], interests: ['Quantum Computing', 'Edge Architectures'], profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150' },
+  { id: 120, name: 'Mr. Himanshu', email: 'himanshu@upes.ac.in', role: 'FACULTY', department: 'Telecommunication & Networks', skills: ['Assistant Professor - Wireless Communication'], interests: ['Wireless Communication', 'Data Analysis Systems'], profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150' },
+  { id: 121, name: 'Dr. Ravi S Iyer', email: 'ravi.iyer@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Faculty - Graduate of IIT Madras / IISc'], interests: ['Theoretical Computer Science', 'HPC'], profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150' },
+  { id: 122, name: 'Mr. Anil Kumar', email: 'anil.kumar@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Faculty member'], interests: ['Software Engineering', 'Web Technologies'], profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 123, name: 'Dr. Ashutosh Kumar Dikshit', email: 'akdikshit@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Assistant Professor Selection Grade'], interests: ['Network Security', 'Information Systems'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+  { id: 124, name: 'Dr. Mukesh Kumar Sharma', email: 'mksharma@upes.ac.in', role: 'FACULTY', department: 'Computer Science & Data Analytics', skills: ['Associate Professor'], interests: ['Cloud Security', 'Soft Computing'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+  { id: 125, name: 'Dr. Alind', email: 'alind@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Faculty member'], interests: ['Operating Systems', 'Embedded Systems'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' }
+]
+
+const MOCK_STUDENT_ROSTER: User[] = [
+  'kartik', 'ayush', 'aryan', 'aditya', 'vansh', 'bhavendra', 'shaurya', 'krish', 'princy', 'gauri', 
+  'vedika', 'ishika', 'shreya', 'yash', 'aman', 'akshay', 'bhaskar', 'saumya', 'deepak', 'swastika', 
+  'arnav', 'uday', 'yugal', 'priyanshu', 'parimal', 'sara', 'prince', 'jiya', 'naina', 'prakash', 
+  'priyanka', 'ishaan', 'mridul', 'dhurv', 'kirti', 'arya', 'sachin', 'sheryam', 'anmol', 'bhavya', 
+  'pari', 'om', 'anuj', 'sahil', 'vanshika', 'anika', 'anubhava', 'vrishali', 'khushboo', 'kavya', 
+  'tanya', 'akshat', 'muskan', 'sarthak', 'shivam', 'vikram', 'saurabh', 'shrishti', 'rashmi', 'rishi', 
+  'trishika', 'khushi', 'aditi', 'rahul'
+].map((name, idx) => ({
+  id: 200 + idx,
+  name: `${name.charAt(0).toUpperCase() + name.slice(1)} (UPES Student)`,
+  email: `${name.toLowerCase()}@stu.upes.ac.in`,
+  role: 'STUDENT' as const,
+  department: idx % 2 === 0 ? 'Computer Science & Engineering' : 'Data Science & Artificial Intelligence',
+  academicYear: (idx % 4) + 1,
+  xpPoints: 120 + (idx * 17) % 400,
+  level: Math.floor((120 + (idx * 17) % 400) / 100) + 1,
+  profileImage: `https://images.unsplash.com/photo-${1530000000000 + idx * 1000}?w=150`
+}))
+
 const MOCK_USERS: User[] = [
-  { id: 1, name: 'Alex Rivera', email: 'student@unisphere.edu', role: 'STUDENT', department: 'Computer Science', profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
-  { id: 2, name: 'Dr. Sarah Jenkins', email: 'faculty@unisphere.edu', role: 'FACULTY', department: 'Data Science', profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
+  { id: 1, name: 'Kartik (Student Lead)', email: 'student@unisphere.edu', role: 'STUDENT', department: 'Computer Science & Engineering', profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 2, name: 'Dr. Hitesh Kumar Sharma', email: 'faculty@unisphere.edu', role: 'FACULTY', department: 'School of Computer Science', profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
   { id: 3, name: 'Admin Chief', email: 'admin@unisphere.edu', role: 'ADMIN', department: 'Administration', profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+  ...MOCK_FACULTY_ROSTER,
+  ...MOCK_STUDENT_ROSTER
 ]
 
 let mockClubs: Club[] = [
@@ -918,5 +968,31 @@ export function useSessions() {
       }
     },
     enabled: !!user
+  })
+}
+
+export function useFacultyDirectory() {
+  return useQuery({
+    queryKey: ['faculty-directory'],
+    queryFn: async () => {
+      try {
+        return await request('/directory/faculty')
+      } catch (err) {
+        return MOCK_USERS.filter(u => u.role === 'FACULTY')
+      }
+    }
+  })
+}
+
+export function useStudentDirectory() {
+  return useQuery({
+    queryKey: ['student-directory'],
+    queryFn: async () => {
+      try {
+        return await request('/directory/students')
+      } catch (err) {
+        return MOCK_USERS.filter(u => u.role === 'STUDENT')
+      }
+    }
   })
 }

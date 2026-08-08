@@ -88,9 +88,34 @@ export async function approveClub(req: AuthRequest, res: Response): Promise<void
 
 export async function getUsersList(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const users = await User.findAll({ attributes: ['id', 'name', 'email', 'role', 'department', 'profileImage'] })
+    const users = await User.findAll({ attributes: ['id', 'name', 'email', 'role', 'department', 'skills', 'interests', 'profileImage', 'level', 'xpPoints', 'academicYear'] })
     res.status(200).json(users)
   } catch (err: any) {
     res.status(500).json({ message: err.message || 'Failed to fetch users' })
+  }
+}
+
+export async function getFacultyDirectory(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const facultyList = await User.findAll({
+      where: { role: 'FACULTY' },
+      attributes: ['id', 'name', 'email', 'role', 'department', 'skills', 'interests', 'profileImage']
+    })
+    res.status(200).json(facultyList)
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to fetch faculty directory' })
+  }
+}
+
+export async function getStudentsDirectory(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const studentsList = await User.findAll({
+      where: { role: 'STUDENT' },
+      attributes: ['id', 'name', 'email', 'role', 'department', 'academicYear', 'xpPoints', 'level', 'skills', 'interests', 'profileImage'],
+      order: [['xpPoints', 'DESC']]
+    })
+    res.status(200).json(studentsList)
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to fetch student directory' })
   }
 }

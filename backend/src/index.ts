@@ -102,6 +102,9 @@ app.get('/api/admin/events/pending', authenticateToken, authorizeRoles('ADMIN'),
 app.post('/api/admin/events/:id/approve', authenticateToken, authorizeRoles('ADMIN'), adminController.approveEvent)
 app.get('/api/admin/clubs/pending', authenticateToken, authorizeRoles('ADMIN'), adminController.getPendingClubs)
 app.post('/api/admin/clubs/:id/approve', authenticateToken, authorizeRoles('ADMIN'), adminController.approveClub)
+// Directory Routes (UPES Faculty & Student Roster)
+app.get('/api/directory/faculty', authenticateToken, adminController.getFacultyDirectory)
+app.get('/api/directory/students', authenticateToken, adminController.getStudentsDirectory)
 app.get('/api/admin/users', authenticateToken, authorizeRoles('ADMIN'), adminController.getUsersList)
 
 // Fallback Route for SPA Web Filter
