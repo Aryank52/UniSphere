@@ -265,12 +265,12 @@ export const LandingPage: React.FC = () => {
               href="#demo"
               className="bg-white hover:bg-slate-50 text-slate-700 font-extrabold px-8 py-4 rounded-2xl border border-sky-100 flex items-center justify-center transition-all shadow-sm shadow-sky-100/50"
             >
-              Explore Sandbox Portal
+              Explore Campus Portal
             </a>
           </div>
         </motion.div>
 
-        {/* 16:9 Floating Travel UI Environment Background Mockup */}
+        {/* 16:9 Floating UI Environment Background Mockup */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -287,9 +287,9 @@ export const LandingPage: React.FC = () => {
             <div className="h-10 w-10 bg-sky-50 text-sky-500 border border-sky-100 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Compass className="h-5 w-5" />
             </div>
-            <h3 className="font-extrabold text-sm text-slate-800 mb-2">Connected Travel Studio</h3>
+            <h3 className="font-extrabold text-sm text-slate-800 mb-2">Connected Campus Studio</h3>
             <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
-              Experience the playful SaaS workspace with floating travel cards, 3D perspective layers, and automated boarding updates in a beautiful sky environment.
+              Experience the unified SaaS workspace with floating ticket passes, event schedules, and automated updates in a beautiful campus environment.
             </p>
           </div>
         </motion.div>
@@ -299,9 +299,9 @@ export const LandingPage: React.FC = () => {
       <section id="examples" className="py-20 px-6 max-w-7xl mx-auto border-t border-sky-100">
         <div className="text-center max-w-2xl mx-auto space-y-4 mb-16">
           <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest block">Core Infrastructure</span>
-          <h2 className="text-3xl font-black tracking-tight sm:text-4xl text-slate-900 font-sans">Automated Document Organizer</h2>
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl text-slate-900 font-sans">Automated Campus Organizer</h2>
           <p className="text-slate-500 text-xs sm:text-sm leading-relaxed font-semibold">
-            UniSphere compiles ticket reservations, boardings codes, schedules, and faculty advisor events into a single, clean workspace.
+            UniSphere compiles ticket reservations, passes, schedules, and faculty advisor events into a single, clean workspace.
           </p>
         </div>
 
@@ -314,7 +314,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <h3 className="font-extrabold text-lg text-slate-800 mb-2">Smart Document Sync</h3>
               <p className="text-slate-500 text-sm leading-relaxed mb-6 font-semibold">
-                Our parsing heuristic extracts PDF boarding credentials and campus itinerary deadlines, organizing them automatically into active travel profiles.
+                Our platform extracts digital boarding passes and campus event schedules, organizing them automatically into your active portal profile.
               </p>
             </div>
           </div>
@@ -334,14 +334,14 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Sandbox Live Demo Switcher Section */}
+      {/* Demo Switcher Section */}
       <section id="demo" className="py-24 px-6 max-w-7xl mx-auto border-t border-sky-100 scroll-mt-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5 space-y-6 text-left">
-            <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest block">UniSphere Portal Sandbox</span>
+            <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest block">UniSphere Campus Portal</span>
             <h2 className="text-3xl font-black tracking-tight leading-tight text-slate-900 sm:text-4xl font-sans">Interactive Portal Profiles</h2>
             <p className="text-slate-550 text-xs sm:text-sm leading-relaxed font-semibold">
-              Explore the student, faculty, and administrative dashboards re-styled in the UniSphere bright travel planner theme.
+              Explore the student, faculty, and administrative dashboards designed for modern university operations.
             </p>
             
             <div className="flex flex-col gap-2.5">
@@ -364,7 +364,7 @@ export const LandingPage: React.FC = () => {
           <div className="lg:col-span-7 bg-white border border-sky-100 rounded-3xl p-8 min-h-[300px] flex flex-col justify-between relative shadow-travel text-left">
             <div className="absolute top-4 right-4 text-[8px] font-bold text-sky-600 tracking-wider uppercase bg-sky-50 border border-sky-100 px-2.5 py-1 rounded">Portal Preview</div>
             <div>
-              <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest block mb-1">UniSphere App Sandbox</span>
+              <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest block mb-1">UniSphere Student Portal</span>
               <h3 className="font-extrabold text-lg text-slate-800 mb-3">{demoContent[activeTab].title}</h3>
               <p className="text-slate-500 text-xs leading-relaxed mb-6 font-semibold">{demoContent[activeTab].desc}</p>
               
@@ -382,7 +382,7 @@ export const LandingPage: React.FC = () => {
               onClick={() => navigate('/login')}
               className="mt-8 bg-sky-50 border border-sky-200 hover:bg-sky-100 text-sky-600 py-3.5 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer w-full"
             >
-              <span>Test Live in Sandbox Profile</span>
+              <span>Explore Live Student Portal</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
@@ -399,7 +399,7 @@ export const LandingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto text-left">
           <div className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-travel">
             <div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Sandbox</span>
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Campus Hub</span>
               <h4 className="text-xl font-bold mb-3 text-slate-800">Local Creator</h4>
               <div className="text-3xl font-black mb-6 text-slate-900">$0 <span className="text-xs text-slate-400 font-medium">/ forever</span></div>
             </div>

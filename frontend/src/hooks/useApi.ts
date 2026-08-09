@@ -34,30 +34,51 @@ const MOCK_FACULTY_ROSTER: User[] = [
   { id: 125, name: 'Dr. Alind', email: 'alind@upes.ac.in', role: 'FACULTY', department: 'School of Computer Science', skills: ['Faculty member'], interests: ['Operating Systems', 'Embedded Systems'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' }
 ]
 
-const MOCK_STUDENT_ROSTER: User[] = [
-  'kartik', 'ayush', 'aryan', 'aditya', 'vansh', 'bhavendra', 'shaurya', 'krish', 'princy', 'gauri', 
-  'vedika', 'ishika', 'shreya', 'yash', 'aman', 'akshay', 'bhaskar', 'saumya', 'deepak', 'swastika', 
-  'arnav', 'uday', 'yugal', 'priyanshu', 'parimal', 'sara', 'prince', 'jiya', 'naina', 'prakash', 
-  'priyanka', 'ishaan', 'mridul', 'dhurv', 'kirti', 'arya', 'sachin', 'sheryam', 'anmol', 'bhavya', 
-  'pari', 'om', 'anuj', 'sahil', 'vanshika', 'anika', 'anubhava', 'vrishali', 'khushboo', 'kavya', 
-  'tanya', 'akshat', 'muskan', 'sarthak', 'shivam', 'vikram', 'saurabh', 'shrishti', 'rashmi', 'rishi', 
-  'trishika', 'khushi', 'aditi', 'rahul'
-].map((name, idx) => ({
+const MOCK_STUDENT_AVATARS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150',
+  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
+  'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
+  'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150',
+  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
+  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+  'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150',
+  'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150',
+  'https://images.unsplash.com/photo-1544717305-2782549b5136?w=150'
+]
+
+const STUDENT_NAMES_POOL = [
+  'Rohan Verma', 'Ananya Gupta', 'Vikramaditya Roy', 'Isha Kapoor', 'Devansh Patel', 
+  'Meera Joshi', 'Riddhima Iyer', 'Kabir Malhotra', 'Tanvi Bhatia', 'Siddharth Nair', 
+  'Neha Choudhury', 'Varun Saxena', 'Tanya Aggarwal', 'Priya Deshmukh', 'Karan Mehta', 
+  'Ritika Pandey', 'Tarun Reddy', 'Snigdha Das', 'Akash Banerjee', 'Riya Rastogi', 
+  'Yashvardhan Singh', 'Bhavna Kulkarni', 'Chirag Trivedi', 'Divya Menon', 'Harshwardhan Rathore', 
+  'Ishani Mukherjee', 'Jayesh Kothari', 'Kavya Singhania', 'Lakshya Sen', 'Manasi Kulkarni', 
+  'Nikhil Joshi', 'Ojaswini Rao', 'Pranav Mishra', 'Radhika Shah', 'Samarth Bansal', 
+  'Trisha Mehra', 'Utkarsh Sharma', 'Vaishnavi Pillai', 'Yashasvi Jha', 'Zoya Khan'
+]
+
+const MOCK_STUDENT_ROSTER: User[] = STUDENT_NAMES_POOL.map((fullName, idx) => ({
   id: 200 + idx,
-  name: `${name.charAt(0).toUpperCase() + name.slice(1)} (UPES Student)`,
-  email: `${name.toLowerCase()}@stu.upes.ac.in`,
+  name: fullName,
+  email: `${fullName.toLowerCase().replace(/\s+/g, '.')}@stu.upes.ac.in`,
   role: 'STUDENT' as const,
   department: idx % 2 === 0 ? 'Computer Science & Engineering' : 'Data Science & Artificial Intelligence',
   academicYear: (idx % 4) + 1,
   xpPoints: 120 + (idx * 17) % 400,
   level: Math.floor((120 + (idx * 17) % 400) / 100) + 1,
-  profileImage: `https://images.unsplash.com/photo-${1530000000000 + idx * 1000}?w=150`
+  profileImage: MOCK_STUDENT_AVATARS[idx % MOCK_STUDENT_AVATARS.length]
 }))
 
 const MOCK_USERS: User[] = [
-  { id: 1, name: 'Kartik (Student Lead)', email: 'student@unisphere.edu', role: 'STUDENT', department: 'Computer Science & Engineering', profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 1, name: 'Aarav Sharma', email: 'student@unisphere.edu', role: 'STUDENT', department: 'Computer Science & Engineering', profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
   { id: 2, name: 'Dr. Hitesh Kumar Sharma', email: 'faculty@unisphere.edu', role: 'FACULTY', department: 'School of Computer Science', profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
-  { id: 3, name: 'Admin Chief', email: 'admin@unisphere.edu', role: 'ADMIN', department: 'Administration', profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+  { id: 3, name: 'Admin Office', email: 'admin@unisphere.edu', role: 'ADMIN', department: 'Administration', profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
   ...MOCK_FACULTY_ROSTER,
   ...MOCK_STUDENT_ROSTER
 ]

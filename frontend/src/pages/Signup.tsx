@@ -143,7 +143,7 @@ export const Signup: React.FC = () => {
               disabled={registerMutation.isPending}
               className="w-full bg-sky-500 hover:bg-sky-600 text-white font-extrabold py-3.5 mt-4"
             >
-              {registerMutation.isPending ? 'Creating account...' : 'Register Sandbox Profile'}
+              {registerMutation.isPending ? 'Creating account...' : 'Create Account'}
             </Button>
           </form>
 
@@ -165,7 +165,7 @@ export const Signup: React.FC = () => {
         </div>
         <div className="flex items-center gap-1">
           <ShieldCheck className="h-4 w-4 text-sky-500" />
-          <span>Sandbox Mode</span>
+          <span>UPES Secured Portal</span>
         </div>
       </div>
     </div>

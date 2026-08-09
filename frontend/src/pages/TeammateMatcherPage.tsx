@@ -13,11 +13,13 @@ export const TeammateMatcherPage: React.FC = () => {
 
   // Compute skill compatibility matrix
   const peerMatches = students.map((s: any, idx: number) => {
-    const skillsList = s.skills || ['React', 'Python', 'C++', 'ML']
+    const skillsList = s.skills || (idx % 3 === 0 ? ['PyTorch', 'Python', 'Computer Vision', 'ML'] : idx % 3 === 1 ? ['Solidity', 'Web3', 'React', 'Smart Contracts'] : ['React', 'TypeScript', 'Tailwind', 'Node.js'])
     const compatibility = Math.min(99, Math.max(70, 96 - (idx * 3) % 25))
+    const vectorCluster = idx % 3 === 0 ? 'Deep Learning Cluster' : idx % 3 === 1 ? 'Web3 Smart Contracts Cluster' : 'Full-Stack Web Cluster'
     return {
       ...s,
       compatibility,
+      vectorCluster,
       projectTitle: idx % 3 === 0 ? 'AI Medical Imaging App' : idx % 3 === 1 ? 'Web3 Smart Campus Wallet' : 'Autonomous IoT Rover',
       roleNeeded: idx % 3 === 0 ? 'Frontend Engineer' : idx % 3 === 1 ? 'Blockchain Developer' : 'ML Researcher',
       skillsList
@@ -41,7 +43,7 @@ export const TeammateMatcherPage: React.FC = () => {
         <div className="relative z-10 space-y-3">
           <div className="inline-flex items-center space-x-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-xl text-purple-300 text-xs font-bold">
             <Sparkles className="w-4 h-4 text-purple-400" />
-            <span>AI Project Teammate Matcher</span>
+            <span>AI Teammate Finder</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
             Find Your Hackathon & Capstone Teammates
@@ -108,6 +110,9 @@ export const TeammateMatcherPage: React.FC = () => {
                   <div>
                     <h3 className="text-base font-extrabold text-slate-900 leading-tight">{peer.name}</h3>
                     <p className="text-xs font-bold text-purple-600 mt-0.5">{peer.department}</p>
+                    <span className="inline-block my-1 px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 text-[9px] font-black rounded-md">
+                      🎯 Track: {peer.vectorCluster}
+                    </span>
                     <p className="text-[10px] text-slate-400 font-semibold">Year {peer.academicYear || 3} • {peer.xpPoints || 250} XP</p>
                   </div>
                 </div>

@@ -22,9 +22,13 @@ import * as notificationController from './controllers/notificationController'
 import * as aiController from './controllers/aiController'
 import * as adminController from './controllers/adminController'
 
+import http from 'http'
+import { initSocketServer } from './services/socketService'
+
 dotenv.config()
 
 const app = express()
+const server = http.createServer(app)
 const PORT = process.env.PORT || 8080
 
 app.use(cors())
@@ -68,6 +72,8 @@ app.post('/api/auth/reset-password', authController.resetPassword)
 app.put('/api/auth/onboarding', authenticateToken, authController.updateOnboarding)
 app.post('/api/auth/2fa/enable', authenticateToken, authController.enable2FA)
 app.post('/api/auth/2fa/verify', authenticateToken, authController.verify2FA)
+app.post('/api/auth/sso/google', authController.googleSSO)
+app.post('/api/auth/sso/microsoft', authController.microsoftSSO)
 app.get('/api/auth/sessions', authenticateToken, authController.getSessions)
 
 // Events Routes
@@ -96,6 +102,7 @@ app.get('/api/ai/recommendations', authenticateToken, authorizeRoles('STUDENT'),
 app.get('/api/ai/predict-attendance', authenticateToken, authorizeRoles('FACULTY'), aiController.predictAttendance)
 app.get('/api/ai/smart-schedule', authenticateToken, authorizeRoles('FACULTY'), aiController.getSmartSchedule)
 app.get('/api/ai/engagement-stats', authenticateToken, authorizeRoles('FACULTY', 'ADMIN'), aiController.getEngagementStats)
+app.get('/api/ai/teammates/vector-match', authenticateToken, aiController.getVectorTeammateMatches)
 
 // Admin Approval Routes
 app.get('/api/admin/events/pending', authenticateToken, authorizeRoles('ADMIN'), adminController.getPendingEvents)
@@ -205,11 +212,14 @@ async function startServer() {
     // Seed Data
     await seedDatabase()
 
+    // Initialize Socket.io Server
+    initSocketServer(server)
+
     // Start Notification Cron Scheduler
     startNotificationScheduler()
 
-    app.listen(PORT, () => {
-      console.log(`Node.js Express Server is listening on http://localhost:${PORT}`)
+    server.listen(PORT, () => {
+      console.log(`⚡ Node.js Express & Socket.io Server is listening on http://localhost:${PORT}`)
       console.log(`API Documentation available at http://localhost:${PORT}/api-docs`)
     })
   } catch (error) {

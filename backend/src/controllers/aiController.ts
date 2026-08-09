@@ -46,3 +46,42 @@ export async function getEngagementStats(req: AuthRequest, res: Response): Promi
     res.status(500).json({ message: err.message || 'Failed to retrieve stats' })
   }
 }
+
+export async function getVectorTeammateMatches(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { computeSkillVector, cosineSimilarity, getClusterName } = require('../services/vectorService')
+    const { User } = require('../models/User')
+
+    const targetUserSkills = req.user?.skills || ['React', 'Python', 'ML']
+    const targetVector = computeSkillVector(targetUserSkills)
+
+    const students = await User.findAll({ where: { role: 'STUDENT' } })
+
+    const vectorMatches = students.map((s: any) => {
+      const peerSkills = s.skills || ['React', 'Python', 'C++', 'ML']
+      const peerVector = computeSkillVector(peerSkills)
+      const sim = cosineSimilarity(targetVector, peerVector)
+      const matchPercentage = Math.round(sim * 100)
+      const cluster = getClusterName(peerVector)
+
+      return {
+        id: s.id,
+        name: s.name,
+        email: s.email,
+        department: s.department,
+        academicYear: s.academicYear,
+        xpPoints: s.xpPoints,
+        level: s.level,
+        profileImage: s.profileImage,
+        vectorMatchPercentage: matchPercentage,
+        vectorCluster: cluster,
+        vectorDimension: peerVector,
+        skillsList: peerSkills
+      }
+    })
+
+    res.status(200).json(vectorMatches)
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Failed to compute vector embeddings' })
+  }
+}

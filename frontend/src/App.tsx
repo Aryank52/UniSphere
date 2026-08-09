@@ -17,7 +17,6 @@ import { ClubsPage } from './pages/ClubsPage'
 import { Unauthorized } from './pages/Unauthorized'
 import { LandingPage } from './pages/LandingPage'
 import { FacultyDirectoryPage } from './pages/FacultyDirectoryPage'
-import { StudentDirectoryPage } from './pages/StudentDirectoryPage'
 import { TeammateMatcherPage } from './pages/TeammateMatcherPage'
 import { CampusMarketplacePage } from './pages/CampusMarketplacePage'
 import { LabReservationPage } from './pages/LabReservationPage'
@@ -112,7 +111,6 @@ export default function App() {
             <Route path="research" element={<ResearchAssistantshipPage />} />
             <Route path="lost-found" element={<LostAndFoundPage />} />
             <Route path="faculty" element={<FacultyDirectoryPage />} />
-            <Route path="students" element={<StudentDirectoryPage />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
             <Route path="unauthorized" element={<Unauthorized />} />

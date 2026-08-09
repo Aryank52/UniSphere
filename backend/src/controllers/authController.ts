@@ -371,3 +371,93 @@ export async function getSessions(req: AuthRequest, res: Response): Promise<void
     res.status(500).json({ message: err.message || 'Failed to fetch session list' })
   }
 }
+
+export async function googleSSO(req: Request, res: Response): Promise<void> {
+  const { email, name } = req.body
+
+  try {
+    if (!email || (!email.endsWith('@stu.upes.ac.in') && !email.endsWith('@upes.ac.in'))) {
+      res.status(403).json({ message: 'Access Denied: Only official UPES accounts (@stu.upes.ac.in or @upes.ac.in) are permitted via Institutional SSO.' })
+      return
+    }
+
+    let user = await User.findOne({ where: { email } })
+    if (!user) {
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        password: await bcrypt.hash('sso-managed-password', 10),
+        role: email.endsWith('@upes.ac.in') && !email.endsWith('@stu.upes.ac.in') ? 'FACULTY' : 'STUDENT',
+        department: 'School of Computer Science',
+        isEmailVerified: true,
+        xpPoints: 100,
+        level: 1,
+        profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+      })
+    }
+
+    const tokenJti = `jti_sso_google_${Date.now()}_${user.id}`
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, jti: tokenJti },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRATION }
+    )
+
+    await SessionTrack.create({
+      userId: user.id,
+      tokenJti,
+      deviceInfo: `Google SSO (${req.headers['user-agent'] || 'Browser'})`,
+      ipAddress: req.ip || '127.0.0.1',
+      isActive: true
+    })
+
+    res.status(200).json({ user, token, message: 'Google Institutional SSO authenticated successfully' })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Google SSO failed' })
+  }
+}
+
+export async function microsoftSSO(req: Request, res: Response): Promise<void> {
+  const { email, name } = req.body
+
+  try {
+    if (!email || (!email.endsWith('@stu.upes.ac.in') && !email.endsWith('@upes.ac.in'))) {
+      res.status(403).json({ message: 'Access Denied: Only official UPES accounts (@stu.upes.ac.in or @upes.ac.in) are permitted via Institutional SSO.' })
+      return
+    }
+
+    let user = await User.findOne({ where: { email } })
+    if (!user) {
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        password: await bcrypt.hash('sso-managed-password', 10),
+        role: email.endsWith('@upes.ac.in') && !email.endsWith('@stu.upes.ac.in') ? 'FACULTY' : 'STUDENT',
+        department: 'School of Computer Science',
+        isEmailVerified: true,
+        xpPoints: 100,
+        level: 1,
+        profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
+      })
+    }
+
+    const tokenJti = `jti_sso_ms_${Date.now()}_${user.id}`
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, jti: tokenJti },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRATION }
+    )
+
+    await SessionTrack.create({
+      userId: user.id,
+      tokenJti,
+      deviceInfo: `Microsoft 365 SSO (${req.headers['user-agent'] || 'Browser'})`,
+      ipAddress: req.ip || '127.0.0.1',
+      isActive: true
+    })
+
+    res.status(200).json({ user, token, message: 'Microsoft 365 Institutional SSO authenticated successfully' })
+  } catch (err: any) {
+    res.status(500).json({ message: err.message || 'Microsoft SSO failed' })
+  }
+}

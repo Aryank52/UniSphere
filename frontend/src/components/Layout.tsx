@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useNotifications, useReadNotification, useMyRegistrations } from '../hooks/useApi'
+import { getSocket, registerSocketUser } from '../services/socket'
 import type { Notification } from '../types'
 import { Badge } from './ui/Badge'
 import { Dialog } from './ui/Dialog'
@@ -69,9 +70,26 @@ export const Layout: React.FC = () => {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
 
-  // Drawer states
   const [activeDrawer, setActiveDrawer] = useState<string | null>(null)
   const [drawerSearchQuery, setDrawerSearchQuery] = useState('')
+  const [socketToast, setSocketToast] = useState<{ title: string; message: string } | null>(null)
+
+  useEffect(() => {
+    if (user?.id) {
+      registerSocketUser(user.id)
+      const socket = getSocket()
+
+      const handleNotification = (notif: any) => {
+        setSocketToast({ title: notif.title || 'New Alert', message: notif.message || 'You received a new campus notification.' })
+        setTimeout(() => setSocketToast(null), 4500)
+      }
+
+      socket.on('NEW_NOTIFICATION', handleNotification)
+      return () => {
+        socket.off('NEW_NOTIFICATION', handleNotification)
+      }
+    }
+  }, [user?.id])
 
   // Calendar state
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<number | null>(null)
@@ -133,7 +151,6 @@ export const Layout: React.FC = () => {
       { path: '/dashboard/research', label: 'Faculty RA Desk', icon: Briefcase },
       { path: '/dashboard/lost-found', label: 'Lost & Found Hub', icon: HelpCircle },
       { path: '/dashboard/faculty', label: 'UPES Faculty Directory', icon: GraduationCap },
-      { path: '/dashboard/students', label: 'Student Leaderboard', icon: Award },
       { path: '/dashboard/profile', label: 'My Profile', icon: GraduationCap },
       { path: '/dashboard/settings', label: 'Settings', icon: Settings },
       { path: '#academic-record', label: 'Academic Record', icon: GraduationCap },
@@ -1123,7 +1140,7 @@ export const Layout: React.FC = () => {
 
               {/* Drawer Footer */}
               <div className="p-6 border-t text-center text-[9px] font-black uppercase tracking-wider border-sky-100 bg-slate-50/50 text-slate-400">
-                UniSphere Systems • Sandbox Environment
+                UniSphere • UPES Campus Automation Hub
               </div>
 
             </div>
@@ -1200,6 +1217,19 @@ export const Layout: React.FC = () => {
             </p>
           </div>
         </Dialog>
+      )}
+
+      {/* Real-time Socket.io Notification Toast */}
+      {socketToast && (
+        <div className="fixed bottom-6 right-6 z-50 p-4 bg-slate-900 text-white border border-purple-500/50 rounded-2xl shadow-2xl flex items-start gap-3 animate-in fade-in slide-in-from-bottom-5 max-w-sm">
+          <div className="p-2 bg-purple-500/20 text-purple-400 rounded-xl shrink-0">
+            <Bell className="h-5 w-5 animate-bounce" />
+          </div>
+          <div>
+            <h4 className="font-extrabold text-xs text-white">{socketToast.title}</h4>
+            <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">{socketToast.message}</p>
+          </div>
+        </div>
       )}
 
       {/* Floating Voice & AI Assistant */}
