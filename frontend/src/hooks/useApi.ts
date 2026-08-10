@@ -3,7 +3,8 @@ import { useAuthStore, type User } from '../store/authStore'
 import { store } from '../store/index'
 import type { Event, Club } from '../types'
 
-const BASE_URL = '/api'
+const API_HOST = import.meta.env.VITE_API_URL || ''
+const BASE_URL = API_HOST ? `${API_HOST.replace(/\/$/, '')}/api` : '/api'
 
 // Client-side Mock Data Store (Fallback if backend is offline/loading)
 const MOCK_FACULTY_ROSTER: User[] = [

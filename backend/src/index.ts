@@ -31,7 +31,23 @@ const app = express()
 const server = http.createServer(app)
 const PORT = process.env.PORT || 8080
 
-app.use(cors())
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'https://uni-sphere-vert.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean) as string[]
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      callback(null, true)
+    } else {
+      callback(null, true)
+    }
+  },
+  credentials: true
+}))
 app.use(express.json())
 app.use(securityHeaders)
 app.use(rateLimiter)
@@ -39,7 +55,25 @@ app.use(rateLimiter)
 // Initialize Redis Cache Server
 initRedis()
 
+// Health Check Endpoint for Cloud Deployments (Render / Monitor)
+app.get('/health', async (_req, res) => {
+  let dbStatus = 'disconnected'
+  try {
+    await sequelize.authenticate()
+    dbStatus = 'connected'
+  } catch (e) {
+    dbStatus = 'error'
+  }
+  res.status(200).json({
+    status: 'ok',
+    environment: process.env.NODE_ENV || 'development',
+    database: dbStatus,
+    timestamp: new Date().toISOString()
+  })
+})
+
 // Swagger Setup
+const serverUrl = process.env.BACKEND_URL || `http://localhost:${PORT}`
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -50,11 +84,11 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`
+        url: serverUrl
       }
     ]
   },
-  apis: ['./src/index.ts'] // Can extract comments here
+  apis: ['./src/index.ts']
 }
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions)

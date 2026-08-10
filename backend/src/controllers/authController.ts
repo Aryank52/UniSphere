@@ -35,7 +35,8 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     // Create activation token
     const activationToken = jwt.sign({ id: newUser.id }, JWT_SECRET, { expiresIn: '1h' })
-    const verificationUrl = `http://localhost:5173/verify-email?token=${activationToken}`
+    const frontendUrl = process.env.FRONTEND_URL || 'https://uni-sphere-vert.vercel.app'
+    const verificationUrl = `${frontendUrl}/verify-email?token=${activationToken}`
 
     await NotificationService.sendEmail(
       newUser.email,
@@ -193,7 +194,8 @@ export async function resetPasswordRequest(req: Request, res: Response): Promise
     }
 
     const resetToken = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '30m' })
-    const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`
+    const frontendUrl = process.env.FRONTEND_URL || 'https://uni-sphere-vert.vercel.app'
+    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`
 
     await NotificationService.sendEmail(
       user.email,
