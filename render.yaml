@@ -4,8 +4,10 @@ services:
     name: unisphere-backend
     env: docker
     plan: free
-    dockerfilePath: backend/Dockerfile
-    dockerContext: backend
+    rootDir: backend
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
     envVars:
       - key: PORT
         value: 8080
