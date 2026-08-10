@@ -2,11 +2,11 @@ services:
   # 1. UniSphere Backend API Web Service
   - type: web
     name: unisphere-backend
-    env: docker
+    env: node
     plan: free
     rootDir: backend
-    dockerfilePath: Dockerfile
-    dockerContext: .
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
     healthCheckPath: /health
     envVars:
       - key: PORT
