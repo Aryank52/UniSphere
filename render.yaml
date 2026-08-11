@@ -15,11 +15,6 @@ services:
         fromDatabase:
           name: unisphere-db
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: unisphere-cache
-          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
@@ -42,14 +37,8 @@ services:
         source: /*
         destination: /index.html
 
-# 3. Redis Cache Instance
+# 3. PostgreSQL Database
 databases:
   - name: unisphere-db
     plan: free
     postgresVersion: 15
-
-# 4. Redis Cache Node
-redis:
-  - name: unisphere-cache
-    plan: free
-    ipAllowList: [] # internal connections only

@@ -4,15 +4,6 @@ import { Event } from '../models/Event'
 import { Club } from '../models/Club'
 import { User } from '../models/User'
 import { Notification } from '../models/Notification'
-import { invalidateCache } from '../config/cache'
-
-async function clearEventsCache() {
-  await invalidateCache('events_list_ALL')
-  await invalidateCache('events_list_TECH')
-  await invalidateCache('events_list_SPORTS')
-  await invalidateCache('events_list_ACADEMIC')
-  await invalidateCache('events_list_CULTURAL')
-}
 
 export async function getPendingEvents(req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -44,8 +35,6 @@ export async function approveEvent(req: AuthRequest, res: Response): Promise<voi
       message: `Your event "${event.title}" has been ${isApproved ? 'approved' : 'rejected'} by admin.`,
       type: 'EVENT_APPROVAL'
     })
-
-    await clearEventsCache()
 
     res.status(200).json({ message: 'Event status updated' })
   } catch (err: any) {

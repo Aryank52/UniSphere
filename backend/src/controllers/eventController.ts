@@ -9,31 +9,14 @@ import { User } from '../models/User'
 import { AIService } from '../services/aiService'
 import { NotificationService } from '../services/notificationService'
 import { GamificationService } from '../services/gamificationService'
-import { getCachedData, setCachedData, invalidateCache } from '../config/cache'
-
-async function clearEventsCache() {
-  await invalidateCache('events_list_ALL')
-  await invalidateCache('events_list_TECH')
-  await invalidateCache('events_list_SPORTS')
-  await invalidateCache('events_list_ACADEMIC')
-  await invalidateCache('events_list_CULTURAL')
-}
-
 export async function getEvents(req: AuthRequest, res: Response): Promise<void> {
   const { category } = req.query
-  const cacheKey = `events_list_${category || 'ALL'}`
   try {
-    const cached = await getCachedData(cacheKey)
-    if (cached) {
-      res.status(200).json(cached)
-      return
-    }
     const whereClause: any = { status: 'APPROVED' }
     if (category && category !== 'ALL') {
       whereClause.category = (category as string).toUpperCase()
     }
     const events = await Event.findAll({ where: whereClause, include: [{ model: Club, as: 'club' }] })
-    await setCachedData(cacheKey, events, 300) // cache for 5 mins
     res.status(200).json(events)
   } catch (err: any) {
     res.status(500).json({ message: err.message || 'Failed to retrieve events' })
@@ -123,8 +106,6 @@ export async function createEvent(req: AuthRequest, res: Response): Promise<void
       engagementScore: 0.0
     })
 
-    await clearEventsCache()
-
     res.status(201).json(newEvent)
   } catch (err: any) {
     res.status(500).json({ message: err.message || 'Failed to create event' })
@@ -141,7 +122,6 @@ export async function deleteEvent(req: AuthRequest, res: Response): Promise<void
     }
 
     await event.destroy()
-    await clearEventsCache()
     res.status(204).send()
   } catch (err: any) {
     res.status(500).json({ message: err.message || 'Failed to delete event' })

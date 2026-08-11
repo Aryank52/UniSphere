@@ -6,7 +6,6 @@ import swaggerJSDoc from 'swagger-jsdoc'
 import cron from 'node-cron'
 
 import { sequelize } from './config/database'
-import { initRedis } from './config/cache'
 import { seedDatabase } from './services/seed'
 import { authenticateToken, authorizeRoles } from './middleware/auth'
 import { securityHeaders } from './middleware/security'
@@ -52,10 +51,7 @@ app.use(express.json())
 app.use(securityHeaders)
 app.use(rateLimiter)
 
-// Initialize Redis Cache Server
-initRedis()
-
-// Health Check Endpoint for Cloud Deployments (Render / Monitor)
+// Health Check Endpoints for Cloud Deployments (Render / Monitor)
 app.get('/health', async (_req, res) => {
   let dbStatus = 'disconnected'
   try {
@@ -66,9 +62,17 @@ app.get('/health', async (_req, res) => {
   }
   res.status(200).json({
     status: 'ok',
+    service: 'UniSphere Backend',
     environment: process.env.NODE_ENV || 'development',
     database: dbStatus,
     timestamp: new Date().toISOString()
+  })
+})
+
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'UniSphere Backend'
   })
 })
 

@@ -17,68 +17,39 @@ export async function seedDatabase() {
 
   console.log('Seeding UPES Dehradun Faculty & Student Campus Operating System data...')
 
-  // Clear previous sample data if updating schema
-  await Attendance.destroy({ where: {} })
-  await Registration.destroy({ where: {} })
-  await ClubMember.destroy({ where: {} })
-  await Event.destroy({ where: {} })
-  await Club.destroy({ where: {} })
-  await User.destroy({ where: {} })
-  await Venue.destroy({ where: {} })
-  await Achievement.destroy({ where: {} })
-
   const hashedPassword = await bcrypt.hash('password', 10)
 
+  // Helper for safe user creation
+  async function findOrCreateUser(userData: any) {
+    const existing = await User.findOne({ where: { email: userData.email } })
+    if (existing) return existing
+    return await User.create(userData)
+  }
+
   // 1. Create Venues
-  const mainAuditorium = await Venue.create({
-    name: 'Main Auditorium (Bidholi)',
-    locationDetails: 'Energy Acres Block, Bidholi Campus, UPES Dehradun',
-    latitude: 30.3412,
-    longitude: 77.9548,
-    capacity: 500
-  })
-
-  const csAuditorium = await Venue.create({
-    name: 'CS Block A Auditorium',
-    locationDetails: 'School of Computer Science, Bidholi Campus',
-    latitude: 30.3415,
-    longitude: 77.9551,
-    capacity: 150
-  })
-
-  const centralQuad = await Venue.create({
-    name: 'Bidholi Quadrangle',
-    locationDetails: 'Central Lawn, Bidholi Campus, UPES Dehradun',
-    latitude: 30.3409,
-    longitude: 77.9542,
-    capacity: 800
-  })
-
-  const aiLab = await Venue.create({
-    name: 'Advanced AI Research Lab',
-    locationDetails: 'High-Tech Lab Wing, Bidholi Campus',
-    latitude: 30.3416,
-    longitude: 77.9554,
-    capacity: 40
-  })
+  const venueData = [
+    { name: 'Main Auditorium (Bidholi)', locationDetails: 'Energy Acres Block, Bidholi Campus, UPES Dehradun', latitude: 30.3412, longitude: 77.9548, capacity: 500 },
+    { name: 'CS Block A Auditorium', locationDetails: 'School of Computer Science, Bidholi Campus', latitude: 30.3415, longitude: 77.9551, capacity: 150 },
+    { name: 'Bidholi Quadrangle', locationDetails: 'Central Lawn, Bidholi Campus, UPES Dehradun', latitude: 30.3409, longitude: 77.9542, capacity: 800 },
+    { name: 'Advanced AI Research Lab', locationDetails: 'High-Tech Lab Wing, Bidholi Campus', latitude: 30.3416, longitude: 77.9554, capacity: 40 }
+  ]
+  const venues: { [key: string]: Venue } = {}
+  for (const v of venueData) {
+    let [vInst] = await Venue.findOrCreate({ where: { name: v.name }, defaults: v })
+    venues[v.name] = vInst
+  }
 
   // 2. Create Achievements
-  await Achievement.create({
-    title: 'UPES Hackathon Master',
-    description: 'Register and check in at a major campus hackathon at UPES.',
-    badgeImage: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100',
-    xpBonus: 100
-  })
-
-  await Achievement.create({
-    title: 'Knowledge Seeker',
-    description: 'Attend 3 or more academic seminars led by UPES Faculty.',
-    badgeImage: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100',
-    xpBonus: 50
-  })
+  const achievementData = [
+    { title: 'UPES Hackathon Master', description: 'Register and check in at a major campus hackathon at UPES.', badgeImage: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100', xpBonus: 100 },
+    { title: 'Knowledge Seeker', description: 'Attend 3 or more academic seminars led by UPES Faculty.', badgeImage: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100', xpBonus: 50 }
+  ]
+  for (const a of achievementData) {
+    await Achievement.findOrCreate({ where: { title: a.title }, defaults: a })
+  }
 
   // 3. Seed Default Admin, Faculty, and Student accounts for Quick Login
-  const defaultStudent = await User.create({
+  const defaultStudent = await findOrCreateUser({
     name: 'Kartik (Student Lead)',
     email: 'student@unisphere.edu',
     password: hashedPassword,
@@ -94,7 +65,7 @@ export async function seedDatabase() {
     profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
   })
 
-  const defaultFaculty = await User.create({
+  const defaultFaculty = await findOrCreateUser({
     name: 'Dr. Hitesh Kumar Sharma',
     email: 'faculty@unisphere.edu',
     password: hashedPassword,
@@ -105,7 +76,7 @@ export async function seedDatabase() {
     profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'
   })
 
-  const defaultAdmin = await User.create({
+  const defaultAdmin = await findOrCreateUser({
     name: 'Admin Chief',
     email: 'admin@unisphere.edu',
     password: hashedPassword,
@@ -117,188 +88,43 @@ export async function seedDatabase() {
 
   // 4. Seed REAL UPES Faculty Members (25 Faculty Members)
   const facultyData = [
-    {
-      name: 'Prof. Vijaysekhar Chellaboina',
-      designation: 'Professor and Dean',
-      department: 'School of Computer Science',
-      interests: ['Systems Theory', 'Control Systems', 'Optimization', 'Academic Leadership'],
-      profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
-    },
-    {
-      name: 'Dr. Vinod Patidar',
-      designation: 'Professor',
-      department: 'School of Computer Science',
-      interests: ['Chaos Theory', 'Nonlinear Dynamics', 'Cryptography'],
-      profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'
-    },
-    {
-      name: 'Dr. Hitesh Kumar Sharma',
-      designation: 'Professor - AI, Deep Learning, Blockchain',
-      department: 'School of Computer Science',
-      interests: ['AI', 'Deep Learning', 'Blockchain Technologies'],
-      profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-    },
-    {
-      name: 'Prof. (Dr.) Sanjay Biswash',
-      designation: 'Professor - Cloud, Fog & Edge Computing',
-      department: 'School of Computer Science',
-      interests: ['Cloud Computing', 'Fog Computing', 'Edge Architectures'],
-      profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150'
-    },
-    {
-      name: 'Dr. Vijendra Singh',
-      designation: 'Professor - Machine Learning, Big Data Analytics',
-      department: 'School of Computer Science',
-      interests: ['Machine Learning', 'Big Data Analytics', 'Pattern Recognition'],
-      profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150'
-    },
-    {
-      name: 'Prof. Adarsh Kumar',
-      designation: 'Professor - Cybersecurity, Cryptography, Blockchain',
-      department: 'School of Computer Science',
-      interests: ['Cybersecurity', 'Cryptography', 'Distributed Ledgers'],
-      profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150'
-    },
-    {
-      name: 'Dr. Md. Shamsul Haque Ansari',
-      designation: 'Faculty - Database Technologies, Big Data',
-      department: 'Computer Science & Data Engineering',
-      interests: ['Database Technologies', 'Big Data', 'Distributed Query Optimization'],
-      profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-    },
-    {
-      name: 'Dr. Kaushik Ghosh',
-      designation: 'Faculty - Wireless Sensor Networks, IoT',
-      department: 'Computer Science & IoT',
-      interests: ['Wireless Sensor Networks', 'IoT Architectures', 'Embedded Protocols'],
-      profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
-    },
-    {
-      name: 'Dr. Subhrasankar Chatterjee',
-      designation: 'Assistant Professor Senior Scale - Computational Neuroscience, Transformer Architectures',
-      department: 'Computer Science & AI',
-      interests: ['Computational Neuroscience', 'Transformer Architectures', 'Deep Learning'],
-      profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'
-    },
-    {
-      name: 'Dr. Saurabh Shrivastava',
-      designation: 'Assistant Professor Senior Scale - Optimization-based ML, Java',
-      department: 'School of Computer Science',
-      interests: ['Optimization-based ML', 'Java Enterprise Systems', 'Algorithms'],
-      profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-    },
-    {
-      name: 'Dr. Siva Sankar',
-      designation: 'Assistant Professor Selection Grade - Geospatial Intelligence, Spatial Data Science',
-      department: 'Computer Science & Spatial Computing',
-      interests: ['Geospatial Intelligence', 'Spatial Data Science', 'Remote Analytics'],
-      profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150'
-    },
-    {
-      name: 'Dr. Khushboo Jain',
-      designation: 'Assistant Professor - Data Structures, Algorithms, Data Mining',
-      department: 'School of Computer Science',
-      interests: ['Data Structures', 'Algorithms', 'Data Mining'],
-      profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'
-    },
-    {
-      name: 'Dr. Uday Kumar Murali',
-      designation: 'Assistant Professor - Operations Research, Statistical Analytics',
-      department: 'Data Analytics & Decision Sciences',
-      interests: ['Operations Research', 'Statistical Analytics', 'Predictive Modeling'],
-      profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150'
-    },
-    {
-      name: 'Dr. Swadhin Das',
-      designation: 'Assistant Professor - NLP, Computer Vision, Image Processing',
-      department: 'Computer Science & Vision AI',
-      interests: ['NLP', 'Computer Vision', 'Image Processing'],
-      profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150'
-    },
-    {
-      name: 'Dr. Nutan Singh',
-      designation: 'Faculty - AI-driven Healthcare, Deep Learning Applications',
-      department: 'Computer Science & Bio-IT',
-      interests: ['AI-driven Healthcare', 'Deep Learning Applications', 'Medical Imaging'],
-      profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-    },
-    {
-      name: 'Dr. Vishal Sharma',
-      designation: 'Faculty - Remote Sensing, SAR Image Processing',
-      department: 'Geoinformatics & Sensing',
-      interests: ['Remote Sensing', 'SAR Image Processing', 'Satellite Data Analytics'],
-      profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
-    },
-    {
-      name: 'Dr. Christalin Nelson S',
-      designation: 'Faculty - Object Oriented Programming, Data Structures',
-      department: 'School of Computer Science',
-      interests: ['Object Oriented Programming', 'Data Structures', 'C++ Systems'],
-      profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'
-    },
-    {
-      name: 'Prof. Abhishek Yadav',
-      designation: 'Assistant Professor - Cyber Security, Digital Forensics',
-      department: 'Cyber Security',
-      interests: ['Cyber Security', 'Digital Forensics', 'Incident Response'],
-      profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-    },
-    {
-      name: 'Mr. Santanu Ghosh',
-      designation: 'Assistant Professor - Quantum & Edge Computing',
-      department: 'School of Computer Science',
-      interests: ['Quantum Computing', 'Edge Architectures', 'Qiskit Frameworks'],
-      profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150'
-    },
-    {
-      name: 'Mr. Himanshu',
-      designation: 'Assistant Professor - Wireless Communication, Data Analysis Systems',
-      department: 'Telecommunication & Networks',
-      interests: ['Wireless Communication', 'Data Analysis Systems', '5G Networks'],
-      profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150'
-    },
-    {
-      name: 'Dr. Ravi S Iyer',
-      designation: 'Faculty - Graduate of IIT Madras / IISc',
-      department: 'School of Computer Science',
-      interests: ['Theoretical Computer Science', 'High Performance Computing', 'Algorithms'],
-      profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150'
-    },
-    {
-      name: 'Mr. Anil Kumar',
-      designation: 'Faculty member',
-      department: 'School of Computer Science',
-      interests: ['Software Engineering', 'Web Technologies', 'Cloud Services'],
-      profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-    },
-    {
-      name: 'Dr. Ashutosh Kumar Dikshit',
-      designation: 'Assistant Professor Selection Grade',
-      department: 'School of Computer Science',
-      interests: ['Network Security', 'Information Systems', 'Cryptography'],
-      profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
-    },
-    {
-      name: 'Dr. Mukesh Kumar Sharma',
-      designation: 'Associate Professor',
-      department: 'Computer Science & Data Analytics',
-      interests: ['Cloud Security', 'Soft Computing', 'Neural Networks'],
-      profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'
-    },
-    {
-      name: 'Dr. Alind',
-      designation: 'Faculty member',
-      department: 'School of Computer Science',
-      interests: ['Operating Systems', 'Embedded Systems', 'Kernel Architecture'],
-      profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-    }
+    { name: 'Prof. Vijaysekhar Chellaboina', designation: 'Professor and Dean', department: 'School of Computer Science', interests: ['Systems Theory', 'Control Systems', 'Optimization', 'Academic Leadership'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+    { name: 'Dr. Vinod Patidar', designation: 'Professor', department: 'School of Computer Science', interests: ['Chaos Theory', 'Nonlinear Dynamics', 'Cryptography'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+    { name: 'Dr. Hitesh Kumar Sharma', designation: 'Professor - AI, Deep Learning, Blockchain', department: 'School of Computer Science', interests: ['AI', 'Deep Learning', 'Blockchain Technologies'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+    { name: 'Prof. (Dr.) Sanjay Biswash', designation: 'Professor - Cloud, Fog & Edge Computing', department: 'School of Computer Science', interests: ['Cloud Computing', 'Fog Computing', 'Edge Architectures'], profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150' },
+    { name: 'Dr. Vijendra Singh', designation: 'Professor - Machine Learning, Big Data Analytics', department: 'School of Computer Science', interests: ['Machine Learning', 'Big Data Analytics', 'Pattern Recognition'], profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150' },
+    { name: 'Prof. Adarsh Kumar', designation: 'Professor - Cybersecurity, Cryptography, Blockchain', department: 'School of Computer Science', interests: ['Cybersecurity', 'Cryptography', 'Distributed Ledgers'], profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150' },
+    { name: 'Dr. Md. Shamsul Haque Ansari', designation: 'Faculty - Database Technologies, Big Data', department: 'Computer Science & Data Engineering', interests: ['Database Technologies', 'Big Data', 'Distributed Query Optimization'], profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+    { name: 'Dr. Kaushik Ghosh', designation: 'Faculty - Wireless Sensor Networks, IoT', department: 'Computer Science & IoT', interests: ['Wireless Sensor Networks', 'IoT Architectures', 'Embedded Protocols'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+    { name: 'Dr. Subhrasankar Chatterjee', designation: 'Assistant Professor Senior Scale - Computational Neuroscience, Transformer Architectures', department: 'Computer Science & AI', interests: ['Computational Neuroscience', 'Transformer Architectures', 'Deep Learning'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+    { name: 'Dr. Saurabh Shrivastava', designation: 'Assistant Professor Senior Scale - Optimization-based ML, Java', department: 'School of Computer Science', interests: ['Optimization-based ML', 'Java Enterprise Systems', 'Algorithms'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+    { name: 'Dr. Siva Sankar', designation: 'Assistant Professor Selection Grade - Geospatial Intelligence, Spatial Data Science', department: 'Computer Science & Spatial Computing', interests: ['Geospatial Intelligence', 'Spatial Data Science', 'Remote Analytics'], profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150' },
+    { name: 'Dr. Khushboo Jain', designation: 'Assistant Professor - Data Structures, Algorithms, Data Mining', department: 'School of Computer Science', interests: ['Data Structures', 'Algorithms', 'Data Mining'], profileImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150' },
+    { name: 'Dr. Uday Kumar Murali', designation: 'Assistant Professor - Operations Research, Statistical Analytics', department: 'Data Analytics & Decision Sciences', interests: ['Operations Research', 'Statistical Analytics', 'Predictive Modeling'], profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150' },
+    { name: 'Dr. Swadhin Das', designation: 'Assistant Professor - NLP, Computer Vision, Image Processing', department: 'Computer Science & Vision AI', interests: ['NLP', 'Computer Vision', 'Image Processing'], profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150' },
+    { name: 'Dr. Nutan Singh', designation: 'Faculty - AI-driven Healthcare, Deep Learning Applications', department: 'Computer Science & Bio-IT', interests: ['AI-driven Healthcare', 'Deep Learning Applications', 'Medical Imaging'], profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+    { name: 'Dr. Vishal Sharma', designation: 'Faculty - Remote Sensing, SAR Image Processing', department: 'Geoinformatics & Sensing', interests: ['Remote Sensing', 'SAR Image Processing', 'Satellite Data Analytics'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+    { name: 'Dr. Christalin Nelson S', designation: 'Faculty - Object Oriented Programming, Data Structures', department: 'School of Computer Science', interests: ['Object Oriented Programming', 'Data Structures', 'C++ Systems'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+    { name: 'Prof. Abhishek Yadav', designation: 'Assistant Professor - Cyber Security, Digital Forensics', department: 'Cyber Security', interests: ['Cyber Security', 'Digital Forensics', 'Incident Response'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' },
+    { name: 'Mr. Santanu Ghosh', designation: 'Assistant Professor - Quantum & Edge Computing', department: 'School of Computer Science', interests: ['Quantum Computing', 'Edge Architectures', 'Qiskit Frameworks'], profileImage: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150' },
+    { name: 'Mr. Himanshu', designation: 'Assistant Professor - Wireless Communication, Data Analysis Systems', department: 'Telecommunication & Networks', interests: ['Wireless Communication', 'Data Analysis Systems', '5G Networks'], profileImage: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150' },
+    { name: 'Dr. Ravi S Iyer', designation: 'Faculty - Graduate of IIT Madras / IISc', department: 'School of Computer Science', interests: ['Theoretical Computer Science', 'High Performance Computing', 'Algorithms'], profileImage: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150' },
+    { name: 'Mr. Anil Kumar', designation: 'Faculty member', department: 'School of Computer Science', interests: ['Software Engineering', 'Web Technologies', 'Cloud Services'], profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+    { name: 'Dr. Ashutosh Kumar Dikshit', designation: 'Assistant Professor Selection Grade', department: 'School of Computer Science', interests: ['Network Security', 'Information Systems', 'Cryptography'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
+    { name: 'Dr. Mukesh Kumar Sharma', designation: 'Associate Professor', department: 'Computer Science & Data Analytics', interests: ['Cloud Security', 'Soft Computing', 'Neural Networks'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
+    { name: 'Dr. Alind', designation: 'Faculty member', department: 'School of Computer Science', interests: ['Operating Systems', 'Embedded Systems', 'Kernel Architecture'], profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150' }
   ]
 
   const seededFaculty: User[] = [defaultFaculty]
   for (let i = 0; i < facultyData.length; i++) {
     const f = facultyData[i]
-    const emailPrefix = f.name.toLowerCase().replace(/[^a-z]/g, '.')
-    const seededF = await User.create({
+    // Clean name transformation to build valid email address without double dots or invalid characters
+    const emailPrefix = f.name.toLowerCase()
+      .replace(/\([^)]*\)/g, '')
+      .replace(/[^a-z0-9]+/g, '.')
+      .replace(/^\.+|\.+$|\.(?=\.)/g, '')
+
+    const seededF = await findOrCreateUser({
       name: f.name,
       email: `${emailPrefix}@upes.ac.in`,
       password: hashedPassword,
@@ -338,7 +164,7 @@ export async function seedDatabase() {
     const xp = 100 + (i * 15) % 450
     const level = Math.floor(xp / 100) + 1
 
-    const st = await User.create({
+    const st = await findOrCreateUser({
       name: `${capitalizedName} (UPES Student)`,
       email,
       password: hashedPassword,
@@ -357,7 +183,12 @@ export async function seedDatabase() {
   }
 
   // 6. Create Clubs managed by UPES Faculty
-  const acm = await Club.create({
+  async function findOrCreateClub(clubData: any) {
+    const [c] = await Club.findOrCreate({ where: { name: clubData.name }, defaults: clubData })
+    return c
+  }
+
+  const acm = await findOrCreateClub({
     name: 'UPES ACM Student Chapter',
     description: 'Deep dive into algorithmic challenges, hackathons, and software engineering principles at UPES Dehradun.',
     bannerImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800',
@@ -366,7 +197,7 @@ export async function seedDatabase() {
     status: 'ACTIVE'
   })
 
-  const ieee = await Club.create({
+  const ieee = await findOrCreateClub({
     name: 'UPES IEEE Student Branch',
     description: 'Promoting technical innovation and excellence in engineering, science, and computing at UPES Dehradun.',
     bannerImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
@@ -375,7 +206,7 @@ export async function seedDatabase() {
     status: 'ACTIVE'
   })
 
-  const sports = await Club.create({
+  const sports = await findOrCreateClub({
     name: 'UPES Sports Committee',
     description: 'Hosting intramural sporting leagues, athletic meets, and Spandan sports events at Bidholi campus.',
     bannerImage: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800',
@@ -386,19 +217,29 @@ export async function seedDatabase() {
 
   // 7. Add Club Members
   for (let i = 0; i < 20; i++) {
-    await ClubMember.create({ clubId: acm.id, userId: seededStudents[i].id })
-    await ClubMember.create({ clubId: ieee.id, userId: seededStudents[i + 10].id })
-    await ClubMember.create({ clubId: sports.id, userId: seededStudents[i + 20].id })
+    await ClubMember.findOrCreate({ where: { clubId: acm.id, userId: seededStudents[i].id } })
+    await ClubMember.findOrCreate({ where: { clubId: ieee.id, userId: seededStudents[i + 10].id } })
+    await ClubMember.findOrCreate({ where: { clubId: sports.id, userId: seededStudents[i + 20].id } })
   }
 
   // 8. Create Campus Events co-ordinated by REAL UPES Faculty
-  const event1 = await Event.create({
+  async function findOrCreateEvent(eventData: any) {
+    const [e] = await Event.findOrCreate({ where: { title: eventData.title }, defaults: eventData })
+    return e
+  }
+
+  const mainAuditorium = venues['Main Auditorium (Bidholi)']
+  const csAuditorium = venues['CS Block A Auditorium']
+  const centralQuad = venues['Bidholi Quadrangle']
+  const aiLab = venues['Advanced AI Research Lab']
+
+  const event1 = await findOrCreateEvent({
     title: 'UPES ACM Hack-a-Sphere 2026',
     description: 'The ultimate 24-hour campus hackathon at UPES Bidholi led by Dr. Hitesh Kumar Sharma & Dr. Khushboo Jain! Build solutions for sustainability, AI, or healthcare.',
     date: '2026-06-15',
     time: '09:00',
-    location: mainAuditorium.name,
-    venueId: mainAuditorium.id,
+    location: mainAuditorium ? mainAuditorium.name : 'Main Auditorium',
+    venueId: mainAuditorium ? mainAuditorium.id : null,
     campus: 'Bidholi',
     maxCapacity: 500,
     status: 'APPROVED',
@@ -409,47 +250,47 @@ export async function seedDatabase() {
     engagementScore: 95.8
   })
 
-  const event2 = await Event.create({
+  const event2 = await findOrCreateEvent({
     title: 'UPES Deep Learning & Transformer Summit',
     description: 'An interactive research symposium hosted by Dr. Subhrasankar Chatterjee & Dr. Swadhin Das discussing Transformer Architectures and Generative AI.',
     date: '2026-06-20',
     time: '14:00',
-    location: csAuditorium.name,
-    venueId: csAuditorium.id,
+    location: csAuditorium ? csAuditorium.name : 'CS Auditorium',
+    venueId: csAuditorium ? csAuditorium.id : null,
     campus: 'Bidholi',
     maxCapacity: 150,
     status: 'APPROVED',
     bannerImage: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=800',
     category: 'ACADEMIC',
     clubId: ieee.id,
-    coordinatorId: seededFaculty[9].id, // Dr. Subhrasankar Chatterjee
+    coordinatorId: seededFaculty[9].id,
     engagementScore: 88.4
   })
 
-  const event3 = await Event.create({
+  const event3 = await findOrCreateEvent({
     title: 'UPES Cyber Security & Forensics Workshop',
     description: 'Hands-on penetration testing and digital forensics lab led by Prof. Adarsh Kumar & Prof. Abhishek Yadav at UPES High-Tech Wing.',
     date: '2026-06-22',
     time: '11:00',
-    location: aiLab.name,
-    venueId: aiLab.id,
+    location: aiLab ? aiLab.name : 'AI Lab',
+    venueId: aiLab ? aiLab.id : null,
     campus: 'Bidholi',
     maxCapacity: 100,
     status: 'APPROVED',
     bannerImage: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800',
     category: 'TECH',
     clubId: ieee.id,
-    coordinatorId: seededFaculty[6].id, // Prof. Adarsh Kumar
+    coordinatorId: seededFaculty[6].id,
     engagementScore: 91.2
   })
 
-  const event4 = await Event.create({
+  const event4 = await findOrCreateEvent({
     title: 'UPES Spandan Annual Track & Sports Meet',
     description: 'Intramural athletic meets and cricket/football selections organized by UPES Sports Committee at Bidholi Quadrangle.',
     date: '2026-06-28',
     time: '08:00',
-    location: centralQuad.name,
-    venueId: centralQuad.id,
+    location: centralQuad ? centralQuad.name : 'Central Quad',
+    venueId: centralQuad ? centralQuad.id : null,
     campus: 'Bidholi',
     maxCapacity: 800,
     status: 'APPROVED',
@@ -464,26 +305,35 @@ export async function seedDatabase() {
   for (let i = 0; i < seededStudents.length; i++) {
     const s = seededStudents[i]
     if (i < 35) {
-      await Registration.create({
-        eventId: event1.id,
-        studentId: s.id,
-        status: 'REGISTERED',
-        passCode: `PASS-${event1.id}-${100400 + i * 13}`
+      await Registration.findOrCreate({
+        where: { eventId: event1.id, studentId: s.id },
+        defaults: {
+          eventId: event1.id,
+          studentId: s.id,
+          status: 'REGISTERED',
+          passCode: `PASS-${event1.id}-${100400 + i * 13}`
+        }
       })
     }
     if (i >= 15 && i < 45) {
-      await Registration.create({
-        eventId: event2.id,
-        studentId: s.id,
-        status: 'REGISTERED',
-        passCode: `PASS-${event2.id}-${990400 + i * 19}`
+      await Registration.findOrCreate({
+        where: { eventId: event2.id, studentId: s.id },
+        defaults: {
+          eventId: event2.id,
+          studentId: s.id,
+          status: 'REGISTERED',
+          passCode: `PASS-${event2.id}-${990400 + i * 19}`
+        }
       })
     }
     if (i < 20) {
-      await Attendance.create({
-        eventId: event3.id,
-        studentId: s.id,
-        checkedById: seededFaculty[6].id
+      await Attendance.findOrCreate({
+        where: { eventId: event3.id, studentId: s.id },
+        defaults: {
+          eventId: event3.id,
+          studentId: s.id,
+          checkedById: seededFaculty[6].id
+        }
       })
     }
   }

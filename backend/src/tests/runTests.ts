@@ -1,22 +1,23 @@
 import { AIService } from '../services/aiService'
 import jwt from 'jsonwebtoken'
+import { sequelize } from '../config/database'
+import { seedDatabase } from '../services/seed'
 
-// A simple Assertion test framework
 let passes = 0
 let fails = 0
 
-function describe(suiteName: string, fn: () => void) {
+async function describe(suiteName: string, fn: () => Promise<void> | void) {
   console.log(`\n\x1b[36mRunning Suite: ${suiteName}\x1b[0m`)
   try {
-    fn()
+    await fn()
   } catch (err: any) {
     console.error(`\x1b[31m[FAIL] Suite crashed: ${err.message}\x1b[0m`)
   }
 }
 
-function it(testName: string, fn: () => void) {
+async function it(testName: string, fn: () => Promise<void> | void) {
   try {
-    fn()
+    await fn()
     passes++
     console.log(`  \x1b[32m✓\x1b[0m ${testName}`)
   } catch (err: any) {
@@ -32,76 +33,80 @@ function assert(condition: boolean, message: string) {
   }
 }
 
-// ----------------------------------------------------
-// RUN TEST SUITES
-// ----------------------------------------------------
+async function main() {
+  await describe('Authentication Service', async () => {
+    await it('should generate and verify JWT tokens correctly', () => {
+      const payload = { id: 42, role: 'STUDENT' }
+      const secret = 'test-secret-key'
+      
+      const token = jwt.sign(payload, secret, { expiresIn: '1h' })
+      assert(!!token, 'JWT Token was not generated')
 
-describe('Authentication Service', () => {
-  it('should generate and verify JWT tokens correctly', () => {
-    const payload = { id: 42, role: 'STUDENT' }
-    const secret = 'test-secret-key'
-    
-    // sign
-    const token = jwt.sign(payload, secret, { expiresIn: '1h' })
-    assert(!!token, 'JWT Token was not generated')
-
-    // verify
-    const decoded = jwt.verify(token, secret) as any
-    assert(decoded.id === 42, 'Decoded ID does not match')
-    assert(decoded.role === 'STUDENT', 'Decoded Role does not match')
-  })
-})
-
-describe('AI Service - RAG Vector Search Heuristics', () => {
-  it('should correctly tokenise strings into word frequency vectors', () => {
-    const text = 'Computer Science AI coding hackathon'
-    const vec = AIService.getTermVector(text)
-    
-    assert(vec['computer'] === 1, 'Failed to extract word: computer')
-    assert(vec['science'] === 1, 'Failed to extract word: science')
-    assert(vec['ai'] === 1, 'Failed to extract word: ai')
+      const decoded = jwt.verify(token, secret) as any
+      assert(decoded.id === 42, 'Decoded ID does not match')
+      assert(decoded.role === 'STUDENT', 'Decoded Role does not match')
+    })
   })
 
-  it('should compute correct Cosine Similarity between matching vectors', () => {
-    const vecA = { 'ai': 1, 'computer': 1, 'science': 1 }
-    const vecB = { 'ai': 1, 'computer': 1, 'science': 1, 'basketball': 1 }
-    
-    const similarity = AIService.cosineSimilarity(vecA, vecB)
-    
-    assert(similarity > 0.8 && similarity < 0.9, `Similarity should be ~0.866, got: ${similarity}`)
+  await describe('AI Service - RAG Vector Search Heuristics', async () => {
+    await it('should correctly tokenise strings into word frequency vectors', () => {
+      const text = 'Computer Science AI coding hackathon'
+      const vec = AIService.getTermVector(text)
+      
+      assert(vec['computer'] === 1, 'Failed to extract word: computer')
+      assert(vec['science'] === 1, 'Failed to extract word: science')
+      assert(vec['ai'] === 1, 'Failed to extract word: ai')
+    })
+
+    await it('should compute correct Cosine Similarity between matching vectors', () => {
+      const vecA = { 'ai': 1, 'computer': 1, 'science': 1 }
+      const vecB = { 'ai': 1, 'computer': 1, 'science': 1, 'basketball': 1 }
+      
+      const similarity = AIService.cosineSimilarity(vecA, vecB)
+      assert(similarity > 0.8 && similarity < 0.9, `Similarity should be ~0.866, got: ${similarity}`)
+    })
+
+    await it('should return 0 similarity for completely disjoint vectors', () => {
+      const vecA = { 'cricket': 1, 'sports': 1 }
+      const vecB = { 'ai': 1, 'coding': 1 }
+      
+      const similarity = AIService.cosineSimilarity(vecA, vecB)
+      assert(similarity === 0, `Similarity should be 0, got: ${similarity}`)
+    })
   })
 
-  it('should return 0 similarity for completely disjoint vectors', () => {
-    const vecA = { 'cricket': 1, 'sports': 1 }
-    const vecB = { 'ai': 1, 'coding': 1 }
-    
-    const similarity = AIService.cosineSimilarity(vecA, vecB)
-    assert(similarity === 0, `Similarity should be 0, got: ${similarity}`)
+  await describe('AI Service - Attendance Regression Predictor', async () => {
+    await it('should predict attendance rate and expected occupancy correctly', () => {
+      const category = 'TECH'
+      const capacity = 100
+      const day = 'Saturday'
+      
+      const prediction = AIService.predictAttendance(category, capacity, day)
+      assert(prediction.predictedAttendanceRate > 0, 'Predicted rate must be positive')
+      assert(prediction.expectedAttendance > 0, 'Expected occupancy must be positive')
+      assert(prediction.factors.length > 0, 'Factors list must not be empty')
+    })
   })
-})
 
-describe('AI Service - Attendance Regression Predictor', () => {
-  it('should predict attendance rate and expected occupancy correctly', () => {
-    const category = 'TECH'
-    const capacity = 100
-    const day = 'Saturday'
-    
-    const prediction = AIService.predictAttendance(category, capacity, day)
-    
-    assert(prediction.predictedAttendanceRate > 0, 'Predicted rate must be positive')
-    assert(prediction.expectedAttendance > 0, 'Expected occupancy must be positive')
-    assert(prediction.factors.length > 0, 'Factors list must not be empty')
+  await describe('Database Seeding & Idempotency', async () => {
+    await it('should initialize and seed database without email validation errors', async () => {
+      await sequelize.sync()
+      await seedDatabase()
+    })
+
+    await it('should run seedDatabase a second time idempotently without duplicating or failing', async () => {
+      await seedDatabase()
+    })
   })
-})
 
-// ----------------------------------------------------
-// PRINT REPORT
-// ----------------------------------------------------
-console.log(`\n==================================================`)
-if (fails === 0) {
-  console.log(`\x1b[32;1mPASS\x1b[0m \x1b[37;1mAll tests passed! (${passes} total)\x1b[0m`)
-} else {
-  console.log(`\x1b[31;1mFAIL\x1b[0m \x1b[37;1mSome tests failed! (${fails} failed, ${passes} passed)\x1b[0m`)
-  process.exit(1)
+  console.log(`\n==================================================`)
+  if (fails === 0) {
+    console.log(`\x1b[32;1mPASS\x1b[0m \x1b[37;1mAll tests passed! (${passes} total)\x1b[0m`)
+  } else {
+    console.log(`\x1b[31;1mFAIL\x1b[0m \x1b[37;1mSome tests failed! (${fails} failed, ${passes} passed)\x1b[0m`)
+    process.exit(1)
+  }
+  console.log(`==================================================\n`)
 }
-console.log(`==================================================\n`)
+
+main()
