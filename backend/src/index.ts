@@ -28,7 +28,7 @@ dotenv.config()
 
 const app = express()
 const server = http.createServer(app)
-const PORT = process.env.PORT || 8080
+const PORT = Number(process.env.PORT) || 10000
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -256,9 +256,9 @@ async function startServer() {
     // Start Notification Cron Scheduler
     startNotificationScheduler()
 
-    server.listen(PORT, () => {
-      console.log(`⚡ Node.js Express & Socket.io Server is listening on http://localhost:${PORT}`)
-      console.log(`API Documentation available at http://localhost:${PORT}/api-docs`)
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`⚡ Node.js Express & Socket.io Server is listening on port ${PORT}`)
+      console.log(`API Documentation available at /api-docs`)
     })
   } catch (error) {
     console.error('Fatal error occurred during server startup:', error)

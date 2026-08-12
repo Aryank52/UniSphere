@@ -9,8 +9,8 @@ import { Achievement } from '../models/Achievement'
 import { ClubMember } from '../models/ClubMember'
 
 export async function seedDatabase() {
-  const deanExists = await User.findOne({ where: { email: 'vijaysekhar@upes.ac.in' } })
-  if (deanExists) {
+  const adminExists = await User.findOne({ where: { email: 'admin@unisphere.edu' } })
+  if (adminExists) {
     console.log('UPES Dehradun Faculty & Student Roster already present in database.')
     return
   }
@@ -86,7 +86,7 @@ export async function seedDatabase() {
     profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
   })
 
-  // 4. Seed REAL UPES Faculty Members (25 Faculty Members)
+  // 4. Seed Synthetic Faculty Members (25 Faculty Members)
   const facultyData = [
     { name: 'Prof. Vijaysekhar Chellaboina', designation: 'Professor and Dean', department: 'School of Computer Science', interests: ['Systems Theory', 'Control Systems', 'Optimization', 'Academic Leadership'], profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' },
     { name: 'Dr. Vinod Patidar', designation: 'Professor', department: 'School of Computer Science', interests: ['Chaos Theory', 'Nonlinear Dynamics', 'Cryptography'], profileImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150' },
@@ -118,15 +118,10 @@ export async function seedDatabase() {
   const seededFaculty: User[] = [defaultFaculty]
   for (let i = 0; i < facultyData.length; i++) {
     const f = facultyData[i]
-    // Clean name transformation to build valid email address without double dots or invalid characters
-    const emailPrefix = f.name.toLowerCase()
-      .replace(/\([^)]*\)/g, '')
-      .replace(/[^a-z0-9]+/g, '.')
-      .replace(/^\.+|\.+$|\.(?=\.)/g, '')
-
+    // Clean synthetic email addresses without real personal emails or invalid characters
     const seededF = await findOrCreateUser({
       name: f.name,
-      email: `${emailPrefix}@upes.ac.in`,
+      email: `faculty${i + 1}@upes.ac.in`,
       password: hashedPassword,
       role: 'FACULTY',
       department: f.department,
@@ -138,7 +133,7 @@ export async function seedDatabase() {
     seededFaculty.push(seededF)
   }
 
-  // 5. Seed REAL UPES Student Names (64 UPES Students)
+  // 5. Seed Synthetic UPES Student Accounts (64 UPES Students)
   const studentNamesList = [
     'kartik', 'ayush', 'aryan', 'aditya', 'vansh', 'bhavendra', 'shaurya', 'krish', 'princy', 'gauri', 
     'vedika', 'ishika', 'shreya', 'yash', 'aman', 'akshay', 'bhaskar', 'saumya', 'deepak', 'swastika', 
@@ -158,7 +153,7 @@ export async function seedDatabase() {
   for (let i = 0; i < studentNamesList.length; i++) {
     const rawName = studentNamesList[i]
     const capitalizedName = rawName.charAt(0).toUpperCase() + rawName.slice(1)
-    const email = `${rawName.toLowerCase()}@stu.upes.ac.in`
+    const email = `student${i + 1}@stu.upes.ac.in`
     const dept = depts[i % depts.length]
     const year = (i % 4) + 1
     const xp = 100 + (i * 15) % 450
@@ -192,7 +187,7 @@ export async function seedDatabase() {
     name: 'UPES ACM Student Chapter',
     description: 'Deep dive into algorithmic challenges, hackathons, and software engineering principles at UPES Dehradun.',
     bannerImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800',
-    creatorId: seededFaculty[3].id, // Dr. Hitesh Kumar Sharma
+    creatorId: seededFaculty[3].id,
     membersCount: 1420,
     status: 'ACTIVE'
   })
@@ -201,7 +196,7 @@ export async function seedDatabase() {
     name: 'UPES IEEE Student Branch',
     description: 'Promoting technical innovation and excellence in engineering, science, and computing at UPES Dehradun.',
     bannerImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
-    creatorId: seededFaculty[1].id, // Prof. Vijaysekhar Chellaboina
+    creatorId: seededFaculty[1].id,
     membersCount: 980,
     status: 'ACTIVE'
   })
@@ -210,7 +205,7 @@ export async function seedDatabase() {
     name: 'UPES Sports Committee',
     description: 'Hosting intramural sporting leagues, athletic meets, and Spandan sports events at Bidholi campus.',
     bannerImage: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800',
-    creatorId: seededFaculty[5].id, // Dr. Vijendra Singh
+    creatorId: seededFaculty[5].id,
     membersCount: 1120,
     status: 'ACTIVE'
   })
@@ -222,7 +217,7 @@ export async function seedDatabase() {
     await ClubMember.findOrCreate({ where: { clubId: sports.id, userId: seededStudents[i + 20].id } })
   }
 
-  // 8. Create Campus Events co-ordinated by REAL UPES Faculty
+  // 8. Create Campus Events co-ordinated by UPES Faculty
   async function findOrCreateEvent(eventData: any) {
     const [e] = await Event.findOrCreate({ where: { title: eventData.title }, defaults: eventData })
     return e
